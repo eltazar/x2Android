@@ -1,5 +1,6 @@
-package it.perdue.perdue;
+package it.wm.perdue;
 
+import it.wm.perdue.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
