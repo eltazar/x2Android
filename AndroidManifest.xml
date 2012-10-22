@@ -28,6 +28,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".TestActivity"
+            android:label="TEST" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="it.wm.perdue.TestActivity" />
+       		<intent-filter>
+                <action   android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
