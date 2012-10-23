@@ -96,24 +96,27 @@ public class HTTPAccess {
 					// Il check è fatto nell'if, ma l'analizzatore sintattico è tonto.
 					HashMap<String, String> postDict = (HashMap<String,String>)params[3];
 					Iterator<String> i=postDict.keySet().iterator();
+					StringBuilder postStringBuilder = new StringBuilder();
 					while (i.hasNext()) {
-						// TODO: usare uno StringBuilder
 						String key = i.next();
 						try {
-						postString += URLEncoder.encode(key, "UTF-8") + "=" 
-								+ URLEncoder.encode(postDict.get(key), "UTF-8") + "&";
+							postStringBuilder.append(URLEncoder.encode(key, "UTF-8"));
+							postStringBuilder.append("=");
+							postStringBuilder.append(URLEncoder.encode(postDict.get(key), "UTF-8"));
+							postStringBuilder.append("&");
 						} catch (UnsupportedEncodingException e) {
 							// Ma dai.... con utf-8? Mi ci gioco le palle che in questo
 							// blocco non ci entreramo mai!!
 						}
 					}
-					if (postString.length() > 0) {
-						postString = postString.substring(0, postString.length() - 1);
+					if (postStringBuilder.length() > 0) {
+						postStringBuilder.deleteCharAt(postStringBuilder.length());
 					}
+					postString = postStringBuilder.toString();
 				}
 			}
 			
-			String response;
+			StringBuilder response = null;
 			InputStream inputStream = null;
 			try {
 				try {                    
@@ -146,10 +149,10 @@ public class HTTPAccess {
 							new InputStreamReader(inputStream, "utf-8"));
 					
 					String line = null;
-					response = new String();
-					//TODO: usare uno StringBuilder
+					response = new StringBuilder();
 					while ((line = reader.readLine()) != null) {
-						response = response + line + "\n";
+						response.append(line);
+						response.append("\n");
 					}
 
 				} finally {
@@ -161,10 +164,9 @@ public class HTTPAccess {
 
             } catch (IOException e) {
             	Log.d(DEBUG_TAG, "An IOExcption has occurred: " + e.getMessage());
-                response = "";
                 success = false;
             }
-            return response;
+            return response.toString();
 		}
 		
 		
