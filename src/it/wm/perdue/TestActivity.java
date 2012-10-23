@@ -46,7 +46,7 @@ public class TestActivity extends Activity {
 	}
 	
 	private void parseJSON(String jsonStr) {
-		JSONObject obj = null;
+		/*JSONObject obj = null;
 		try {
 			obj = new JSONObject(jsonStr);
 		} catch (JSONException e) {
@@ -74,13 +74,16 @@ public class TestActivity extends Activity {
 				e.printStackTrace();
 			}
 			dataModel.add(data);
-		}
+		}*/
+		
+		Gson gson = new Gson();
+		JSONFormat dataModel = gson.fromJson(jsonStr, JSONFormat.class);
 		
 		android.widget.TextView tv = ((android.widget.TextView)findViewById(R.id.textView1));
 		StringBuilder b = new StringBuilder(tv.getText());
 		
-		for (int i=0; i<dataModel.size(); i++) {
-			CommentDataModel data = dataModel.get(i);
+		for (int i=0; i<dataModel.getEsercente().size(); i++) {
+			CommentDataModel data = dataModel.getEsercente().get(i);
 			b.append("\n****************\n");
 			b.append(data.comment_author);
 			b.append("\n===\n");
@@ -94,6 +97,13 @@ public class TestActivity extends Activity {
 	}
 	
 	
+	private class JSONFormat {
+		private ArrayList<CommentDataModel> Esercente;
+		
+		public void setEsercente(ArrayList<CommentDataModel> list) {Esercente = list;}
+		public ArrayList<CommentDataModel> getEsercente() {return Esercente;}
+		
+	}
 	private class CommentDataModel {
 		private String comment_author;
 		private String comment_content;
