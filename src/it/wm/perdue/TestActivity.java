@@ -101,16 +101,16 @@ public class TestActivity extends Activity {
 		private int comment_ID;
 		
 		public void   setComment_author(String s) {comment_author = s;}
-		public String comment_author() {return comment_author;}
+		public String getComment_author() {return comment_author;}
 		
 		public void   setComment_content(String s) {comment_content = s;}
-		public String comment_content() {return comment_content;}
+		public String getComment_content() {return comment_content;}
 		
 		public void   setComment_date(String s) {comment_date = s;}
-		public String comment_date() {return comment_date;}
+		public String getComment_date() {return comment_date;}
 		
 		public void setComment_ID(int id) {comment_ID = id;}
-		public int  comment_ID() {return comment_ID;}	
+		public int  getComment_ID() {return comment_ID;}	
 	}
 
 }
