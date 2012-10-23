@@ -2,21 +2,16 @@ package it.wm.perdue;
 
 import java.util.ArrayList;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-
 import it.wm.HTTPAccess;
-//import it.wm.JSONDecoder;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
 public class TestActivity extends Activity {
 	private static final String DEBUG_TAG = "TestActivity";
+	
+	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +19,7 @@ public class TestActivity extends Activity {
         
         HTTPAccess httpAccess = HTTPAccess.getInstance();
         String urlString = "http://www.cartaperdue.it/partner/commenti.php?id=119&from=0&to=10";
-        
+        Log.i(DEBUG_TAG, "Connecting to: " + urlString);
         httpAccess.startHTTPConnection(
         		urlString, 
         		HTTPAccess.Method.GET, 
@@ -41,41 +36,10 @@ public class TestActivity extends Activity {
         				.setText("Arrangiati, Errore di Rete.");
         	}
         });
-        
-
 	}
 	
-	private void parseJSON(String jsonStr) {
-		/*JSONObject obj = null;
-		try {
-			obj = new JSONObject(jsonStr);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		JSONArray arr = null;
-		try {
-			arr = obj.getJSONArray("Esercente");
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		ArrayList<CommentDataModel> dataModel = new ArrayList<CommentDataModel>(arr.length());
-		for (int i=0; i<arr.length(); i++) {
-			Gson gson = new Gson();
-			CommentDataModel data = null;
-			try {
-				data = gson.fromJson(arr.getJSONObject(i).toString(), CommentDataModel.class);
-			} catch (JsonSyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			dataModel.add(data);
-		}*/
-		
+	
+	private void parseJSON(String jsonStr) {		
 		Gson gson = new Gson();
 		JSONFormat dataModel = gson.fromJson(jsonStr, JSONFormat.class);
 		
@@ -97,6 +61,7 @@ public class TestActivity extends Activity {
 	}
 	
 	
+	@SuppressWarnings("unused")
 	private class JSONFormat {
 		private ArrayList<CommentDataModel> Esercente;
 		
@@ -104,6 +69,8 @@ public class TestActivity extends Activity {
 		public ArrayList<CommentDataModel> getEsercente() {return Esercente;}
 		
 	}
+	
+	@SuppressWarnings("unused")
 	private class CommentDataModel {
 		private String comment_author;
 		private String comment_content;
