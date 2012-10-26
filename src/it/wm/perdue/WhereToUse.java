@@ -1,15 +1,14 @@
+
 package it.wm.perdue;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-
-import it.wm.perdue.R;
-import android.os.Bundle;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 public class WhereToUse extends SherlockActivity {
 
@@ -26,7 +25,6 @@ public class WhereToUse extends SherlockActivity {
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#d65151")));
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
