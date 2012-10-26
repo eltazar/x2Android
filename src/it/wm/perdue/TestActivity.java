@@ -4,12 +4,14 @@ package it.wm.perdue;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
 import it.wm.HTTPAccess;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class TestActivity extends Activity {
     private static final String DEBUG_TAG = "TestActivity";
@@ -28,15 +30,32 @@ public class TestActivity extends Activity {
                 null,
                 new HTTPAccess.ResponseListener() {
                     public void onHTTPResponseReceived(String response) {
-                        ((android.widget.TextView) TestActivity.this
+                        ((TextView) TestActivity.this
                                 .findViewById(R.id.textView1)).setText(response);
                         parseJSON(response);
                     }
 
                     public void onHTTPerror() {
-                        ((android.widget.TextView) TestActivity.this
+                        ((TextView) TestActivity.this
                                 .findViewById(R.id.textView1))
                                 .setText("Arrangiati, Errore di Rete.");
+                    }
+                });
+        urlString = "http://www.cartaperdue.it/partner/v2.0/News.php";
+        HashMap<String, String> postMap = new HashMap<String, String>();
+        postMap.put("from", "0");
+        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap,
+                new HTTPAccess.ResponseListener() {
+                    @Override
+                    public void onHTTPerror() {
+                        TextView t = (TextView) TestActivity.this.findViewById(R.id.textView1);
+                        t.setText(t.getText() + "\n\nLa richiesta POST è fallita\n\n");
+                    }
+
+                    @Override
+                    public void onHTTPResponseReceived(String response) {
+                        TextView t = (TextView) TestActivity.this.findViewById(R.id.textView1);
+                        t.setText(t.getText() + "\n\n" + response + "\n\n");
                     }
                 });
     }
