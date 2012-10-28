@@ -21,43 +21,33 @@ public class TestActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        HTTPAccess httpAccess = HTTPAccess.getInstance();
+        HTTPAccess httpAccess = new HTTPAccess();
         String urlString = "http://www.cartaperdue.it/partner/commenti.php?id=119&from=0&to=10";
         Log.i(DEBUG_TAG, "Connecting to: " + urlString);
-        httpAccess.startHTTPConnection(
-                urlString,
-                HTTPAccess.Method.GET,
-                null,
-                new HTTPAccess.ResponseListener() {
-                    public void onHTTPResponseReceived(String response) {
-                        ((TextView) TestActivity.this
-                                .findViewById(R.id.textView1)).setText(response);
-                        parseJSON(response);
-                    }
+        httpAccess.setResponseListener(new HTTPAccess.ResponseListener() {
+            public void onHTTPResponseReceived(String tag, String response) {
+                if (tag.equals("testGet")) {
+                    ((TextView) TestActivity.this
+                            .findViewById(R.id.textView1)).setText(response + "["
+                            + response.length() + "]");
+                    // parseJSON(response);
+                } else if (tag.equals("testPost")) {
+                    TextView t = (TextView) TestActivity.this.findViewById(R.id.textView1);
+                    t.setText(t.getText() + "\n\n" + response + "\n\n");
+                }
+            }
 
-                    public void onHTTPerror() {
-                        ((TextView) TestActivity.this
-                                .findViewById(R.id.textView1))
-                                .setText("Arrangiati, Errore di Rete.");
-                    }
-                });
+            public void onHTTPerror(String tag) {
+                ((TextView) TestActivity.this
+                        .findViewById(R.id.textView1))
+                        .setText("\n\nArrangiati, Errore di Rete.(" + tag + ")\n\n");
+            }
+        });
+        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET, null, "testGet");
         urlString = "http://www.cartaperdue.it/partner/v2.0/News.php";
         HashMap<String, String> postMap = new HashMap<String, String>();
         postMap.put("from", "0");
-        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap,
-                new HTTPAccess.ResponseListener() {
-                    @Override
-                    public void onHTTPerror() {
-                        TextView t = (TextView) TestActivity.this.findViewById(R.id.textView1);
-                        t.setText(t.getText() + "\n\nLa richiesta POST è fallita\n\n");
-                    }
-
-                    @Override
-                    public void onHTTPResponseReceived(String response) {
-                        TextView t = (TextView) TestActivity.this.findViewById(R.id.textView1);
-                        t.setText(t.getText() + "\n\n" + response + "\n\n");
-                    }
-                });
+        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, "testPost");
     }
 
     private void parseJSON(String jsonStr) {
