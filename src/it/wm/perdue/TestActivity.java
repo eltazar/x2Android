@@ -53,12 +53,13 @@ public class TestActivity extends Activity {
         urlString = "http://ubuntuforums.org/images/rebrand/ubuntulogo-o-small.png";
         ((CachedAsyncImageView) findViewById(R.id.cachedAsyncImageView1))
                 .loadImageFromURL(urlString);
+
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
                     synchronized (this) {
-                        this.wait(10000);
+                        this.wait(5000);
                     }
                 } catch (InterruptedException e) {
                     Log.v("WAITER", "interrotto");
@@ -68,11 +69,13 @@ public class TestActivity extends Activity {
 
             @Override
             protected void onPostExecute(Void result) {
-                String urlString = "http://ubuntuforums.org/images/rebrand/ubuntulogo-o-small.png";
+                String urlString =
+                        "http://ubuntuforums.org/images/rebrand/ubuntulogo-o-small.png";
                 ((CachedAsyncImageView) TestActivity.this.findViewById(R.id.cachedAsyncImageView1))
                         .loadImageFromURL(urlString);
             }
         }.execute(new Void[1]);
+
     }
 
     private void parseJSON(String jsonStr) {
