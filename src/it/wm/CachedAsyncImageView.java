@@ -26,10 +26,19 @@ import java.util.HashMap;
 public class CachedAsyncImageView extends RelativeLayout implements DownloaderTask.ResponseListener {
 
     private static final String DEBUG_TAG = "CachedAsyncImageView";
+    private Listener listener = null;
     private DownloaderTask task = null;
     private String urlString = null;
     private ImageView imageView = null;
     private ProgressBar progressBar = null;
+
+    public Listener getListener() {
+        return this.listener;
+    }
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
 
     public CachedAsyncImageView(Context context) {
         super(context);
@@ -71,56 +80,29 @@ public class CachedAsyncImageView extends RelativeLayout implements DownloaderTa
     }
 
     public void loadImageFromURL(URL url) {
-        // - (void)loadImageFromURL:(NSURL *)url {
-        // @synchronized (self) {
-        // if (_connection) {
-        // [self releaseConnection];
-        // }
         if (task != null) {
             task.setListener(null);
             task = null;
             urlString = null;
         }
-        // _urlString = [url.absoluteString retain];
-        // //NSLog(@"[%@ loadImageFromUrl]  [[%@]+]", [self class], [_urlString
-        // substringWithRange:NSMakeRange(_urlString.length-1-10, 3)]);
-        // UIImage *image = [[ImageCache sharedInstance]
-        // imageForURLString:_urlString];
-        // //NSLog(@"[%@ loadImageFromURL]: _urlString = %@", [self class],
-        // _urlString);
+
         Drawable image = ImageCache.getInstance().getDrawable(url.toString());
         Log.v(DEBUG_TAG, "Loading image from: " + url.toString());
-        // if (image) {
-        // NSLog(@"                          \t Cache Hit! [[%@]-]", [_urlString
-        // substringWithRange:NSMakeRange(_urlString.length-1-10, 3)]);
-        // self.image = image;
-        // [_urlString release];
-        // _urlString = nil;
+
         if (image != null) {
             Log.v(DEBUG_TAG, "Cache hit!");
             imageView.setImageDrawable(image);
-        }
-        // } else {
-        // self.image = nil;
-        // NSURLRequest *request = [NSURLRequest requestWithURL:url];
-        // _connection = [[NSURLConnection alloc] initWithRequest:request
-        // delegate:self];
-        else {
+            progressBar.setVisibility(INVISIBLE);
+            if (listener != null) {
+                listener.onImageLoadingCompleted(this);
+            }
+        } else {
             urlString = url.toString();
             task = new DownloaderTask();
             task.setListener(this);
             task.execute(new DownloaderTask.Params(url, "GET", null));
             progressBar.setVisibility(VISIBLE);
         }
-        // if (_connection) {
-        // [_activityIndicator startAnimating];
-        // } else {
-        // [self connection:nil didFailWithError:nil];
-        // }
-        // }
-        // }
-        // }
-
     }
 
     public void loadImageFromURL(String urlString) {
@@ -135,13 +117,6 @@ public class CachedAsyncImageView extends RelativeLayout implements DownloaderTa
         loadImageFromURL(url);
     }
 
-    /*
-     * - (void)loadImageFromURLString:(NSString *)urlString { NSURL *url =
-     * [NSURL URLWithString:urlString]; [self loadImageFromURL:url]; } -
-     * (void)setActivityIndicatorStyle:(UIActivityIndicatorViewStyle)style {
-     * _activityIndicator.activityIndicatorViewStyle = style; } +
-     * (void)emptyCache { [[ImageCache sharedInstance] emptyCache];
-     */
     public void emptyCache() {
         ImageCache.getInstance().emptyCache();
     }
@@ -226,31 +201,30 @@ public class CachedAsyncImageView extends RelativeLayout implements DownloaderTa
             imageView.startAnimation(fadeIn);
             progressBar.startAnimation(fadeOut);
         }
-
-        /*
-         * [_activityIndicator stopAnimating]; self.alpha = 0; [UIView
-         * beginAnimations:nil context:nil]; [UIView setAnimationDuration:1.0];
-         * self.image = image; self.alpha = 1; [UIView commitAnimations];
-         * if(delegate && [delegate
-         * respondsToSelector:@selector(didFinishLoadingImage:)]) [delegate
-         * didFinishLoadingImage:self];
-         */
-
+        if (listener != null) {
+            listener.onImageLoadingCompleted(this);
+        }
     }
 
     @Override
     public void onHTTPerror(DownloaderTask task) {
-        /*- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-            // Settare un immagine placeholder?
-            @synchronized (self) {
-                if (connection != _connection) return;
-                [_activityIndicator stopAnimating];
-                [self releaseConnection];
-            }
-            
-            if(delegate && [delegate respondsToSelector:@selector(didErrorLoadingImage:)])
-                [delegate didErrorLoadingImage:self];       
-         */
+        if (task != this.task) {
+            return;
+        }
+        this.task.setListener(null);
+        this.task = null;
+        this.urlString = null;
+        progressBar.setVisibility(INVISIBLE);
+        // TODO: Settare un immagine placeholder?
+        if (listener != null) {
+            listener.onImageLoadingFailed(this);
+        }
+    }
+
+    public interface Listener {
+        public void onImageLoadingCompleted(CachedAsyncImageView imageView);
+
+        public void onImageLoadingFailed(CachedAsyncImageView imageView);
     }
 
     private static class ImageCache {
