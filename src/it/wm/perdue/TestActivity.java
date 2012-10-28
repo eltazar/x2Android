@@ -2,12 +2,14 @@
 package it.wm.perdue;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import it.wm.CachedAsyncImageView;
 import it.wm.HTTPAccess;
 
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class TestActivity extends Activity {
                     ((TextView) TestActivity.this
                             .findViewById(R.id.textView1)).setText(response + "["
                             + response.length() + "]");
-                    // parseJSON(response);
+                    parseJSON(response);
                 } else if (tag.equals("testPost")) {
                     TextView t = (TextView) TestActivity.this.findViewById(R.id.textView1);
                     t.setText(t.getText() + "\n\n" + response + "\n\n");
@@ -48,6 +50,29 @@ public class TestActivity extends Activity {
         HashMap<String, String> postMap = new HashMap<String, String>();
         postMap.put("from", "0");
         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, "testPost");
+        urlString = "http://ubuntuforums.org/images/rebrand/ubuntulogo-o-small.png";
+        ((CachedAsyncImageView) findViewById(R.id.cachedAsyncImageView1))
+                .loadImageFromURL(urlString);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    synchronized (this) {
+                        this.wait(10000);
+                    }
+                } catch (InterruptedException e) {
+                    Log.v("WAITER", "interrotto");
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                String urlString = "http://ubuntuforums.org/images/rebrand/ubuntulogo-o-small.png";
+                ((CachedAsyncImageView) TestActivity.this.findViewById(R.id.cachedAsyncImageView1))
+                        .loadImageFromURL(urlString);
+            }
+        }.execute(new Void[1]);
     }
 
     private void parseJSON(String jsonStr) {
