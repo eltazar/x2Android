@@ -1,12 +1,19 @@
 
 package it.wm;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import java.io.ByteArrayInputStream;
 import java.net.MalformedURLException;
@@ -16,22 +23,51 @@ import java.util.HashMap;
 /**
  * TODO: document your custom view class.
  */
-public class CachedAsyncImageView extends ImageView implements DownloaderTask.ResponseListener {
+public class CachedAsyncImageView extends RelativeLayout implements DownloaderTask.ResponseListener {
 
     private static final String DEBUG_TAG = "CachedAsyncImageView";
     private DownloaderTask task = null;
-    private String urlString;
+    private String urlString = null;
+    private ImageView imageView = null;
+    private ProgressBar progressBar = null;
 
     public CachedAsyncImageView(Context context) {
         super(context);
+        initialize();
     }
 
     public CachedAsyncImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        initialize();
     }
 
     public CachedAsyncImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        initialize();
+    }
+
+    private void initialize() {
+        imageView = new ImageView(getContext());
+        progressBar = new ProgressBar(getContext());
+        progressBar.setIndeterminate(true);
+        this.addView(imageView);
+        this.addView(progressBar);
+
+        LayoutParams layoutParams = new LayoutParams(imageView.getLayoutParams());
+        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        imageView.setLayoutParams(layoutParams);
+        layoutParams = new LayoutParams(progressBar.getLayoutParams());
+        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        progressBar.setLayoutParams(layoutParams);
+
+        progressBar.setVisibility(INVISIBLE); // Sembra che fermi il calcolo
+                                              // dell'animazione, così non
+                                              // sprechiamo cicli di cpu.
+                                              // http://stackoverflow.com/q/4544316
+                                              // Inoltre manco lo vogliamo
+                                              // visibile a questo punto, quindi
+                                              // tanto di guadagnato. Nice side
+                                              // effects.
     }
 
     public void loadImageFromURL(URL url) {
@@ -62,7 +98,7 @@ public class CachedAsyncImageView extends ImageView implements DownloaderTask.Re
         // _urlString = nil;
         if (image != null) {
             Log.v(DEBUG_TAG, "Cache hit!");
-            this.setImageDrawable(image);
+            imageView.setImageDrawable(image);
         }
         // } else {
         // self.image = nil;
@@ -74,6 +110,7 @@ public class CachedAsyncImageView extends ImageView implements DownloaderTask.Re
             task = new DownloaderTask();
             task.setListener(this);
             task.execute(new DownloaderTask.Params(url, "GET", null));
+            progressBar.setVisibility(VISIBLE);
         }
         // if (_connection) {
         // [_activityIndicator startAnimating];
@@ -109,6 +146,7 @@ public class CachedAsyncImageView extends ImageView implements DownloaderTask.Re
         ImageCache.getInstance().emptyCache();
     }
 
+    @TargetApi(11)
     @Override
     public void onHTTPResponseReceived(DownloaderTask task, byte[] response) {
         if (task != this.task) {
@@ -129,8 +167,66 @@ public class CachedAsyncImageView extends ImageView implements DownloaderTask.Re
                     new ByteArrayInputStream(response));
         }
         ImageCache.getInstance().putDrawable(urlString, image);
+        imageView.setImageDrawable(image);
 
-        this.setImageDrawable(image);
+        long duration = 10000;
+        // Ok, questo si sarebbe potuto scrivere usando solo la classe di
+        // compatibilità ObjectAnimator fornita da ActionBarSherlock... Ma... e
+        // se l'implementazione fosse subottima? Se da HoneyComb in poi non
+        // usasse le classi native? Potrebbero esserci schermate con molte
+        // CachedAsyncImageView dentro, quindi meglio non rischiare, e fare le
+        // cose a manina.
+        if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.HONEYCOMB) {
+            Log.d(DEBUG_TAG, "Animazioni HoneyComb");
+            ObjectAnimator fadeIn = ObjectAnimator.ofFloat(imageView, "alpha", 0.0f, 1.0f);
+            ObjectAnimator fadeOut = ObjectAnimator.ofFloat(progressBar, "alpha", 1.0f, 0.0f);
+            fadeIn.setDuration(duration);
+            fadeOut.setDuration(duration);
+            fadeOut.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    progressBar.setVisibility(INVISIBLE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                }
+            });
+            fadeIn.start();
+            fadeOut.start();
+        } else {
+            Log.d(DEBUG_TAG, "Animazioni Base");
+            Animation fadeIn = new AlphaAnimation(0.0f, 1.0f);
+            Animation fadeOut = new AlphaAnimation(1.0f, 0.0f);
+            fadeIn.setDuration(duration);
+            fadeOut.setDuration(duration);
+            fadeOut.setFillAfter(true);
+            fadeOut.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    progressBar.setVisibility(INVISIBLE);
+                }
+            });
+            imageView.startAnimation(fadeIn);
+            progressBar.startAnimation(fadeOut);
+        }
+
         /*
          * [_activityIndicator stopAnimating]; self.alpha = 0; [UIView
          * beginAnimations:nil context:nil]; [UIView setAnimationDuration:1.0];
@@ -185,4 +281,5 @@ public class CachedAsyncImageView extends ImageView implements DownloaderTask.Re
         }
 
     }
+
 }
