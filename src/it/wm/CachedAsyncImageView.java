@@ -4,6 +4,7 @@ package it.wm;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -25,7 +26,63 @@ public class CachedAsyncImageView extends ImageView implements DownloaderTask.Re
         super(context);
     }
 
+    public CachedAsyncImageView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public CachedAsyncImageView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
+
     public void loadImageFromURL(URL url) {
+        // - (void)loadImageFromURL:(NSURL *)url {
+        // @synchronized (self) {
+        // if (_connection) {
+        // [self releaseConnection];
+        // }
+        if (task != null) {
+            task.setListener(null);
+            task = null;
+            urlString = null;
+        }
+        // _urlString = [url.absoluteString retain];
+        // //NSLog(@"[%@ loadImageFromUrl]  [[%@]+]", [self class], [_urlString
+        // substringWithRange:NSMakeRange(_urlString.length-1-10, 3)]);
+        // UIImage *image = [[ImageCache sharedInstance]
+        // imageForURLString:_urlString];
+        // //NSLog(@"[%@ loadImageFromURL]: _urlString = %@", [self class],
+        // _urlString);
+        Drawable image = ImageCache.getInstance().getDrawable(url.toString());
+        Log.v(DEBUG_TAG, "Loading image from: " + url.toString());
+        // if (image) {
+        // NSLog(@"                          \t Cache Hit! [[%@]-]", [_urlString
+        // substringWithRange:NSMakeRange(_urlString.length-1-10, 3)]);
+        // self.image = image;
+        // [_urlString release];
+        // _urlString = nil;
+        if (image != null) {
+            Log.v(DEBUG_TAG, "Cache hit!");
+            this.setImageDrawable(image);
+        }
+        // } else {
+        // self.image = nil;
+        // NSURLRequest *request = [NSURLRequest requestWithURL:url];
+        // _connection = [[NSURLConnection alloc] initWithRequest:request
+        // delegate:self];
+        else {
+            urlString = url.toString();
+            task = new DownloaderTask();
+            task.setListener(this);
+            task.execute(new DownloaderTask.Params(url, "GET", null));
+        }
+        // if (_connection) {
+        // [_activityIndicator startAnimating];
+        // } else {
+        // [self connection:nil didFailWithError:nil];
+        // }
+        // }
+        // }
+        // }
 
     }
 
@@ -42,27 +99,15 @@ public class CachedAsyncImageView extends ImageView implements DownloaderTask.Re
     }
 
     /*
-     * - (void)loadImageFromURL:(NSURL *)url {
-     * @synchronized (self) { if (_connection) { [self releaseConnection]; }
-     * _urlString = [url.absoluteString retain];
-     * //NSLog(@"[%@ loadImageFromUrl]  [[%@]+]", [self class], [_urlString
-     * substringWithRange:NSMakeRange(_urlString.length-1-10, 3)]); UIImage
-     * *image = [[ImageCache sharedInstance] imageForURLString:_urlString];
-     * //NSLog(@"[%@ loadImageFromURL]: _urlString = %@", [self class],
-     * _urlString); if (image) {
-     * //NSLog(@"                          \t Cache Hit! [[%@]-]", [_urlString
-     * substringWithRange:NSMakeRange(_urlString.length-1-10, 3)]); self.image =
-     * image; [_urlString release]; _urlString = nil; } else { self.image = nil;
-     * NSURLRequest *request = [NSURLRequest requestWithURL:url]; _connection =
-     * [[NSURLConnection alloc] initWithRequest:request delegate:self]; if
-     * (_connection) { [_activityIndicator startAnimating]; } else { [self
-     * connection:nil didFailWithError:nil]; } } } } -
-     * (void)loadImageFromURLString:(NSString *)urlString { NSURL *url = [NSURL
-     * URLWithString:urlString]; [self loadImageFromURL:url]; } -
+     * - (void)loadImageFromURLString:(NSString *)urlString { NSURL *url =
+     * [NSURL URLWithString:urlString]; [self loadImageFromURL:url]; } -
      * (void)setActivityIndicatorStyle:(UIActivityIndicatorViewStyle)style {
      * _activityIndicator.activityIndicatorViewStyle = style; } +
      * (void)emptyCache { [[ImageCache sharedInstance] emptyCache];
      */
+    public void emptyCache() {
+        ImageCache.getInstance().emptyCache();
+    }
 
     @Override
     public void onHTTPResponseReceived(DownloaderTask task, byte[] response) {
@@ -76,13 +121,16 @@ public class CachedAsyncImageView extends ImageView implements DownloaderTask.Re
         // solo nel thread della UI, quindi non c'è bisogno di renderlo
         // ulteriormente thread safe. Il discorso poi cambia se uno inizia a
         // richiamare i metodi dell'interfaccia ResponseListener al di fuori dal
-        // DownloaderTask.... ma ques
+        // DownloaderTask.... ma questa è un'altra storia.
         if (new String(response).equals("Use a placeholder")) {
             // TODO: settare un placeholder
         } else {
-            image = new BitmapDrawable(new ByteArrayInputStream(response));
+            image = new BitmapDrawable(this.getContext().getApplicationContext().getResources(),
+                    new ByteArrayInputStream(response));
         }
         ImageCache.getInstance().putDrawable(urlString, image);
+
+        this.setImageDrawable(image);
         /*
          * [_activityIndicator stopAnimating]; self.alpha = 0; [UIView
          * beginAnimations:nil context:nil]; [UIView setAnimationDuration:1.0];
