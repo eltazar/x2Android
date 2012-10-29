@@ -5,64 +5,77 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import it.wm.CachedAsyncImageView;
 import it.wm.HTTPAccess;
+import it.wm.perdue.businessLogic.Commento;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TestActivity extends Activity {
-    private static final String DEBUG_TAG = "TestActivity";
+    private static final String DEBUG_TAG  = "TestActivity";
+    private HTTPAccess          httpAccess = null;
+    private String              getText    = null;
+    private String              postText   = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        HTTPAccess httpAccess = new HTTPAccess();
-        String urlString = "http://www.cartaperdue.it/partner/commenti.php?id=119&from=0&to=10";
-        Log.i(DEBUG_TAG, "Connecting to: " + urlString);
+        httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(new HTTPAccess.ResponseListener() {
             public void onHTTPResponseReceived(String tag, String response) {
                 if (tag.equals("testGet")) {
-                    ((TextView) TestActivity.this
-                            .findViewById(R.id.textView1)).setText(response + "["
-                            + response.length() + "]");
-                    parseJSON(response);
+                    getText = response;
+                    parseJSON(getText);
                 } else if (tag.equals("testPost")) {
-                    TextView t = (TextView) TestActivity.this.findViewById(R.id.textView1);
-                    t.setText(t.getText() + "\n\n" + response + "\n\n");
+                    postText = response;
                 }
+                setText();
             }
 
             public void onHTTPerror(String tag) {
-                ((TextView) TestActivity.this
-                        .findViewById(R.id.textView1))
-                        .setText("\n\nArrangiati, Errore di Rete.(" + tag + ")\n\n");
+                ((Button) findViewById(R.id.startBtn)).setText("[!]");
             }
         });
-        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET, null, "testGet");
-        urlString = "http://www.cartaperdue.it/partner/v2.0/News.php";
-        HashMap<String, String> postMap = new HashMap<String, String>();
-        postMap.put("from", "0");
-        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, "testPost");
-        urlString = "http://ubuntuforums.org/images/rebrand/ubuntulogo-o-small.png";
-        ((CachedAsyncImageView) findViewById(R.id.cachedAsyncImageView1))
-                .loadImageFromURL(urlString);
+
+        ((Button) findViewById(R.id.startBtn)).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String urlString = "http://www.cartaperdue.it/partner/commenti.php?id=119&from=0&to=10";
+                httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET, null, "testGet");
+
+                urlString = "http://www.cartaperdue.it/partner/v2.0/News.php";
+                HashMap<String, String> postMap = new HashMap<String, String>();
+                postMap.put("from", "0");
+                httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap,
+                        "testPost");
+
+                urlString = "http://ubuntuforums.org/images/rebrand/ubuntulogo-o-small.png";
+                ((CachedAsyncImageView) findViewById(R.id.headerImage))
+                        .loadImageFromURL(urlString);
+            }
+        });
 
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
                     synchronized (this) {
-                        this.wait(5000);
+                        this.wait(11000);
                     }
                 } catch (InterruptedException e) {
-                    Log.v("WAITER", "interrotto");
+                    Log.d("WAITER", "interrotto");
                 }
                 return null;
             }
@@ -71,86 +84,86 @@ public class TestActivity extends Activity {
             protected void onPostExecute(Void result) {
                 String urlString =
                         "http://ubuntuforums.org/images/rebrand/ubuntulogo-o-small.png";
-                ((CachedAsyncImageView) TestActivity.this.findViewById(R.id.cachedAsyncImageView1))
+                ((CachedAsyncImageView) TestActivity.this.findViewById(R.id.headerImage))
                         .loadImageFromURL(urlString);
             }
         }.execute(new Void[1]);
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("getText", getText);
+        outState.putString("postText", postText);
+        outState.putString("btnLabel", (String) ((Button) findViewById(R.id.startBtn)).getText());
+        outState.putInt("scroll1", ((ScrollView) findViewById(R.id.scrollView1)).getScrollY());
+        outState.putInt("scroll2", ((ScrollView) findViewById(R.id.scrollView2)).getScrollY());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        getText = savedInstanceState.getString("getText");
+        postText = savedInstanceState.getString("postText");
+        ((Button) findViewById(R.id.startBtn)).setText(savedInstanceState.getString(
+                "btnLabel"));
+        // savedInstanceState.getInt("scroll1",
+        // ((ScrollView)findViewById(R.id.scrollView1)).getScrollY());
+        // savedInstanceState.getInt("scroll2",
+        // ((ScrollView)findViewById(R.id.scrollView2)).getScrollY());
+        setText();
+    }
+
+    private void setText() {
+        StringBuilder builder = new StringBuilder();
+        if (getText != null) {
+            builder.append(getText);
+        }
+        if (getText != null && postText != null) {
+            builder.append("**********************************************************");
+        }
+        if (postText != null) {
+            builder.append(postText);
+        }
+        ((TextView) findViewById(R.id.textView1)).setText(builder.toString());
+    }
+
     private void parseJSON(String jsonStr) {
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(java.util.Date.class, new Commento.DateDeserializer());
+        Gson gson = gsonBuilder.create();
         JSONFormat dataModel = gson.fromJson(jsonStr, JSONFormat.class);
 
-        android.widget.TextView tv = ((android.widget.TextView) findViewById(R.id.textView1));
+        android.widget.TextView tv = ((android.widget.TextView) findViewById(R.id.textView2));
         StringBuilder b = new StringBuilder(tv.getText());
 
         for (int i = 0; i < dataModel.getEsercente().size(); i++) {
-            CommentDataModel data = dataModel.getEsercente().get(i);
+            Commento data = dataModel.getEsercente().get(i);
             b.append("\n****************\n");
-            b.append(data.comment_author);
+            b.append(data.getAutore());
             b.append("\n===\n");
-            b.append(data.comment_content);
+            b.append(data.getTesto());
             b.append("\n===\n");
-            b.append(data.comment_date);
+            b.append(data.getData());
             b.append("\n===\n");
-            b.append("" + data.comment_ID);
+            b.append("" + data.getId());
         }
         tv.setText(b.toString());
     }
 
     @SuppressWarnings("unused")
     private class JSONFormat {
-        private ArrayList<CommentDataModel> Esercente;
+        private ArrayList<Commento> Esercente;
 
-        public void setEsercente(ArrayList<CommentDataModel> list) {
+        public void setEsercente(ArrayList<Commento> list) {
             Esercente = list;
         }
 
-        public ArrayList<CommentDataModel> getEsercente() {
+        public ArrayList<Commento> getEsercente() {
             return Esercente;
         }
 
-    }
-
-    @SuppressWarnings("unused")
-    private class CommentDataModel {
-        private String comment_author;
-        private String comment_content;
-        private String comment_date;
-        private int comment_ID;
-
-        public void setComment_author(String s) {
-            comment_author = s;
-        }
-
-        public String getComment_author() {
-            return comment_author;
-        }
-
-        public void setComment_content(String s) {
-            comment_content = s;
-        }
-
-        public String getComment_content() {
-            return comment_content;
-        }
-
-        public void setComment_date(String s) {
-            comment_date = s;
-        }
-
-        public String getComment_date() {
-            return comment_date;
-        }
-
-        public void setComment_ID(int id) {
-            comment_ID = id;
-        }
-
-        public int getComment_ID() {
-            return comment_ID;
-        }
     }
 
 }

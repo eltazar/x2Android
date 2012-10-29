@@ -30,17 +30,17 @@ import java.util.List;
 class DownloaderTask extends AsyncTask<Params, Void, byte[]> {
 
     /** tag meant to be used in ${Link android.util.Log} */
-    private static final String DEBUG_TAG = "DownloaderTask";
+    private static final String DEBUG_TAG  = "DownloaderTask";
     /**
      * The <code>ResponseListener</code> object which will be notified about
      * connection error and will receive the requsted HTTP page
      */
-    private ResponseListener listener = null;
+    private ResponseListener    listener   = null;
 
     /** String containing the POST data, reconstructed from <code>postMap</code> */
-    private String postString = null;
+    private String              postString = null;
     /** Object used to open the socket and handle the HTTP socket. */
-    private HttpURLConnection conn = null;
+    private HttpURLConnection   conn       = null;
 
     /** Sets the listener */
     public void setListener(ResponseListener l) {
@@ -92,7 +92,7 @@ class DownloaderTask extends AsyncTask<Params, Void, byte[]> {
 
             return fetchResponse();
         } catch (IOException e) {
-            Log.v(DEBUG_TAG, "Unable to connect to " + url.toString() + ": " + e.getMessage());
+            Log.d(DEBUG_TAG, "Unable to connect to " + url.toString() + ": " + e.getMessage());
             e.printStackTrace();
             return null;
         } finally {
@@ -184,9 +184,9 @@ class DownloaderTask extends AsyncTask<Params, Void, byte[]> {
      */
     public static class Params {
         /** The {$link URL} of the requested HTTP page. */
-        public URL url;
+        public URL                     url;
         /** The HTTP connection method. */
-        public String method;
+        public String                  method;
         /**
          * A HashMap of POST parameters.
          * 

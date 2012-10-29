@@ -25,12 +25,12 @@ import java.util.HashMap;
  */
 public class CachedAsyncImageView extends RelativeLayout implements DownloaderTask.ResponseListener {
 
-    private static final String DEBUG_TAG = "CachedAsyncImageView";
-    private Listener listener = null;
-    private DownloaderTask task = null;
-    private String urlString = null;
-    private ImageView imageView = null;
-    private ProgressBar progressBar = null;
+    private static final String DEBUG_TAG   = "CachedAsyncImageView";
+    private Listener            listener    = null;
+    private DownloaderTask      task        = null;
+    private String              urlString   = null;
+    private ImageView           imageView   = null;
+    private ProgressBar         progressBar = null;
 
     public Listener getListener() {
         return this.listener;
@@ -87,10 +87,10 @@ public class CachedAsyncImageView extends RelativeLayout implements DownloaderTa
         }
 
         Drawable image = ImageCache.getInstance().getDrawable(url.toString());
-        Log.v(DEBUG_TAG, "Loading image from: " + url.toString());
+        Log.d(DEBUG_TAG, "Loading image from: " + url.toString());
 
         if (image != null) {
-            Log.v(DEBUG_TAG, "Cache hit!");
+            Log.d(DEBUG_TAG, "Cache hit!");
             imageView.setImageDrawable(image);
             progressBar.setVisibility(INVISIBLE);
             if (listener != null) {
@@ -228,8 +228,8 @@ public class CachedAsyncImageView extends RelativeLayout implements DownloaderTa
     }
 
     private static class ImageCache {
-        private static ImageCache __instance = null;
-        private HashMap<String, Drawable> cache = null;
+        private static ImageCache         __instance = null;
+        private HashMap<String, Drawable> cache      = null;
 
         private ImageCache() {
             cache = new HashMap<String, Drawable>();

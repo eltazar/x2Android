@@ -1,34 +1,74 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+        android:dividerPadding="50dp"
+        android:orientation="vertical"
+        android:showDividers="beginning|middle|end" >
 
-        <ScrollView
-            android:id="@+id/scrollView1"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1" >
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/startBtn"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:text="Start!" />
 
-                <it.wm.CachedAsyncImageView
-                    android:id="@+id/cachedAsyncImageView1"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_weight="1" />
+            <it.wm.CachedAsyncImageView
+                android:id="@+id/headerImage"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal" >
+            </it.wm.CachedAsyncImageView>
+
+        </TableRow>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent" >
+
+            <ScrollView
+                android:id="@+id/scrollView1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2" >
 
                 <TextView
                     android:id="@+id/textView1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="TextView" />
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextViewLandscape!" />
+            </ScrollView>
 
-            </LinearLayout>
-        </ScrollView>
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:layout_margin="2dp"
+                android:background="@android:color/darker_gray"
+                android:paddingBottom="2dp"
+                android:paddingTop="2dp"
+                android:text="TextView"
+                android:textColorLink="@android:color/darker_gray" />
+
+            <ScrollView
+                android:id="@+id/scrollView2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView" />
+            </ScrollView>
+
+        </LinearLayout>
 
     </LinearLayout>
