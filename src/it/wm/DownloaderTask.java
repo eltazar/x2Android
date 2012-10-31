@@ -9,6 +9,7 @@ import android.util.Log;
 
 import it.wm.DownloaderTask.Params;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -18,8 +19,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * An AsyncTask which opens a network connection using the HTTP protocol and
@@ -86,9 +85,9 @@ class DownloaderTask extends AsyncTask<Params, Void, byte[]> {
             }
 
             conn.connect();
-            int responseCode = conn.getResponseCode();
-            Log.d(DEBUG_TAG, "Content Type: " + conn.getContentType());
-            Log.d(DEBUG_TAG, "The response is: " + responseCode);
+            // int responseCode = conn.getResponseCode();
+            // Log.d(DEBUG_TAG, "Content Type: " + conn.getContentType());
+            // Log.d(DEBUG_TAG, "The response is: " + responseCode);
 
             return fetchResponse();
         } catch (IOException e) {
@@ -144,32 +143,33 @@ class DownloaderTask extends AsyncTask<Params, Void, byte[]> {
      */
     private byte[] fetchResponse() throws IOException {
         InputStream inputStream = conn.getInputStream();
-        Log.d(DEBUG_TAG, "Headers in the HTTP response: \n" + conn.getHeaderFields().toString());
+        // Log.d(DEBUG_TAG, "Headers in the HTTP response: \n" +
+        // conn.getHeaderFields().toString());
 
         // Premature optimization is the root of all evil. Donald Knuth
         // maledicimi.
-        List<Byte> bytesList = new LinkedList<Byte>();
+        /*
+         * List<Byte> bytesList = new LinkedList<Byte>(); int n = 0; // int
+         * length = 0; byte[] chunk = new byte[1500]; // 1500 bytes è MTU tipica
+         * su internet. while ((n = inputStream.read(chunk)) > 0) { for (int i =
+         * 0; i < n; i++) { bytesList.add(chunk[i]); } // length += n; //
+         * Log.d(DEBUG_TAG, "Read " + n + " bytes.\n"); } // Log.d(DEBUG_TAG,
+         * "Total: " + length + " bytes.\n"); byte[] responseBody = new
+         * byte[bytesList.size()]; int i = 0; for (Byte b : bytesList) {
+         * responseBody[i++] = b; } return responseBody;
+         */
+        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
 
-        int n = 0;
-        int length = 0;
-        byte[] chunk = new byte[1500]; // 1500 bytes è MTU tipica su internet.
-        while ((n = inputStream.read(chunk)) > 0) {
-            for (int i = 0; i < n; i++) {
-                bytesList.add(chunk[i]);
-            }
-            length += n;
-            Log.d(DEBUG_TAG, "Read " + n + " bytes.\n");
-        }
-        Log.d(DEBUG_TAG, "Total: " + length + " bytes.\n");
+        int nRead;
+        byte[] data = new byte[16384];
 
-        byte[] responseBody = new byte[bytesList.size()];
-
-        int i = 0;
-        for (Byte b : bytesList) {
-            responseBody[i++] = b;
+        while ((nRead = inputStream.read(data, 0, data.length)) > 0) {
+            outBuffer.write(data, 0, nRead);
         }
 
-        return responseBody;
+        outBuffer.flush();
+
+        return outBuffer.toByteArray();
     }
 
     /**
