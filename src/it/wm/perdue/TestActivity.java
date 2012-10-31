@@ -87,8 +87,14 @@ public class TestActivity extends Activity {
                 ((CachedAsyncImageView) TestActivity.this.findViewById(R.id.headerImage))
                         .loadImageFromURL(urlString);
             }
-        }.execute(new Void[1]);
+        }/* .execute(new Void[1]) */;
 
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        Log.d(DEBUG_TAG, "Help! I'm getting deallocated! :(");
+        super.finalize();
     }
 
     @Override
