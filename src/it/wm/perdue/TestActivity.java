@@ -136,26 +136,37 @@ public class TestActivity extends Activity {
     }
 
     private void parseJSON(String jsonStr) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(java.util.Date.class, new Commento.DateDeserializer());
-        Gson gson = gsonBuilder.create();
-        JSONFormat dataModel = gson.fromJson(jsonStr, JSONFormat.class);
+        new AsyncTask<String, Void, JSONFormat>() {
 
-        android.widget.TextView tv = ((android.widget.TextView) findViewById(R.id.textView2));
-        StringBuilder b = new StringBuilder(tv.getText());
+            @Override
+            protected JSONFormat doInBackground(String... params) {
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                gsonBuilder.registerTypeAdapter(java.util.Date.class,
+                        new Commento.DateDeserializer());
+                Gson gson = gsonBuilder.create();
+                JSONFormat dataModel = gson.fromJson(params[0], JSONFormat.class);
+                return dataModel;
+            }
 
-        for (int i = 0; i < dataModel.getEsercente().size(); i++) {
-            Commento data = dataModel.getEsercente().get(i);
-            b.append("\n****************\n");
-            b.append(data.getAutore());
-            b.append("\n===\n");
-            b.append(data.getTesto());
-            b.append("\n===\n");
-            b.append(data.getData());
-            b.append("\n===\n");
-            b.append("" + data.getId());
-        }
-        tv.setText(b.toString());
+            protected void onPostExecute(JSONFormat result) {
+                android.widget.TextView tv = ((android.widget.TextView) findViewById(R.id.textView2));
+                StringBuilder b = new StringBuilder(tv.getText());
+
+                for (int i = 0; i < result.getEsercente().size(); i++) {
+                    Commento data = result.getEsercente().get(i);
+                    b.append("\n****************\n");
+                    b.append(data.getAutore());
+                    b.append("\n===\n");
+                    b.append(data.getTesto());
+                    b.append("\n===\n");
+                    b.append(data.getData());
+                    b.append("\n===\n");
+                    b.append("" + data.getId());
+                }
+                tv.setText(b.toString());
+            }
+
+        }.execute(jsonStr);
     }
 
     @SuppressWarnings("unused")
