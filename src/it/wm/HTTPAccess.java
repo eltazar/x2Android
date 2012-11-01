@@ -80,6 +80,7 @@ public class HTTPAccess implements CacheListener {
         if (data != null && listener != null) {
             listener.onHTTPResponseReceived(tag, new String(data));
         } else {
+            tag = (tag == null ? urlString : tag);
             tagMap.put(params, tag);
         }
     }
