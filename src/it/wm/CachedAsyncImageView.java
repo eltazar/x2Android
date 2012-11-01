@@ -13,20 +13,18 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import it.wm.AbstractCache.CacheListener;
+
 import java.io.ByteArrayInputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
 
 /**
  * TODO: document your custom view class.
  */
-public class CachedAsyncImageView extends RelativeLayout implements DownloaderTask.ResponseListener {
+public class CachedAsyncImageView extends RelativeLayout implements CacheListener {
 
     private static final String              DEBUG_TAG   = "CachedAsyncImageView";
     private Listener                         listener    = null;
-    private DownloaderTask                   task        = null;
-    private String                           urlString   = null;
+    private DownloadRequest                  request     = null;
     private ImageView                        imageView   = null;
     private ProgressBar                      progressBar = null;
     private android.animation.ObjectAnimator fadeIn      = null;
@@ -102,6 +100,7 @@ public class CachedAsyncImageView extends RelativeLayout implements DownloaderTa
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         Log.d(DEBUG_TAG, "Detached!");
+        AbstractCache.getInstance().removeListener(request, this);
         if (fadeIn != null) {
             fadeIn.end();
             fadeIn.removeAllListeners();
@@ -112,19 +111,25 @@ public class CachedAsyncImageView extends RelativeLayout implements DownloaderTa
         }
     }
 
-    public void loadImageFromURL(URL url) {
-        if (task != null) {
-            task.setListener(null);
-            task = null;
-            urlString = null;
+    public void loadImageFromURL(String url) {
+        if (request != null) {
+            request = null;
         }
 
-        Drawable image = ImageCache.getInstance().getDrawable(url.toString());
+        request = new DownloadRequest(url, DownloadRequest.GET, null);
+
+        AbstractCache cache = AbstractCache.getInstance();
+        byte[] data = cache.getCacheLine(request, this);
         Log.d(DEBUG_TAG, "Loading image from: " + url.toString());
 
-        if (image != null) {
+        if (data != null) {
             Log.d(DEBUG_TAG, "Cache hit!");
-            imageView.setImageDrawable(image);
+            // TODO: importantissimo cazzo! così però salviamo ogni immagine
+            // almeno in doppia copia! come byte[] nella cache e qui come
+            // Drawable!
+            imageView.setImageDrawable(new BitmapDrawable(this.getContext().getApplicationContext()
+                    .getResources(),
+                    new ByteArrayInputStream(data)));
             progressBar.setVisibility(INVISIBLE);
             /*
              * La sezione seguente risolve un "bug" (se così si può dire..) con
@@ -147,34 +152,14 @@ public class CachedAsyncImageView extends RelativeLayout implements DownloaderTa
                 listener.onImageLoadingCompleted(this);
             }
         } else {
-            urlString = url.toString();
-            task = new DownloaderTask();
-            task.setListener(this);
-            task.execute(new DownloaderTask.Params(url, "GET", null));
             progressBar.setVisibility(VISIBLE);
         }
     }
 
-    public void loadImageFromURL(String urlString) {
-        URL url = null;
-        try {
-            url = new URL(urlString);
-        } catch (MalformedURLException e) {
-            Log.e(DEBUG_TAG, "Invalid URL:" + urlString);
-            e.printStackTrace();
-            return;
-        }
-        loadImageFromURL(url);
-    }
-
-    public void emptyCache() {
-        ImageCache.getInstance().emptyCache();
-    }
-
     @TargetApi(11)
     @Override
-    public void onHTTPResponseReceived(DownloaderTask task, byte[] response) {
-        if (task != this.task) {
+    public void onCacheLineLoaded(DownloadRequest request, byte[] data) {
+        if (!request.equals(this.request)) {
             return;
         }
         Drawable image = null;
@@ -184,15 +169,14 @@ public class CachedAsyncImageView extends RelativeLayout implements DownloaderTa
         // solo nel thread della UI, quindi non c'è bisogno di renderlo
         // ulteriormente thread safe. Il discorso poi cambia se uno inizia a
         // richiamare i metodi dell'interfaccia ResponseListener al di fuori dal
-        // DownloaderTask.... ma questa è un'altra storia.
-        if (new String(response).equals("Use a placeholder")) {
+        // DownloaderTask.... ma questa è un'altra storia
+
+        if (new String(data).equals("Use a placeholder")) {
             // TODO: settare un placeholder
         } else {
             image = new BitmapDrawable(this.getContext().getApplicationContext().getResources(),
-                    new ByteArrayInputStream(response));
-            Log.d(DEBUG_TAG, "image Alpha is: " + image.getOpacity());
+                    new ByteArrayInputStream(data));
         }
-        ImageCache.getInstance().putDrawable(urlString, image);
         imageView.setImageDrawable(image);
 
         long duration = 10000;
@@ -204,6 +188,8 @@ public class CachedAsyncImageView extends RelativeLayout implements DownloaderTa
         // cose a manina.
         // EDIT: No, la classe di compatibilità essenzialmente non funziona -.-
         // quindi o così o pomì
+
+        // TODO: spezzare.
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
             Log.d(DEBUG_TAG, "Animazioni HoneyComb");
             fadeIn = android.animation.ObjectAnimator.ofFloat(imageView, "alpha", 0.0f, 1.0f);
@@ -262,13 +248,11 @@ public class CachedAsyncImageView extends RelativeLayout implements DownloaderTa
     }
 
     @Override
-    public void onHTTPerror(DownloaderTask task) {
-        if (task != this.task) {
+    public void onCacheLineError(DownloadRequest request) {
+        if (!request.equals(this.request)) {
             return;
         }
-        this.task.setListener(null);
-        this.task = null;
-        this.urlString = null;
+        this.request = null;
         progressBar.setVisibility(INVISIBLE);
         // TODO: Settare un immagine placeholder?
         if (listener != null) {
@@ -280,35 +264,6 @@ public class CachedAsyncImageView extends RelativeLayout implements DownloaderTa
         public void onImageLoadingCompleted(CachedAsyncImageView imageView);
 
         public void onImageLoadingFailed(CachedAsyncImageView imageView);
-    }
-
-    private static class ImageCache {
-        private static ImageCache         __instance = null;
-        private HashMap<String, Drawable> cache      = null;
-
-        private ImageCache() {
-            cache = new HashMap<String, Drawable>();
-        }
-
-        public static ImageCache getInstance() {
-            if (__instance == null) {
-                __instance = new ImageCache();
-            }
-            return __instance;
-        }
-
-        public Drawable getDrawable(String urlString) {
-            return cache.get(urlString);
-        }
-
-        public void putDrawable(String urlString, Drawable drawable) {
-            cache.put(urlString, drawable);
-        }
-
-        public void emptyCache() {
-            cache.clear();
-        }
-
     }
 
 }
