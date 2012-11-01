@@ -15,7 +15,7 @@ import java.util.Iterator;
  * @author Gabriele "Whisky" Visconti
  */
 public class DownloadRequest {
-    private static final String     DEBUG_TAG  = "DownloadParams";
+    private static final String     DEBUG_TAG  = "DownloadRequest";
     public static final int         GET        = 1;
     public static final int         POST       = 2;
     public String                   urlString;
