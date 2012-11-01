@@ -63,12 +63,18 @@ import java.util.List;
 
             case CACHE_PENDING:
                 CacheLine line = cache.get(params);
-                line.listeners.add(l);
+                if (!line.listeners.contains(l)) {
+                    Log.d(DEBUG_TAG, "**getCacheLine: aggiungo listener");
+                    line.listeners.add(l);
+                }
                 return null;
 
             case CACHE_MISS:
                 CacheLine newLine = new CacheLine();
-                newLine.listeners.add(l);
+                if (!newLine.listeners.contains(l)) {
+                    Log.d(DEBUG_TAG, "**getCacheLine: aggiungo listener");
+                    newLine.listeners.add(l);
+                }
                 cache.put(params, newLine);
                 DownloaderTask task = new DownloaderTask();
                 task.setListener(this);
