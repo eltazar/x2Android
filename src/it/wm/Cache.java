@@ -13,22 +13,34 @@ import java.util.List;
 /**
  * @author Gabriele "Whisky" Visconti
  */
-abstract class AbstractCache<T> implements DownloaderTask.DownloadListener {
-    static final String                            DEBUG_TAG     = "AbstractCache";
-    static final int                               CACHE_HIT     = 1;
-    static final int                               CACHE_PENDING = 2;
-    static final int                               CACHE_MISS    = 3;
-    private HashMap<DownloadRequest, CacheLine<T>> cache         = null;
+/* abstract */class Cache implements DownloaderTask.DownloadListener {
+    static final String                         DEBUG_TAG     = "AbstractCache";
+    static final int                            CACHE_HIT     = 1;
+    static final int                            CACHE_PENDING = 2;
+    static final int                            CACHE_MISS    = 3;
+    private static Cache                __instance    = null;
+    private HashMap<DownloadRequest, CacheLine> cache         = null;
 
-    protected AbstractCache() {
+    // public abstract void onCacheLineLoaded();
+
+    // public abstract void onCacheLineError();
+
+    private Cache() {
         if (cache == null) {
-            cache = new HashMap<DownloadRequest, CacheLine<T>>();
+            cache = new HashMap<DownloadRequest, CacheLine>();
         }
     }
 
-    protected int getCacheLineStatus(DownloadRequest key) {
+    public static Cache getInstance() {
+        if (__instance == null) {
+            __instance = new Cache();
+        }
+        return __instance;
+    }
+
+    public int getCacheLineStatus(DownloadRequest key) {
         Log.d(DEBUG_TAG, "**getCacheLineStatus");
-        CacheLine<T> line = cache.get(key);
+        CacheLine line = cache.get(key);
         if (line == null) {
             Log.d(DEBUG_TAG, "**getCacheLineStatus: MISS");
             return CACHE_MISS;
@@ -43,14 +55,14 @@ abstract class AbstractCache<T> implements DownloaderTask.DownloadListener {
 
     }
 
-    public T getCacheLine(DownloadRequest params, CacheListener<T> l) {
+    public byte[] getCacheLine(DownloadRequest params, CacheListener l) {
         Log.d(DEBUG_TAG, "**getCacheLine");
         switch (getCacheLineStatus(params)) {
             case CACHE_HIT:
                 return cache.get(params).data;
 
             case CACHE_PENDING:
-                CacheLine<T> line = cache.get(params);
+                CacheLine line = cache.get(params);
                 if (!line.listeners.contains(l)) {
                     Log.d(DEBUG_TAG, "**getCacheLine: aggiungo listener");
                     line.listeners.add(l);
@@ -58,7 +70,7 @@ abstract class AbstractCache<T> implements DownloaderTask.DownloadListener {
                 return null;
 
             case CACHE_MISS:
-                CacheLine<T> newLine = new CacheLine<T>();
+                CacheLine newLine = new CacheLine();
                 if (!newLine.listeners.contains(l)) {
                     Log.d(DEBUG_TAG, "**getCacheLine: aggiungo listener");
                     newLine.listeners.add(l);
@@ -71,13 +83,12 @@ abstract class AbstractCache<T> implements DownloaderTask.DownloadListener {
 
             default:
                 return null;
+
         }
     }
 
-    protected abstract T convertData(byte[] data);
-
-    public void removeListener(DownloadRequest request, CacheListener<T> l) {
-        CacheLine<T> line = cache.get(request);
+    public void removeListener(DownloadRequest request, CacheListener l) {
+        CacheLine line = cache.get(request);
         if (line != null && line.listeners != null) {
             line.listeners.remove(l);
         }
@@ -87,9 +98,9 @@ abstract class AbstractCache<T> implements DownloaderTask.DownloadListener {
     @Override
     public void onDownloadCompleted(DownloadRequest request, byte[] responseBody) {
         Log.d(DEBUG_TAG, "**onHTTPResponseReceived");
-        CacheLine<T> line = cache.get(request);
-        line.data = convertData(responseBody);
-        for (CacheListener<T> l : line.listeners) {
+        CacheLine line = cache.get(request);
+        line.data = responseBody;
+        for (CacheListener l : line.listeners) {
             l.onCacheLineLoaded(request, line.data);
         }
         line.listeners.clear();
@@ -99,8 +110,8 @@ abstract class AbstractCache<T> implements DownloaderTask.DownloadListener {
     @Override
     public void onDownloadError(DownloadRequest request) {
         Log.d(DEBUG_TAG, "**onHTTPerror");
-        CacheLine<T> line = cache.get(request);
-        for (CacheListener<T> l : line.listeners) {
+        CacheLine line = cache.get(request);
+        for (CacheListener l : line.listeners) {
             l.onCacheLineError(request);
         }
         line.listeners.clear();
@@ -110,18 +121,18 @@ abstract class AbstractCache<T> implements DownloaderTask.DownloadListener {
 
     /* *** END: DownloaderTask.ResponseListener **************** */
 
-    private class CacheLine<K> {
-        public T                      data = null;
-        public List<CacheListener<K>> listeners;
+    private class CacheLine {
+        public byte[]              data = null;
+        public List<CacheListener> listeners;
 
         public CacheLine() {
-            listeners = new ArrayList<CacheListener<K>>();
+            listeners = new ArrayList<CacheListener>();
         }
 
     }
 
-    public interface CacheListener<J> {
-        public void onCacheLineLoaded(DownloadRequest request, J data);
+    public interface CacheListener {
+        public void onCacheLineLoaded(DownloadRequest request, byte[] data);
 
         public void onCacheLineError(DownloadRequest request);
     }

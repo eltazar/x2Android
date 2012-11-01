@@ -4,7 +4,7 @@
 
 package it.wm;
 
-import it.wm.AbstractCache.CacheListener;
+import it.wm.StringCache.StringCacheListener;
 
 import java.util.HashMap;
 
@@ -14,7 +14,7 @@ import java.util.HashMap;
  * 
  * @author Gabriele "Whisky" Visconti
  */
-public class HTTPAccess implements CacheListener {
+public class HTTPAccess implements StringCacheListener {
     /**
      * Represents the HTTP connection method.
      * 
@@ -46,7 +46,7 @@ public class HTTPAccess implements CacheListener {
         this.listener = listener;
         if (this.listener == null) {
             for (DownloadRequest r : tagMap.keySet()) {
-                AbstractCache.getInstance().removeListener(r, this);
+                StringCache.getInstance().removeListener(r, this);
             }
         }
     }
@@ -75,10 +75,10 @@ public class HTTPAccess implements CacheListener {
         }
 
         DownloadRequest params = new DownloadRequest(urlString, httpMethod, postMap);
-        AbstractCache cache = AbstractCache.getInstance();
-        byte[] data = cache.getCacheLine(params, this);
+        StringCache cache = StringCache.getInstance();
+        String data = cache.getCacheLine(params, this);
         if (data != null && listener != null) {
-            listener.onHTTPResponseReceived(tag, new String(data));
+            listener.onHTTPResponseReceived(tag, data);
         } else {
             tag = (tag == null ? urlString : tag);
             tagMap.put(params, tag);
@@ -86,7 +86,7 @@ public class HTTPAccess implements CacheListener {
     }
 
     @Override
-    public void onCacheLineLoaded(DownloadRequest request, byte[] data) {
+    public void onCacheLineLoaded(DownloadRequest request, String data) {
         String tag;
         synchronized (this) {
             // listener = connectionMap.remove(task);
@@ -95,7 +95,7 @@ public class HTTPAccess implements CacheListener {
         if (listener == null) {
             return;
         }
-        listener.onHTTPResponseReceived(tag, new String(data));
+        listener.onHTTPResponseReceived(tag, data);
     }
 
     @Override
