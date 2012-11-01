@@ -31,7 +31,7 @@ class DownloaderTask extends AsyncTask<DownloadRequest, Void, byte[]> {
      */
     private DownloadListener    listener  = null;
 
-    private DownloadRequest      params    = null;
+    private DownloadRequest     params    = null;
 
     /** Object used to open the socket and handle the HTTP socket. */
     private HttpURLConnection   conn      = null;
@@ -137,13 +137,10 @@ class DownloaderTask extends AsyncTask<DownloadRequest, Void, byte[]> {
         byte[] data = new byte[512];
 
         while ((nRead = inputStream.read(data, 0, data.length)) > 0) {
-            try {
-                synchronized (this) {
-                    this.wait(200);
-                }
-            } catch (InterruptedException e) {
-                Log.d("WAITER", "interrotto");
-            }
+            /*
+             * try { synchronized (this) { this.wait(200); } } catch
+             * (InterruptedException e) { Log.d("WAITER", "interrotto"); }
+             */
             outBuffer.write(data, 0, nRead);
         }
 

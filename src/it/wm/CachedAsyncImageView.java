@@ -3,7 +3,6 @@ package it.wm;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -13,14 +12,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import it.wm.AbstractCache.CacheListener;
-
-import java.io.ByteArrayInputStream;
+import it.wm.DrawableCache.DrawableCacheListener;
 
 /**
  * TODO: document your custom view class.
  */
-public class CachedAsyncImageView extends RelativeLayout implements CacheListener {
+public class CachedAsyncImageView extends RelativeLayout implements DrawableCacheListener {
 
     private static final String              DEBUG_TAG   = "CachedAsyncImageView";
     private Listener                         listener    = null;
@@ -100,7 +97,7 @@ public class CachedAsyncImageView extends RelativeLayout implements CacheListene
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         Log.d(DEBUG_TAG, "Detached!");
-        AbstractCache.getInstance().removeListener(request, this);
+        DrawableCache.getInstance(this.getContext()).removeListener(request, this);
         if (fadeIn != null) {
             fadeIn.end();
             fadeIn.removeAllListeners();
@@ -118,8 +115,8 @@ public class CachedAsyncImageView extends RelativeLayout implements CacheListene
 
         request = new DownloadRequest(url, DownloadRequest.GET, null);
 
-        AbstractCache cache = AbstractCache.getInstance();
-        byte[] data = cache.getCacheLine(request, this);
+        DrawableCache cache = DrawableCache.getInstance(this.getContext());
+        Drawable data = cache.getCacheLine(request, this);
         Log.d(DEBUG_TAG, "Loading image from: " + url.toString());
 
         if (data != null) {
@@ -127,9 +124,7 @@ public class CachedAsyncImageView extends RelativeLayout implements CacheListene
             // TODO: importantissimo cazzo! così però salviamo ogni immagine
             // almeno in doppia copia! come byte[] nella cache e qui come
             // Drawable!
-            imageView.setImageDrawable(new BitmapDrawable(this.getContext().getApplicationContext()
-                    .getResources(),
-                    new ByteArrayInputStream(data)));
+            imageView.setImageDrawable(data);
             progressBar.setVisibility(INVISIBLE);
             /*
              * La sezione seguente risolve un "bug" (se così si può dire..) con
@@ -158,11 +153,10 @@ public class CachedAsyncImageView extends RelativeLayout implements CacheListene
 
     @TargetApi(11)
     @Override
-    public void onCacheLineLoaded(DownloadRequest request, byte[] data) {
+    public void onCacheLineLoaded(DownloadRequest request, Drawable data) {
         if (!request.equals(this.request)) {
             return;
         }
-        Drawable image = null;
         // Non serve un synchronized: anche se questo metodo potrebbe venire
         // richiamato da due DownloaderTask diversi (a causa di una doppia
         // chiamata a loadImageFromURL) questo metodo viene eseguito sempre e
@@ -171,13 +165,12 @@ public class CachedAsyncImageView extends RelativeLayout implements CacheListene
         // richiamare i metodi dell'interfaccia ResponseListener al di fuori dal
         // DownloaderTask.... ma questa è un'altra storia
 
-        if (new String(data).equals("Use a placeholder")) {
-            // TODO: settare un placeholder
-        } else {
-            image = new BitmapDrawable(this.getContext().getApplicationContext().getResources(),
-                    new ByteArrayInputStream(data));
-        }
-        imageView.setImageDrawable(image);
+        /*
+         * if (new String(data).equals("Use a placeholder")) { // TODO: settare
+         * un placeholder } else {
+         */
+
+        imageView.setImageDrawable(data);
 
         long duration = 10000;
         // Ok, questo si sarebbe potuto scrivere usando solo la classe di

@@ -61,6 +61,8 @@ public class TestActivity extends Activity {
                 httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap,
                         "testPost");
 
+                // urlString =
+                // "http://multimedia.coldiretti.it/Manifestazione_Latte_Milano_marzo_07/Immagine%20046.jpg";
                 urlString = "http://ubuntuforums.org/images/rebrand/ubuntulogo-o-small.png";
                 ((CachedAsyncImageView) findViewById(R.id.headerImage))
                         .loadImageFromURL(urlString);
@@ -134,7 +136,8 @@ public class TestActivity extends Activity {
         if (postText != null) {
             builder.append(postText);
         }
-        ((TextView) findViewById(R.id.textView1)).setText(builder.toString());
+        ((TextView) findViewById(R.id.textView1)).setText(builder.toString(),
+                TextView.BufferType.NORMAL);
     }
 
     private void parseJSON(String jsonStr) {
@@ -165,7 +168,7 @@ public class TestActivity extends Activity {
                     b.append("\n===\n");
                     b.append("" + data.getId());
                 }
-                tv.setText(b.toString());
+                tv.setText(b.toString(), TextView.BufferType.NORMAL);
             }
 
         }.execute(jsonStr);
