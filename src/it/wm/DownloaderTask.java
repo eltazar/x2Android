@@ -7,18 +7,13 @@ package it.wm;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import it.wm.DownloaderTask.Params;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * An AsyncTask which opens a network connection using the HTTP protocol and
@@ -26,40 +21,40 @@ import java.util.Iterator;
  * 
  * @author Gabriele "Whisky" Visconti
  */
-class DownloaderTask extends AsyncTask<Params, Void, byte[]> {
+class DownloaderTask extends AsyncTask<DownloadRequest, Void, byte[]> {
 
     /** tag meant to be used in ${Link android.util.Log} */
-    private static final String DEBUG_TAG  = "DownloaderTask";
+    private static final String DEBUG_TAG = "DownloaderTask";
     /**
      * The <code>ResponseListener</code> object which will be notified about
      * connection error and will receive the requsted HTTP page
      */
-    private ResponseListener    listener   = null;
+    private DownloadListener    listener  = null;
 
-    /** String containing the POST data, reconstructed from <code>postMap</code> */
-    private String              postString = null;
+    private DownloadRequest      params    = null;
+
     /** Object used to open the socket and handle the HTTP socket. */
-    private HttpURLConnection   conn       = null;
+    private HttpURLConnection   conn      = null;
 
     /** Sets the listener */
-    public void setListener(ResponseListener l) {
+    public void setListener(DownloadListener l) {
         this.listener = l;
     }
 
     @Override
-    protected byte[] doInBackground(Params... params) {
+    protected byte[] doInBackground(DownloadRequest... paramsArray) {
         // Se method è null viene assunto GET.
         // Se postMap è null viene assunto un campo dati POST vuoto.
         // Se url è null, l'AsyncTask termina richiamando la callback di
         // errore.
-        Log.d(DEBUG_TAG, "Starting background work");
-
-        URL url = params[0].url;
-        String method = params[0].method;
-        buildPostString(params[0].postMap);
-
-        if (url == null) {
-            Log.e(DEBUG_TAG, "Unable to connect to a null URL");
+        Log.d(DEBUG_TAG, "***doInBackground");
+        params = paramsArray[0];
+        URL url;
+        try {
+            url = new URL(params.urlString);
+        } catch (MalformedURLException e) {
+            Log.e(DEBUG_TAG, "Unable to malformed URL:" + e.getMessage());
+            e.printStackTrace();
             return null;
         }
 
@@ -69,8 +64,9 @@ class DownloaderTask extends AsyncTask<Params, Void, byte[]> {
             conn.setConnectTimeout(15000 /* milliseconds */);
             conn.setDoInput(true);
 
-            if (method.toUpperCase().equals("POST")) {
+            if (params.httpMethod == DownloadRequest.POST) {
                 // Setting POST data:
+                String postString = params.getPostString();
                 conn.setDoOutput(true);
                 conn.setRequestMethod("POST");
                 conn.setFixedLengthStreamingMode(postString.getBytes().length);
@@ -78,7 +74,7 @@ class DownloaderTask extends AsyncTask<Params, Void, byte[]> {
                 PrintWriter out = new PrintWriter(conn.getOutputStream());
                 out.print(postString);
                 out.close();
-            } else if (method.toUpperCase().equals("GET")) {
+            } else if (params.httpMethod == DownloadRequest.GET) {
                 conn.setRequestMethod("GET");
             } else {
                 throw new RuntimeException("Invalid Connection Method");
@@ -100,41 +96,17 @@ class DownloaderTask extends AsyncTask<Params, Void, byte[]> {
     }
 
     public void onPostExecute(byte[] result) {
+        Log.d(DEBUG_TAG, "***onPostExecute");
         if (listener == null) {
             return;
         }
         if (result != null) {
-            listener.onHTTPResponseReceived(this, result);
+            Log.d(DEBUG_TAG, "***onPostExecute: success");
+            listener.onDownloadCompleted(params, result);
         } else {
-            listener.onHTTPerror(this);
+            Log.d(DEBUG_TAG, "***onPostExecute: fail");
+            listener.onDownloadError(params);
         }
-    }
-
-    /** Builds the postData */
-    private void buildPostString(HashMap<String, String> postMap) {
-        if (postMap == null) {
-            postString = "";
-            return;
-        }
-        StringBuilder postStringBuilder = new StringBuilder();
-        for (Iterator<String> i = postMap.keySet().iterator(); i.hasNext();) {
-            String key = i.next();
-            try {
-                postStringBuilder.append(URLEncoder.encode(key, "UTF-8"));
-                postStringBuilder.append("=");
-                postStringBuilder.append(URLEncoder.encode(postMap.get(key), "UTF-8"));
-                postStringBuilder.append("&");
-            } catch (UnsupportedEncodingException e) {
-                // Ma dai.... con utf-8? Mi ci gioco le palle che in
-                // questo blocco non ci entreramo mai!!
-                postString = "";
-                return;
-            }
-        }
-        if (postStringBuilder.length() > 0) {
-            postStringBuilder.deleteCharAt(postStringBuilder.length() - 1);
-        }
-        postString = postStringBuilder.toString();
     }
 
     /**
@@ -142,6 +114,7 @@ class DownloaderTask extends AsyncTask<Params, Void, byte[]> {
      * <code>HttpURLConnection</code> object
      */
     private byte[] fetchResponse() throws IOException {
+        Log.d(DEBUG_TAG, "***fetchResponse");
         InputStream inputStream = conn.getInputStream();
         // Log.d(DEBUG_TAG, "Headers in the HTTP response: \n" +
         // conn.getHeaderFields().toString());
@@ -161,45 +134,22 @@ class DownloaderTask extends AsyncTask<Params, Void, byte[]> {
         ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
 
         int nRead;
-        byte[] data = new byte[16384];
+        byte[] data = new byte[512];
 
         while ((nRead = inputStream.read(data, 0, data.length)) > 0) {
+            try {
+                synchronized (this) {
+                    this.wait(200);
+                }
+            } catch (InterruptedException e) {
+                Log.d("WAITER", "interrotto");
+            }
             outBuffer.write(data, 0, nRead);
         }
 
         outBuffer.flush();
-
+        Log.d(DEBUG_TAG, "***fetchResponse: [" + outBuffer.toString() + "]");
         return outBuffer.toByteArray();
-    }
-
-    /**
-     * Class meant to be used only to pass data from the HTTPAccess Singleton to
-     * the ${link DownloaderTask} it creates whenerver a new connection is
-     * opened.
-     * <p>
-     * Data is not passed directly to the <code>Params.. params</code> argument
-     * of DownloaderTask to enforce type-checking and safety.
-     * 
-     * @author Gabriele "Whisky" Visconti
-     */
-    public static class Params {
-        /** The {$link URL} of the requested HTTP page. */
-        public URL                     url;
-        /** The HTTP connection method. */
-        public String                  method;
-        /**
-         * A HashMap of POST parameters.
-         * 
-         * @see startHTTPConnection
-         */
-        public HashMap<String, String> postMap;
-
-        /** Creates an object with the given data. */
-        public Params(URL url, String method, HashMap<String, String> postMap) {
-            this.url = url;
-            this.method = method;
-            this.postMap = postMap;
-        }
     }
 
     /**
@@ -208,18 +158,18 @@ class DownloaderTask extends AsyncTask<Params, Void, byte[]> {
      * 
      * @author Gabriele "Whisky" Visconti
      */
-    public interface ResponseListener {
+    public interface DownloadListener {
         /**
          * This method will be called if the HTTP page
          * 
-         * @param response the contents of the requested HTTP page
+         * @param responseBody the contents of the requested HTTP page
          */
-        public void onHTTPResponseReceived(DownloaderTask task, byte[] response);
+        public void onDownloadCompleted(DownloadRequest request, byte[] responseBody);
 
         /**
          * This method will be called if an error happened while trying to
          * download the requested HTTP page
          */
-        public void onHTTPerror(DownloaderTask task);
+        public void onDownloadError(DownloadRequest request);
     }
 }

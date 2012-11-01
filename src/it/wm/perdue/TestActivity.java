@@ -105,6 +105,8 @@ public class TestActivity extends Activity {
         outState.putString("btnLabel", (String) ((Button) findViewById(R.id.startBtn)).getText());
         outState.putInt("scroll1", ((ScrollView) findViewById(R.id.scrollView1)).getScrollY());
         outState.putInt("scroll2", ((ScrollView) findViewById(R.id.scrollView2)).getScrollY());
+        // TODO: cercare di capire se questo va qua
+        httpAccess.setResponseListener(null);
     }
 
     @Override

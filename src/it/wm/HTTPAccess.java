@@ -4,10 +4,8 @@
 
 package it.wm;
 
-import android.util.Log;
+import it.wm.AbstractCache.CacheListener;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 
 /**
@@ -16,7 +14,7 @@ import java.util.HashMap;
  * 
  * @author Gabriele "Whisky" Visconti
  */
-public class HTTPAccess implements DownloaderTask.ResponseListener {
+public class HTTPAccess implements CacheListener {
     /**
      * Represents the HTTP connection method.
      * 
@@ -30,14 +28,14 @@ public class HTTPAccess implements DownloaderTask.ResponseListener {
     }
 
     /** tag meant to be used in ${Link android.util.Log} */
-    private static final String DEBUG_TAG = "HTTPAccess";
-    private ResponseListener listener = null;
+    private static final String              DEBUG_TAG = "HTTPAccess";
+    private ResponseListener                 listener  = null;
     // private HashMap<DownloaderTask, ResponseListener> connectionMap = null;
-    private HashMap<DownloaderTask, String> tagMap = null;
+    private HashMap<DownloadRequest, String> tagMap    = null;
 
     public HTTPAccess() {
         // connectionMap = new HashMap<DownloaderTask, ResponseListener>();
-        tagMap = new HashMap<DownloaderTask, String>();
+        tagMap = new HashMap<DownloadRequest, String>();
     }
 
     public ResponseListener getResponseListener() {
@@ -46,6 +44,11 @@ public class HTTPAccess implements DownloaderTask.ResponseListener {
 
     public void setResponseListener(ResponseListener listener) {
         this.listener = listener;
+        if (this.listener == null) {
+            for (DownloadRequest r : tagMap.keySet()) {
+                AbstractCache.getInstance().removeListener(r, this);
+            }
+        }
     }
 
     /**
@@ -62,51 +65,44 @@ public class HTTPAccess implements DownloaderTask.ResponseListener {
      *            completed successfully or with error. If <code>null</code> the
      *            connection status won't be notified.
      */
-    public void startHTTPConnection(URL url, Method method, HashMap<String, String> parameters,
-            String tag) {
-        DownloaderTask task;
-        synchronized (this) { // TODO: ma serve davvero?
-            task = new DownloaderTask();
-            task.setListener(this);
-            // connectionMap.put(task, listener);
-            tagMap.put(task, tag);
-        }
-        task.execute(new DownloaderTask.Params(url, method.toString(), parameters));
-
-    }
-
     public void startHTTPConnection(String urlString, Method method,
-            HashMap<String, String> parameters, String tag) {
-        URL url = null;
-        try {
-            url = new URL(urlString);
-        } catch (MalformedURLException e) {
-            Log.e(DEBUG_TAG, "Malformed URL. Not opening http connection.");
-            e.printStackTrace();
-            return;
+            HashMap<String, String> postMap, String tag) {
+        int httpMethod;
+        if (method == Method.POST) {
+            httpMethod = DownloadRequest.POST;
+        } else {
+            httpMethod = DownloadRequest.GET;
         }
-        startHTTPConnection(url, method, parameters, tag);
+
+        DownloadRequest params = new DownloadRequest(urlString, httpMethod, postMap);
+        AbstractCache cache = AbstractCache.getInstance();
+        byte[] data = cache.getCacheLine(params, this);
+        if (data != null && listener != null) {
+            listener.onHTTPResponseReceived(tag, new String(data));
+        } else {
+            tagMap.put(params, tag);
+        }
     }
 
     @Override
-    public void onHTTPResponseReceived(DownloaderTask task, byte[] response) {
+    public void onCacheLineLoaded(DownloadRequest request, byte[] data) {
         String tag;
         synchronized (this) {
             // listener = connectionMap.remove(task);
-            tag = tagMap.remove(task);
+            tag = tagMap.remove(request);
         }
         if (listener == null) {
             return;
         }
-        listener.onHTTPResponseReceived(tag, new String(response));
+        listener.onHTTPResponseReceived(tag, new String(data));
     }
 
     @Override
-    public void onHTTPerror(DownloaderTask task) {
+    public void onCacheLineError(DownloadRequest request) {
         String tag;
         synchronized (this) {
             // listener = connectionMap.remove(task);
-            tag = tagMap.remove(task);
+            tag = tagMap.remove(request);
         }
         if (listener == null) {
             return;
