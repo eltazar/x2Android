@@ -21,22 +21,19 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
         setContentView(R.layout.main_activity);
 
         ActionBar bar = getSupportActionBar();
-        bar.setDisplayHomeAsUpEnabled(true);
 
         bar.addTab(bar.newTab().setText("Dove usarla").setTabListener(this));
         bar.addTab(bar.newTab().setText("tempTab").setTabListener(this));
-        bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
-                | ActionBar.DISPLAY_USE_LOGO);
+        bar.setDisplayOptions(ActionBar.DISPLAY_USE_LOGO
+                | ActionBar.DISPLAY_SHOW_HOME
+                | ActionBar.DISPLAY_SHOW_TITLE);
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        bar.setDisplayShowHomeEnabled(true);
-        bar.setDisplayShowTitleEnabled(false);
-        bar.show();
+        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#D65151")));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.main_activity_menu_layout, menu);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#d65151")));
+        getSupportMenuInflater().inflate(R.menu.main_activity_menu, menu);
         return true;
     }
 

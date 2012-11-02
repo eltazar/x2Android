@@ -20,10 +20,7 @@
         android:theme="@style/Theme.Sherlock.Light" >
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_where_to_use" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="MainActivity" />
+            android:label="@string/main_activity_title" >
        		<intent-filter>
                 <action   android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -32,9 +29,6 @@
         <activity
             android:name=".TestActivity"
             android:label="TEST" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="it.wm.perdue.TestActivity" />
        		<intent-filter>
                 <action   android:name="android.intent.action.MAIN" />
             </intent-filter>

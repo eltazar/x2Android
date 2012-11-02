@@ -3,6 +3,6 @@
     <string name="app_name">PerDue</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Info</string>
-    <string name="title_activity_where_to_use"></string>
+    <string name="main_activity_title"></string>
 	<string name="image">Thumbnail</string>
 </resources>
