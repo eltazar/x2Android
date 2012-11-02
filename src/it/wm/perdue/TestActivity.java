@@ -30,7 +30,7 @@ public class TestActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
+        setContentView(R.layout.test_activity);
 
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(new HTTPAccess.ResponseListener() {
