@@ -155,7 +155,7 @@ public class TestActivity extends Activity {
 
             protected void onPostExecute(JSONFormat result) {
                 android.widget.TextView tv = ((android.widget.TextView) findViewById(R.id.textView2));
-                StringBuilder b = new StringBuilder(tv.getText());
+                StringBuilder b = new StringBuilder();
 
                 for (int i = 0; i < result.getEsercente().size(); i++) {
                     Commento data = result.getEsercente().get(i);
