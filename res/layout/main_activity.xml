@@ -4,7 +4,7 @@
     android:layout_height="match_parent" >
 
     <fragment
-      android:name="it.wm.perdue.KindOfShop"
+      android:name="it.wm.perdue.KindOfShopFragment"
       android:id="@+id/kindOfShop"
       android:layout_width="match_parent"
       android:layout_height="match_parent" />
