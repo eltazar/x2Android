@@ -121,9 +121,7 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
 
         if (data != null) {
             Log.d(DEBUG_TAG, "Cache hit!");
-            // TODO: importantissimo cazzo! così però salviamo ogni immagine
-            // almeno in doppia copia! come byte[] nella cache e qui come
-            // Drawable!
+
             imageView.setImageDrawable(data);
             progressBar.setVisibility(INVISIBLE);
             /*
@@ -135,10 +133,8 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
              * sta cosa, e se stiamo leakando oggetti :/
              */
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-                Log.d(DEBUG_TAG,
-                        "Fading in instantly");
-                Animation fadeInInstantly = new
-                        AlphaAnimation(0.999f, 1.0f);
+                Log.d(DEBUG_TAG, "Fading in instantly");
+                Animation fadeInInstantly = new AlphaAnimation(0.999f, 1.0f);
                 fadeInInstantly.setDuration(1l);
                 fadeInInstantly.setFillAfter(true);
                 imageView.startAnimation(fadeInInstantly);
@@ -151,7 +147,6 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
         }
     }
 
-    @TargetApi(11)
     @Override
     public void onCacheLineLoaded(DownloadRequest request, Drawable data) {
         if (!request.equals(this.request)) {
@@ -165,14 +160,9 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
         // richiamare i metodi dell'interfaccia ResponseListener al di fuori dal
         // DownloaderTask.... ma questa è un'altra storia
 
-        /*
-         * if (new String(data).equals("Use a placeholder")) { // TODO: settare
-         * un placeholder } else {
-         */
-
         imageView.setImageDrawable(data);
-
         long duration = 10000;
+
         // Ok, questo si sarebbe potuto scrivere usando solo la classe di
         // compatibilità ObjectAnimator fornita da ActionBarSherlock... Ma... e
         // se l'implementazione fosse subottima? Se da HoneyComb in poi non
@@ -182,58 +172,10 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
         // EDIT: No, la classe di compatibilità essenzialmente non funziona -.-
         // quindi o così o pomì
 
-        // TODO: spezzare.
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-            Log.d(DEBUG_TAG, "Animazioni HoneyComb");
-            fadeIn = android.animation.ObjectAnimator.ofFloat(imageView, "alpha", 0.0f, 1.0f);
-            fadeOut = android.animation.ObjectAnimator.ofFloat(progressBar, "alpha", 1.0f, 0.0f);
-            fadeIn.setDuration(duration);
-            fadeOut.setDuration(duration);
-            fadeOut.addListener(new android.animation.Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(android.animation.Animator animation) {
-                }
-
-                @Override
-                public void onAnimationRepeat(android.animation.Animator animation) {
-                }
-
-                @Override
-                public void onAnimationEnd(android.animation.Animator animation) {
-                    Log.d(DEBUG_TAG, "Honeycomb animation ended");
-                    progressBar.setVisibility(INVISIBLE);
-                }
-
-                @Override
-                public void onAnimationCancel(android.animation.Animator animation) {
-                    Log.d(DEBUG_TAG, "Anim interrupted");
-                }
-            });
-            fadeIn.start();
-            fadeOut.start();
+            crossFadeFromHoneycomb(duration);
         } else {
-            Log.d(DEBUG_TAG, "Animazioni Base");
-            Animation cFadeIn = new AlphaAnimation(0.0f, 1.0f);
-            Animation cFadeOut = new AlphaAnimation(1.0f, 0.0f);
-            cFadeIn.setDuration(duration);
-            cFadeOut.setDuration(duration);
-            cFadeOut.setFillAfter(true);
-            cFadeOut.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    progressBar.setVisibility(INVISIBLE);
-                }
-            });
-            imageView.startAnimation(cFadeIn);
-            progressBar.startAnimation(cFadeOut);
+            crossFadeBeforeHoneycomb(duration);
         }
         if (listener != null) {
             listener.onImageLoadingCompleted(this);
@@ -251,6 +193,62 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
         if (listener != null) {
             listener.onImageLoadingFailed(this);
         }
+    }
+
+    private void crossFadeBeforeHoneycomb(long duration) {
+        Log.d(DEBUG_TAG, "Animazioni Base");
+        Animation cFadeIn = new AlphaAnimation(0.0f, 1.0f);
+        Animation cFadeOut = new AlphaAnimation(1.0f, 0.0f);
+        cFadeIn.setDuration(duration);
+        cFadeOut.setDuration(duration);
+        cFadeOut.setFillAfter(true);
+        cFadeOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                progressBar.setVisibility(INVISIBLE);
+            }
+        });
+        imageView.startAnimation(cFadeIn);
+        progressBar.startAnimation(cFadeOut);
+    }
+
+    @TargetApi(11)
+    private void crossFadeFromHoneycomb(long duration) {
+        Log.d(DEBUG_TAG, "Animazioni HoneyComb");
+        fadeIn = android.animation.ObjectAnimator.ofFloat(imageView, "alpha", 0.0f, 1.0f);
+        fadeOut = android.animation.ObjectAnimator.ofFloat(progressBar, "alpha", 1.0f, 0.0f);
+        fadeIn.setDuration(duration);
+        fadeOut.setDuration(duration);
+        fadeOut.addListener(new android.animation.Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(android.animation.Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(android.animation.Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(android.animation.Animator animation) {
+                Log.d(DEBUG_TAG, "Honeycomb animation ended");
+                progressBar.setVisibility(INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(android.animation.Animator animation) {
+                Log.d(DEBUG_TAG, "Anim interrupted");
+            }
+        });
+        fadeIn.start();
+        fadeOut.start();
     }
 
     public interface Listener {
