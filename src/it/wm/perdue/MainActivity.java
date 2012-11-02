@@ -9,11 +9,11 @@ import android.support.v4.app.FragmentTransaction;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.ActionBar.TabListener;
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-public class MainActivity extends SherlockActivity implements TabListener {
+public class MainActivity extends SherlockFragmentActivity implements TabListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -23,8 +23,8 @@ public class MainActivity extends SherlockActivity implements TabListener {
         ActionBar bar = getSupportActionBar();
         bar.setDisplayHomeAsUpEnabled(true);
 
-        bar.addTab(bar.newTab().setText("Tab 1").setTabListener(this));
-        bar.addTab(bar.newTab().setText("Tab 2").setTabListener(this));
+        bar.addTab(bar.newTab().setText("Dove usarla").setTabListener(this));
+        bar.addTab(bar.newTab().setText("tempTab").setTabListener(this));
         bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
                 | ActionBar.DISPLAY_USE_LOGO);
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
