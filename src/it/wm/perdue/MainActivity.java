@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -14,6 +15,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 public class MainActivity extends SherlockFragmentActivity implements TabListener {
+    private static final String DEBUG_TAG = "MainActivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -23,7 +25,7 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
         ActionBar bar = getSupportActionBar();
 
         bar.addTab(bar.newTab().setText("Dove usarla").setTabListener(this));
-        bar.addTab(bar.newTab().setText("tempTab").setTabListener(this));
+        bar.addTab(bar.newTab().setText("Coupon").setTabListener(this));
         bar.setDisplayOptions(ActionBar.DISPLAY_USE_LOGO
                 | ActionBar.DISPLAY_SHOW_HOME
                 | ActionBar.DISPLAY_SHOW_TITLE);
@@ -49,8 +51,24 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
 
     @Override
     public void onTabSelected(Tab tab, FragmentTransaction ft) {
-        // TODO Auto-generated method stub
-
+        Log.d(DEBUG_TAG, "onTabSelected:");
+        CharSequence tabText = tab.getText();
+        // Sia ben chiaro che quanto segue è una porcheria sperimentale :D
+        // Beccare il fragment sul testo del tab è una porcata, è giusto per
+        // vedere su funziona :D
+        // Forse è una porcata pure allocare Fragment ogni volta che si clicca
+        // un tab :D
+        if (tabText.equals("Dove usarla")) {
+            Log.d(DEBUG_TAG, "onTabSelected: Dove Usarla");
+            ft.replace(R.id.mainActivityFragmentContainer, new KindOfShopFragment());
+        } else if (tabText.equals("Coupon")) {
+            Log.d(DEBUG_TAG, "onTabSelected: Coupon");
+            ft.replace(R.id.mainActivityFragmentContainer, new CouponFragment());
+        }
+        // Perché cavolo non vuole il commit? La documentazione dice
+        // esplicitamente che è obbligatorio.... che sia l'action bar stessa a
+        // chiamarlo? Investigare sulla doc dell'actionbar.
+        // ft.commit();
     }
 
     @Override
