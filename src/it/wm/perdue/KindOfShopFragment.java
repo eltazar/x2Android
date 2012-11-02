@@ -11,7 +11,7 @@ import com.actionbarsherlock.app.SherlockListFragment;
 
 import it.wm.android.adaptor.CategoryListAdapter;
 
-public class KindOfShop extends SherlockListFragment {
+public class KindOfShopFragment extends SherlockListFragment {
     private static final String[] month  = {
             "Ristoranti", "Pubs e Bar",
             "Cinema", "Teatri",
