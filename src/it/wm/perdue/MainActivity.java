@@ -18,7 +18,7 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity_layout);
+        setContentView(R.layout.main_activity);
 
         ActionBar bar = getSupportActionBar();
         bar.setDisplayHomeAsUpEnabled(true);
