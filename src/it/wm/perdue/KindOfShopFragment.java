@@ -12,7 +12,7 @@ import com.actionbarsherlock.app.SherlockListFragment;
 import it.wm.android.adaptor.CategoryListAdapter;
 
 public class KindOfShopFragment extends SherlockListFragment {
-    private static final String[] month  = {
+    private static final String[] categories  = {
             "Ristoranti", "Pubs e Bar",
             "Cinema", "Teatri",
             "Musei", "Librerie",
@@ -31,7 +31,7 @@ public class KindOfShopFragment extends SherlockListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ListAdapter myListAdapter = new CategoryListAdapter(getActivity(), month, images);
+        ListAdapter myListAdapter = new CategoryListAdapter(getActivity(), categories, images);
         setListAdapter(myListAdapter);
     }
 
