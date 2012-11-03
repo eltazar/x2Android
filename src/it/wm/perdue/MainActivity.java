@@ -25,7 +25,7 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
         ActionBar bar = getSupportActionBar();
         
         bar.addTab(bar.newTab().setText("Dove usarla").setTabListener(this));
-        bar.addTab(bar.newTab().setText("Coupon").setTabListener(this));
+        bar.addTab(bar.newTab().setText("News").setTabListener(this));
         
         bar.setDisplayOptions(ActionBar.DISPLAY_USE_LOGO
                 | ActionBar.DISPLAY_SHOW_HOME
@@ -67,7 +67,7 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
                 break;
             case 1:
                 Log.d(DEBUG_TAG, "onTabSelected: Coupon");
-                ft.replace(R.id.mainActivityFragmentContainer, new CouponFragment());
+                ft.replace(R.id.mainActivityFragmentContainer, new NewsFragment());
                 break;
             default:
                 break;
