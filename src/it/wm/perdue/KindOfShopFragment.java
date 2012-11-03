@@ -78,9 +78,21 @@ public class KindOfShopFragment extends SherlockListFragment {
                 Toast.LENGTH_SHORT).show();
     }
     
+    @Override
+    public void onDestroyView() {
+        listState = getListView().onSaveInstanceState();
+        super.onDestroyView();
+    }
+    
     public void onSaveInstanceState(Bundle outState) {
         Log.d("", "Saving Instance State ");
-        Parcelable p = getListView().onSaveInstanceState();
+        Parcelable p = null;
+        if (listState != null) {
+            // la view è stata già distrutta
+            p = listState;
+        } else {
+            p = getListView().onSaveInstanceState();
+        }
         outState.putParcelable("liststate", p);
         Log.d("", "** " + p);
         Log.d("", "**** " + this);
