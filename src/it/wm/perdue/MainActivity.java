@@ -30,8 +30,24 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
         tabList.add(new TabDescriptor("doveusarla", KindOfShopFragment.class, "Dove Usarla"));
         tabList.add(new TabDescriptor("news", NewsFragment.class, "News"));
         
+        ActionBar bar = getSupportActionBar();
+        bar.setDisplayOptions(ActionBar.DISPLAY_USE_LOGO
+                | ActionBar.DISPLAY_SHOW_HOME
+                | ActionBar.DISPLAY_SHOW_TITLE);
+        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#D65151")));
+        
         setContentView(R.layout.main_activity);
         setupTabs();
+        
+        if (savedInstanceState != null) {
+            bar.setSelectedNavigationItem(savedInstanceState.getInt("selectedtab"));
+        }
+    }
+    
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("selectedtab", getSupportActionBar().getSelectedNavigationIndex());
     }
     
     @Override
@@ -94,11 +110,7 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
         for (TabDescriptor t : tabList) {
             bar.addTab(bar.newTab().setText(t.title).setTag(t.tag).setTabListener(this));
         }
-        bar.setDisplayOptions(ActionBar.DISPLAY_USE_LOGO
-                | ActionBar.DISPLAY_SHOW_HOME
-                | ActionBar.DISPLAY_SHOW_TITLE);
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#D65151")));
     }
     
     private static class TabDescriptor {
