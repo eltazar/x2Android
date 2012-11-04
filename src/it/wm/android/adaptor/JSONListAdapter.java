@@ -3,59 +3,51 @@ package it.wm.android.adaptor;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-
-import it.wm.perdue.businessLogic.Notizia;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 public class JSONListAdapter<T> extends ArrayAdapter<T> {
-    // Un costruttore esplicito a casaccio giusto per far star zitto il
-    // compilatore
-    public JSONListAdapter(Context context, int resource, int textViewResourceId) {
-        super(context, resource, textViewResourceId);
-    }
+    Class<T[]> clazz = null;
     
-    private class JSONFormat extends ArrayList<T> {
-    };
+    public JSONListAdapter(Context context, int resource, int textViewResourceId, Class<T[]> clazz) {
+        super(context, resource, textViewResourceId);
+        this.clazz = clazz;
+    }
     
     public void addFromJSON(String jsonString) {
         StringBuilder builder = new StringBuilder(jsonString);
-        builder.replace(jsonString.length() - ",false]".length(), jsonString.length(), "]");
-        Log.d("", builder.toString());
-        new AsyncTask<String, Void, List>() {
+        
+        if (builder.substring(0, 13).equals("{\"Esercente\":")) {
+            builder.delete(0, 13);
+            builder.deleteCharAt(builder.length() - 1);
+        }
+        
+        int start = builder.length() - ",false]".length();
+        int end = builder.length();
+        if (builder.substring(start, end).equals(",false]")) {
+            builder.replace(start, end, "]");
+        }
+        
+        new AsyncTask<String, Void, T[]>() {
             
             @Override
-            protected List doInBackground(String... params) {
+            protected T[] doInBackground(String... params) {
                 GsonBuilder gsonBuilder = new GsonBuilder();
-                // onRegisterDeserializers();
-                /*
-                 * gsonBuilder.registerTypeAdapter(java.util.Date.class, new
-                 * Commento.DateDeserializer());
-                 */
+                gsonBuilder.setDateFormat("yyyy-MM-dd kk:mm:ss");
+                onRegisterDeserializers(gsonBuilder);
                 Gson gson = gsonBuilder.create();
-                Type typeToken = new TypeToken<ArrayList<Notizia>>() {
-                }.getType();
-                Object objects = null;
-                // try {
-                objects = gson.fromJson(params[0], typeToken);
-                // } catch (ClassNotFoundException e) {
-                // Log.d("JSON", "Seh, ciaooo!!!!");
-                // }
-                return (List) objects;
+                return gson.fromJson(params[0], JSONListAdapter.this.clazz);
             }
             
-            protected void onPostExecute(List result) {
+            protected void onPostExecute(T[] result) {
                 JSONListAdapter.this.addAll(result);
             }
             
         }.execute(builder.toString());
+    }
+    
+    protected void onRegisterDeserializers(GsonBuilder gsonBuilder) {
     }
 }
