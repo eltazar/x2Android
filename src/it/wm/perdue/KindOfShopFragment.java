@@ -3,7 +3,6 @@ package it.wm.perdue;
 
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -44,33 +43,6 @@ public class KindOfShopFragment extends SherlockListFragment {
     }
     
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            Log.d("", "Restoring Instance State 1");
-            listState = savedInstanceState.getParcelable("liststate");
-            Log.d("", "** " + listState);
-            Log.d("", "**** " + this);
-        }
-    }
-    
-    @Override
-    public void onResume() {
-        Log.d("", "Restoring Instance State 2?");
-        Log.d("", "** " + listState);
-        Log.d("", "**** " + this);
-        super.onResume();
-        if (listState != null) {
-            Log.d("", "Restoring Instance State 2");
-            getListView().onRestoreInstanceState(listState);
-            listState = null;
-        } else {
-            Log.d("", "NOT Restoring Instance State 2");
-        }
-        
-    }
-    
-    @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Toast.makeText(
                 getActivity(),
@@ -78,24 +50,4 @@ public class KindOfShopFragment extends SherlockListFragment {
                 Toast.LENGTH_SHORT).show();
     }
     
-    @Override
-    public void onDestroyView() {
-        listState = getListView().onSaveInstanceState();
-        super.onDestroyView();
-    }
-    
-    public void onSaveInstanceState(Bundle outState) {
-        Log.d("", "Saving Instance State ");
-        Parcelable p = null;
-        if (listState != null) {
-            // la view è stata già distrutta
-            p = listState;
-        } else {
-            p = getListView().onSaveInstanceState();
-        }
-        outState.putParcelable("liststate", p);
-        Log.d("", "** " + p);
-        Log.d("", "**** " + this);
-        
-    }
 }
