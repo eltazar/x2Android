@@ -3,7 +3,9 @@ package it.wm.perdue.businessLogic;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * @author Gabriele "Whisky" Visconti
@@ -31,8 +33,9 @@ public class Notizia {
     }
     
     public String getLocalizedDataString() {
-        // TODO: implementare!
-        return "";
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
+        DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.DEFAULT, Locale.ITALIAN);
+        return dateFormat.format(data) + " " + timeFormat.format(data);
     }
     
     public String getTesto() {
