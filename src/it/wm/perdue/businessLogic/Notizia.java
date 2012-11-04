@@ -3,6 +3,8 @@ package it.wm.perdue.businessLogic;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 /**
  * @author Gabriele "Whisky" Visconti
  */
@@ -12,7 +14,7 @@ public class Notizia {
     @SerializedName("post_title")
     private String titolo = null;
     @SerializedName("post_date")
-    private String data   = null;
+    private Date   data   = null;
     @SerializedName("post_content")
     private String testo  = null;
     
@@ -24,7 +26,7 @@ public class Notizia {
         return titolo;
     }
     
-    public String getData() {
+    public Date getData() {
         return data;
     }
     

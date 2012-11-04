@@ -23,14 +23,17 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new JSONListAdapter<Notizia>(getActivity(), R.layout.news_row, R.id.newsTitle);
+        adapter = new JSONListAdapter<Notizia>(
+                getActivity(),
+                R.layout.news_row,
+                R.id.newsTitle,
+                Notizia[].class);
         setListAdapter(adapter);
         
         httpAccess = new HTTPAccess();
         String urlString = "http://www.cartaperdue.it/partner/v2.0/News.php";
         HashMap<String, String> postMap = new HashMap<String, String>();
         postMap.put("from", "0");
-        postMap.put("newJsonFormat", "1");
         httpAccess.setResponseListener(this);
         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
     }
