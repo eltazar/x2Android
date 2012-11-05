@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -35,7 +36,6 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
                 R.layout.news_row,
                 R.id.newsTitle,
                 Notizia[].class);
-        setListAdapter(adapter);
         
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
@@ -54,9 +54,16 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
         }
     }
     
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getListView().setOnScrollListener(this);
+        ListView lv = getListView();
+        TextView tv = new TextView(getActivity());
+        tv.setText("Caricamento...");
+        lv.addFooterView(tv);
+        setListAdapter(adapter);
+        lv.setOnScrollListener(this);
+        setListShown(false);
     }
     
     @Override
@@ -101,6 +108,7 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
         adapter.addFromJSON(response);
+        setListShown(true);
     }
     
     @Override
@@ -118,7 +126,8 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
             int totalItemCount) {
-        boolean loadMore = /* maybe add a padding */
+        // Fonte: http://stackoverflow.com/questions/1080811/
+        boolean loadMore =
                 firstVisibleItem + visibleItemCount >= totalItemCount - visibleItemCount;
         if (loadMore) {
             HashMap<String, String> postMap = new HashMap<String, String>();
