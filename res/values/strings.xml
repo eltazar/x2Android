@@ -5,4 +5,5 @@
     <string name="menu_settings">Info</string>
     <string name="main_activity_title"></string>
 	<string name="image">Thumbnail</string>
+	<string name="loading">Caricamento&#8230;</string>
 </resources>
