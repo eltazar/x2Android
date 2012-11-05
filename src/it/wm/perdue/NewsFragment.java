@@ -31,6 +31,8 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
     private HTTPAccess             httpAccess  = null;
     private Parcelable             listState   = null;
     private int                    downloading = 0;
+    private boolean                noMoreData  = false;
+    private View                   footerView  = null;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,8 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
         ListView lv = getListView();
         LayoutInflater inflater = (LayoutInflater) getActivity()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        lv.addFooterView(inflater.inflate(R.layout.endless_list_footer, null));
+        footerView = inflater.inflate(R.layout.endless_list_footer, null);
+        lv.addFooterView(footerView);
         setListAdapter(adapter);
         lv.setOnScrollListener(this);
         setListShown(false);
@@ -114,7 +117,11 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
-        adapter.addFromJSON(response);
+        int n = adapter.addFromJSON(response);
+        if (n == 0) {
+            noMoreData = true;
+            getListView().removeFooterView(footerView);
+        }
         setListShown(true);
         downloading--;
         Log.d(DEBUG_TAG, "Donwloading " + downloading);
@@ -140,7 +147,7 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
         // Fonte: http://stackoverflow.com/questions/1080811/
         boolean loadMore =
                 firstVisibleItem + visibleItemCount >= totalItemCount - visibleItemCount;
-        if (loadMore && downloading == 0) {
+        if (loadMore && downloading == 0 && !noMoreData) {
             Log.d(DEBUG_TAG, "Donwload from: " + adapter.getCount());
             HashMap<String, String> postMap = new HashMap<String, String>();
             postMap.put("from", "" + adapter.getCount());

@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 
 public class JSONListAdapter<T> extends ArrayAdapter<T> {
     Class<T[]> clazz = null;
@@ -16,7 +17,7 @@ public class JSONListAdapter<T> extends ArrayAdapter<T> {
         this.clazz = clazz;
     }
     
-    public void addFromJSON(String jsonString) {
+    public int addFromJSON(String jsonString) {
         StringBuilder builder = new StringBuilder(jsonString);
         
         if (builder.substring(0, 13).equals("{\"Esercente\":")) {
@@ -46,8 +47,15 @@ public class JSONListAdapter<T> extends ArrayAdapter<T> {
         gsonBuilder.setDateFormat("yyyy-MM-dd kk:mm:ss");
         onRegisterDeserializers(gsonBuilder);
         Gson gson = gsonBuilder.create();
-        T[] objects = gson.fromJson(builder.toString(), JSONListAdapter.this.clazz);
+        T[] objects = null;
+        try {
+            objects = gson.fromJson(builder.toString(), clazz);
+        } catch (JsonSyntaxException e) {
+            // In teoria se siamo qui, significa che è arrivato un array vuoto,
+            objects = gson.fromJson("[]", clazz);
+        }
         this.supportAddAll(objects);
+        return objects.length;
     }
     
     protected void onRegisterDeserializers(GsonBuilder gsonBuilder) {
