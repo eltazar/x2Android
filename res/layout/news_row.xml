@@ -3,13 +3,20 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:padding="10dp" >
-    
+
+    <TextView
+        android:id="@+id/newsDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="2dp" />
+
     <TextView
         android:id="@+id/newsTitle"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="2dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/newsDate"
+        android:layout_below="@+id/newsDate"
         android:textColor="#CC0033"
         android:textSize="14dp"
         android:textStyle="bold" />
