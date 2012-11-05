@@ -20,6 +20,7 @@ import it.wm.HTTPAccess;
 import it.wm.android.adaptor.JSONListAdapter;
 import it.wm.perdue.businessLogic.Notizia;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 public class NewsFragment extends SherlockListFragment implements HTTPAccess.ResponseListener,
@@ -158,12 +159,14 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
             super(context, resource, textViewResourceId, clazz);
         }
         
+        @SuppressWarnings("deprecation")
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             
             View v = convertView;
             if (v == null) {
                 v = ((LayoutInflater) super.getContext().getSystemService(
+                        
                         Context.LAYOUT_INFLATER_SERVICE))
                         .inflate(R.layout.news_row, null);
             }
@@ -171,8 +174,13 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
             Notizia str = getItem(position);
             if (str != null) {
                 TextView title = (TextView) v.findViewById(R.id.newsTitle);
+                TextView date = (TextView) v.findViewById(R.id.newsDate);
                 if (title != null) {
                     title.setText(str.getTitolo());
+                }
+                if (date != null) {
+                    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                    date.setText(df.format(str.getData()));
                 }
             }
             
