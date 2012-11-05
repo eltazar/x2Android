@@ -26,12 +26,12 @@ public class TestActivity extends Activity {
     private HTTPAccess          httpAccess = null;
     private String              getText    = null;
     private String              postText   = null;
-
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_activity);
-
+        
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(new HTTPAccess.ResponseListener() {
             public void onHTTPResponseReceived(String tag, String response) {
@@ -43,24 +43,24 @@ public class TestActivity extends Activity {
                 }
                 setText();
             }
-
+            
             public void onHTTPerror(String tag) {
                 ((Button) findViewById(R.id.startBtn)).setText("[!]");
             }
         });
-
+        
         ((Button) findViewById(R.id.startBtn)).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 String urlString = "http://www.cartaperdue.it/partner/commenti.php?id=119&from=0&to=10";
                 httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET, null, "testGet");
-
+                
                 urlString = "http://www.cartaperdue.it/partner/v2.0/News.php";
                 HashMap<String, String> postMap = new HashMap<String, String>();
                 postMap.put("from", "0");
                 httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap,
                         "testPost");
-
+                
                 // urlString =
                 // "http://multimedia.coldiretti.it/Manifestazione_Latte_Milano_marzo_07/Immagine%20046.jpg";
                 urlString = "http://ubuntuforums.org/images/rebrand/ubuntulogo-o-small.png";
@@ -68,7 +68,7 @@ public class TestActivity extends Activity {
                         .loadImageFromURL(urlString);
             }
         });
-
+        
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -81,7 +81,7 @@ public class TestActivity extends Activity {
                 }
                 return null;
             }
-
+            
             @Override
             protected void onPostExecute(Void result) {
                 String urlString =
@@ -90,15 +90,15 @@ public class TestActivity extends Activity {
                         .loadImageFromURL(urlString);
             }
         }/* .execute(new Void[1]) */;
-
+        
     }
-
+    
     @Override
     protected void finalize() throws Throwable {
         Log.d(DEBUG_TAG, "Help! I'm getting deallocated! :(");
         super.finalize();
     }
-
+    
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -110,7 +110,7 @@ public class TestActivity extends Activity {
         // TODO: cercare di capire se questo va qua
         httpAccess.setResponseListener(null);
     }
-
+    
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -124,7 +124,7 @@ public class TestActivity extends Activity {
         // ((ScrollView)findViewById(R.id.scrollView2)).getScrollY());
         setText();
     }
-
+    
     private void setText() {
         StringBuilder builder = new StringBuilder();
         if (getText != null) {
@@ -139,24 +139,23 @@ public class TestActivity extends Activity {
         ((TextView) findViewById(R.id.textView1)).setText(builder.toString(),
                 TextView.BufferType.NORMAL);
     }
-
+    
     private void parseJSON(String jsonStr) {
         new AsyncTask<String, Void, JSONFormat>() {
-
+            
             @Override
             protected JSONFormat doInBackground(String... params) {
                 GsonBuilder gsonBuilder = new GsonBuilder();
-                gsonBuilder.registerTypeAdapter(java.util.Date.class,
-                        new Commento.DateDeserializer());
+                gsonBuilder.setDateFormat("yyyy-MM-dd kk:mm:ss");
                 Gson gson = gsonBuilder.create();
                 JSONFormat dataModel = gson.fromJson(params[0], JSONFormat.class);
                 return dataModel;
             }
-
+            
             protected void onPostExecute(JSONFormat result) {
                 android.widget.TextView tv = ((android.widget.TextView) findViewById(R.id.textView2));
                 StringBuilder b = new StringBuilder();
-
+                
                 for (int i = 0; i < result.getEsercente().size(); i++) {
                     Commento data = result.getEsercente().get(i);
                     b.append("\n****************\n");
@@ -170,22 +169,22 @@ public class TestActivity extends Activity {
                 }
                 tv.setText(b.toString(), TextView.BufferType.NORMAL);
             }
-
+            
         }.execute(jsonStr);
     }
-
+    
     @SuppressWarnings("unused")
     private class JSONFormat {
         private ArrayList<Commento> Esercente;
-
+        
         public void setEsercente(ArrayList<Commento> list) {
             Esercente = list;
         }
-
+        
         public ArrayList<Commento> getEsercente() {
             return Esercente;
         }
-
+        
     }
-
+    
 }
