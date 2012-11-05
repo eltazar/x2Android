@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -16,7 +18,8 @@ import it.wm.perdue.businessLogic.Notizia;
 
 import java.util.HashMap;
 
-public class NewsFragment extends SherlockListFragment implements HTTPAccess.ResponseListener {
+public class NewsFragment extends SherlockListFragment implements HTTPAccess.ResponseListener,
+        OnScrollListener {
     private static final String      DEBUG_TAG  = "NewsFragment";
     private JSONListAdapter<Notizia> adapter    = null;
     private String                   urlString  = null;
@@ -49,6 +52,11 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
             postMap.put("from", "" + i * 10);
             httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
         }
+    }
+    
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getListView().setOnScrollListener(this);
     }
     
     @Override
@@ -89,6 +97,7 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
                 Toast.LENGTH_SHORT).show();
     }
     
+    /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
         adapter.addFromJSON(response);
@@ -98,4 +107,25 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
     public void onHTTPerror(String tag) {
         Log.d(DEBUG_TAG, "Errore nel download");
     }
+    
+    /* *** END: HTTPAccess.ResponseListener ******************* */
+    
+    /* *** BEGIN: AbsListView.OnScrollListener **************** */
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    }
+    
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+            int totalItemCount) {
+        boolean loadMore = /* maybe add a padding */
+                firstVisibleItem + visibleItemCount >= totalItemCount - visibleItemCount;
+        if (loadMore) {
+            HashMap<String, String> postMap = new HashMap<String, String>();
+            postMap.put("from", "" + adapter.getCount());
+            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
+        }
+    }
+    /* *** END: AbsListView.OnScrollListener ****************** */
+    
 }
