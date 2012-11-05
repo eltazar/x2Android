@@ -37,10 +37,22 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
                 R.layout.news_row,
                 R.id.newsTitle,
                 Notizia[].class);
-        
-        int nRows = 10;
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
+    }
+    
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ListView lv = getListView();
+        LayoutInflater inflater = (LayoutInflater) getActivity()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        lv.addFooterView(inflater.inflate(R.layout.endless_list_footer, null));
+        setListAdapter(adapter);
+        lv.setOnScrollListener(this);
+        setListShown(false);
+        
+        int nRows = 10;
         if (savedInstanceState != null) {
             listState = savedInstanceState.getParcelable("listState");
             nRows = savedInstanceState.getInt("nRows");
@@ -54,19 +66,8 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
             postMap.put("from", "" + i * 10);
             httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
             downloading++;
+            Log.d(DEBUG_TAG, "Donwloading " + downloading);
         }
-    }
-    
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        ListView lv = getListView();
-        LayoutInflater inflater = (LayoutInflater) getActivity()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        lv.addFooterView(inflater.inflate(R.layout.endless_list_footer, null));
-        setListAdapter(adapter);
-        lv.setOnScrollListener(this);
-        setListShown(false);
     }
     
     @Override
@@ -113,12 +114,14 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
         adapter.addFromJSON(response);
         setListShown(true);
         downloading--;
+        Log.d(DEBUG_TAG, "Donwloading " + downloading);
     }
     
     @Override
     public void onHTTPerror(String tag) {
         Log.d(DEBUG_TAG, "Errore nel download");
         downloading--;
+        Log.d(DEBUG_TAG, "Donwloading " + downloading);
     }
     
     /* *** END: HTTPAccess.ResponseListener ******************* */
@@ -139,6 +142,8 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
             HashMap<String, String> postMap = new HashMap<String, String>();
             postMap.put("from", "" + adapter.getCount());
             httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
+            downloading++;
+            Log.d(DEBUG_TAG, "Donwloading " + downloading);
         }
     }
     /* *** END: AbsListView.OnScrollListener ****************** */
