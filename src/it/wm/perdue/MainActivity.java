@@ -5,8 +5,10 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
+import android.support.v4.view.ViewPager;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -21,6 +23,7 @@ import java.util.List;
 public class MainActivity extends SherlockFragmentActivity implements TabListener {
     private static final String DEBUG_TAG = "MainActivity";
     List<TabDescriptor>         tabList   = null;
+    ViewPager                   pager     = null;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,10 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
         
         setContentView(R.layout.main_activity);
         setupTabs();
+        pager = (ViewPager) findViewById(R.id.mainActivityFragmentContainer);
+        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
+        pager.setAdapter(pagerAdapter);
+        pager.setOnPageChangeListener(pagerAdapter);
         
         if (savedInstanceState != null) {
             bar.setSelectedNavigationItem(savedInstanceState.getInt("selectedtab"));
@@ -66,51 +73,70 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
         return super.onOptionsItemSelected(item);
     }
     
-    @Override
-    public void onTabSelected(Tab tab, FragmentTransaction ft) {
-        TabDescriptor tabDesc = tabList.get(tab.getPosition());
-        Log.d(DEBUG_TAG, "onTabSelected: " + tabDesc.title);
-        
-        // Prima di istanziarlo bisogna chiedere al FragmentManager se c'è già,
-        // perché su un config change viene reinstanziato automaticamente
-        // (rotation). Se lo non lo si fa lo si istanzia due volte.
-        // Ovviamente lo stesso discorso vale se il fragmente viene allocato
-        // altrove (non nel tab listener): nel costruttore dell'activity, negli
-        // attributi della classe, sulla tazza del cesso. Morale della favola:
-        // PRIMA di istanziare un Fragment chiedere SEMPRE prima al fragment
-        // manager.
-        Fragment frgmnt = getSupportFragmentManager().findFragmentByTag(tabDesc.tag);
-        
-        if (frgmnt == null) {
-            frgmnt = Fragment.instantiate(this, tabDesc.clazz.getName());
-        }
-        if (!frgmnt.isAdded()) {
-            ft.add(R.id.mainActivityFragmentContainer, frgmnt, tabDesc.tag);
-        }
-        if (frgmnt.isDetached()) {
-            ft.attach(frgmnt);
-        }
-    }
-    
-    @Override
-    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-        TabDescriptor tabDesc = tabList.get(tab.getPosition());
-        Fragment frgmnt = getSupportFragmentManager().findFragmentByTag(tabDesc.tag);
-        if (frgmnt != null) {
-            ft.detach(frgmnt);
-        }
-    }
-    
-    @Override
-    public void onTabReselected(Tab tab, FragmentTransaction ft) {
-    }
-    
     private void setupTabs() {
         ActionBar bar = getSupportActionBar();
         for (TabDescriptor t : tabList) {
             bar.addTab(bar.newTab().setText(t.title).setTag(t.tag).setTabListener(this));
         }
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+    }
+    
+    /* *** BEGIN: ActionBar.TabListener ********************* */
+    
+    @Override
+    public void onTabSelected(Tab tab, FragmentTransaction ft) {
+        if (pager != null) {
+            pager.setCurrentItem(tab.getPosition(), true);
+        }
+    }
+    
+    @Override
+    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+    }
+    
+    @Override
+    public void onTabReselected(Tab tab, FragmentTransaction ft) {
+    }
+    
+    /* *** END: ActionBar.TabListener ********************* */
+    
+    private class PagerAdapter extends FragmentPagerAdapter implements
+            ViewPager.OnPageChangeListener {
+        
+        public PagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+        
+        @Override
+        public Fragment getItem(int position) {
+            TabDescriptor tabDesc = tabList.get(position);
+            Fragment frgmnt = getSupportFragmentManager().findFragmentByTag(tabDesc.tag);
+            if (frgmnt == null) {
+                frgmnt = Fragment.instantiate(MainActivity.this, tabDesc.clazz.getName());
+            }
+            return frgmnt;
+        }
+        
+        @Override
+        public int getCount() {
+            return tabList.size();
+        }
+        
+        /* *** BEGIN: ViewPager.OnPageChangeListener **************** */
+        @Override
+        public void onPageScrollStateChanged(int state) {
+        }
+        
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
+        
+        @Override
+        public void onPageSelected(int position) {
+            MainActivity.this.getSupportActionBar().setSelectedNavigationItem(position);
+        }
+        /* *** END: ViewPager.OnPageChangeListener **************** */
+        
     }
     
     private static class TabDescriptor {
