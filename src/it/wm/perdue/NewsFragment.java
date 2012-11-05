@@ -2,6 +2,7 @@
 package it.wm.perdue;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -18,7 +19,10 @@ import java.util.HashMap;
 public class NewsFragment extends SherlockListFragment implements HTTPAccess.ResponseListener {
     private static final String      DEBUG_TAG  = "NewsFragment";
     private JSONListAdapter<Notizia> adapter    = null;
+    private String                   urlString  = null;
     private HTTPAccess               httpAccess = null;
+    private Parcelable               listState  = null;
+    private int                      nRows      = 10;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,11 +35,49 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
         setListAdapter(adapter);
         
         httpAccess = new HTTPAccess();
-        String urlString = "http://www.cartaperdue.it/partner/v2.0/News.php";
-        HashMap<String, String> postMap = new HashMap<String, String>();
-        postMap.put("from", "0");
         httpAccess.setResponseListener(this);
-        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
+        if (savedInstanceState != null) {
+            listState = savedInstanceState.getParcelable("listState");
+            nRows = savedInstanceState.getInt("nRows");
+            if (nRows == 0)
+                nRows = 10;
+        }
+        
+        urlString = "http://www.cartaperdue.it/partner/v2.0/News.php";
+        for (int i = 0; i < nRows / 10; i++) {
+            HashMap<String, String> postMap = new HashMap<String, String>();
+            postMap.put("from", "" + i * 10);
+            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
+        }
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (listState != null) {
+            getListView().onRestoreInstanceState(listState);
+            listState = null;
+        }
+    }
+    
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        listState = getListView().onSaveInstanceState();
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (adapter.getCount() > 0) {
+            outState.putInt("nRows", adapter.getCount());
+        }
+        if (listState != null) {
+            outState.putParcelable("listState", listState);
+        } else {
+            outState.putParcelable("listState", getListView().onSaveInstanceState());
+        }
+        
     }
     
     @Override
