@@ -22,12 +22,12 @@ import java.util.HashMap;
 
 public class NewsFragment extends SherlockListFragment implements HTTPAccess.ResponseListener,
         OnScrollListener {
-    private static final String      DEBUG_TAG  = "NewsFragment";
-    private JSONListAdapter<Notizia> adapter    = null;
-    private String                   urlString  = null;
-    private HTTPAccess               httpAccess = null;
-    private Parcelable               listState  = null;
-    private int                      nRows      = 10;
+    private static final String      DEBUG_TAG   = "NewsFragment";
+    private JSONListAdapter<Notizia> adapter     = null;
+    private String                   urlString   = null;
+    private HTTPAccess               httpAccess  = null;
+    private Parcelable               listState   = null;
+    private int                      downloading = 0;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,6 +38,7 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
                 R.id.newsTitle,
                 Notizia[].class);
         
+        int nRows = 10;
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
         if (savedInstanceState != null) {
@@ -52,6 +53,7 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
             HashMap<String, String> postMap = new HashMap<String, String>();
             postMap.put("from", "" + i * 10);
             httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
+            downloading++;
         }
     }
     
@@ -110,11 +112,13 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
     public void onHTTPResponseReceived(String tag, String response) {
         adapter.addFromJSON(response);
         setListShown(true);
+        downloading--;
     }
     
     @Override
     public void onHTTPerror(String tag) {
         Log.d(DEBUG_TAG, "Errore nel download");
+        downloading--;
     }
     
     /* *** END: HTTPAccess.ResponseListener ******************* */
@@ -130,7 +134,8 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
         // Fonte: http://stackoverflow.com/questions/1080811/
         boolean loadMore =
                 firstVisibleItem + visibleItemCount >= totalItemCount - visibleItemCount;
-        if (loadMore) {
+        if (loadMore && downloading == 0) {
+            Log.d(DEBUG_TAG, "Donwload from: " + adapter.getCount());
             HashMap<String, String> postMap = new HashMap<String, String>();
             postMap.put("from", "" + adapter.getCount());
             httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
