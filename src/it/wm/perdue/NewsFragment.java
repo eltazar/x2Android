@@ -7,9 +7,11 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -22,17 +24,17 @@ import java.util.HashMap;
 
 public class NewsFragment extends SherlockListFragment implements HTTPAccess.ResponseListener,
         OnScrollListener {
-    private static final String      DEBUG_TAG   = "NewsFragment";
-    private JSONListAdapter<Notizia> adapter     = null;
-    private String                   urlString   = null;
-    private HTTPAccess               httpAccess  = null;
-    private Parcelable               listState   = null;
-    private int                      downloading = 0;
+    private static final String    DEBUG_TAG   = "NewsFragment";
+    private NotiziaJSONListAdapter adapter     = null;
+    private String                 urlString   = null;
+    private HTTPAccess             httpAccess  = null;
+    private Parcelable             listState   = null;
+    private int                    downloading = 0;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new JSONListAdapter<Notizia>(
+        adapter = new NotiziaJSONListAdapter(
                 getActivity(),
                 R.layout.news_row,
                 R.id.newsTitle,
@@ -146,6 +148,36 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
             Log.d(DEBUG_TAG, "Donwloading " + downloading);
         }
     }
+    
     /* *** END: AbsListView.OnScrollListener ****************** */
+    
+    private static class NotiziaJSONListAdapter extends JSONListAdapter<Notizia> {
+        
+        public NotiziaJSONListAdapter(Context context, int resource, int textViewResourceId,
+                Class<Notizia[]> clazz) {
+            super(context, resource, textViewResourceId, clazz);
+        }
+        
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            
+            View v = convertView;
+            if (v == null) {
+                v = ((LayoutInflater) super.getContext().getSystemService(
+                        Context.LAYOUT_INFLATER_SERVICE))
+                        .inflate(R.layout.news_row, null);
+            }
+            
+            Notizia str = getItem(position);
+            if (str != null) {
+                TextView title = (TextView) v.findViewById(R.id.newsTitle);
+                if (title != null) {
+                    title.setText(str.getTitolo());
+                }
+            }
+            
+            return v;
+        }
+    }
     
 }
