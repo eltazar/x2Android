@@ -1,14 +1,15 @@
 
 package it.wm.perdue;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -58,9 +59,9 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ListView lv = getListView();
-        TextView tv = new TextView(getActivity());
-        tv.setText("Caricamento...");
-        lv.addFooterView(tv);
+        LayoutInflater inflater = (LayoutInflater) getActivity()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        lv.addFooterView(inflater.inflate(R.layout.endless_list_footer, null));
         setListAdapter(adapter);
         lv.setOnScrollListener(this);
         setListShown(false);
