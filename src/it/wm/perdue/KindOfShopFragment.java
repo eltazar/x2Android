@@ -1,12 +1,12 @@
 
 package it.wm.perdue;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
@@ -42,12 +42,23 @@ public class KindOfShopFragment extends SherlockListFragment {
         
     }
     
+    // public void onPause() {
+    // super.onPause();
+    // this.overridePendingTransition(R.anim.animation_leave,
+    // R.anim.animation_enter);
+    // }
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Toast.makeText(
-                getActivity(),
-                getListView().getItemAtPosition(position).toString(),
-                Toast.LENGTH_SHORT).show();
+        /*
+         * Toast.makeText( getActivity(),
+         * getListView().getItemAtPosition(position).toString(),
+         * Toast.LENGTH_SHORT).show();
+         */
+        
+        Intent intent = new Intent(getActivity(), EsercentiListActivity.class);
+        startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.animation_right, R.anim.animation_left);
+        
     }
     
 }

@@ -33,6 +33,10 @@
                 <action   android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".EsercentiListActivity"
+            android:label="" >
+        </activity>
     </application>
 
 </manifest>
