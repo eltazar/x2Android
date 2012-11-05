@@ -57,8 +57,6 @@ public class KindOfShopFragment extends SherlockListFragment {
         
         Intent intent = new Intent(getActivity(), EsercentiListActivity.class);
         startActivity(intent);
-        getActivity().overridePendingTransition(R.anim.animation_right, R.anim.animation_left);
-        
     }
     
 }
