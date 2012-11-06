@@ -2,6 +2,7 @@
 package it.wm.perdue;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -12,7 +13,6 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
@@ -20,6 +20,7 @@ import it.wm.HTTPAccess;
 import it.wm.android.adaptor.JSONListAdapter;
 import it.wm.perdue.businessLogic.Notizia;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
@@ -108,10 +109,16 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         // TODO Auto-generated method stub
-        Toast.makeText(
-                getActivity(),
-                getListView().getItemAtPosition(position).toString(),
-                Toast.LENGTH_SHORT).show();
+        /*
+         * Toast.makeText( getActivity(),
+         * getListView().getItemAtPosition(position).toString(),
+         * Toast.LENGTH_SHORT).show();
+         */
+        Bundle extras = new Bundle();
+        extras.putSerializable("notizia", (Serializable) l.getItemAtPosition(position));
+        Intent intent = new Intent(getActivity(), NotiziaActivity.class);
+        intent.putExtras(extras);
+        startActivity(intent);
     }
     
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
