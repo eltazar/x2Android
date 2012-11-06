@@ -3,6 +3,7 @@ package it.wm.perdue.businessLogic;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -10,7 +11,8 @@ import java.util.Locale;
 /**
  * @author Gabriele "Whisky" Visconti
  */
-public class Notizia {
+@SuppressWarnings("serial")
+public class Notizia implements Serializable {
     @SerializedName("ID")
     private int    id     = -1;
     @SerializedName("post_title")

@@ -37,6 +37,10 @@
             android:name=".EsercentiListActivity"
             android:label="" >
         </activity>
+        <activity
+            android:name=".NotiziaActivity"
+            android:label="" >
+        </activity>
     </application>
 
 </manifest>
