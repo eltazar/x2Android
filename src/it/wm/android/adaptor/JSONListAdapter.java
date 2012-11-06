@@ -6,7 +6,6 @@ import android.content.Context;
 import android.widget.ArrayAdapter;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import it.wm.perdue.Utils;
@@ -35,10 +34,7 @@ public class JSONListAdapter<T> extends ArrayAdapter<T> {
          * }.execute(builder.toString());
          */
         
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setDateFormat("yyyy-MM-dd kk:mm:ss");
-        onRegisterDeserializers(gsonBuilder);
-        Gson gson = gsonBuilder.create();
+        Gson gson = Utils.getGson();
         T[] objects = null;
         try {
             objects = gson.fromJson(jsonString, clazz);
@@ -48,9 +44,6 @@ public class JSONListAdapter<T> extends ArrayAdapter<T> {
         }
         this.supportAddAll(objects);
         return objects.length;
-    }
-    
-    protected void onRegisterDeserializers(GsonBuilder gsonBuilder) {
     }
     
     @SuppressLint("NewApi")
