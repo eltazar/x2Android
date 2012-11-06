@@ -1,8 +1,6 @@
 
 package it.wm.perdue;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -19,8 +17,6 @@ public class EsercentiListActivity extends SherlockListActivity {
         bar.setDisplayOptions(ActionBar.DISPLAY_USE_LOGO
                 | ActionBar.DISPLAY_SHOW_HOME
                 | ActionBar.DISPLAY_SHOW_TITLE);
-        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#D65151")));
-        
     }
     
     @Override

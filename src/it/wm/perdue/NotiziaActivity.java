@@ -2,8 +2,6 @@
 package it.wm.perdue;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
@@ -43,7 +41,6 @@ public class NotiziaActivity extends SherlockActivity implements HTTPAccess.Resp
         bar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
                 | ActionBar.DISPLAY_SHOW_HOME
                 | ActionBar.DISPLAY_SHOW_TITLE);
-        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#D65151")));
         bar.setTitle(notizia.getLocalizedDataString(false));
         // bar.setTitle(notizia.getTitolo());
         // bar.setSubtitle(notizia.getLocalizedDataString(true));
@@ -117,7 +114,7 @@ public class NotiziaActivity extends SherlockActivity implements HTTPAccess.Resp
         response = Utils.stripEsercente(response);
         notizia = Utils.getGson().fromJson(response, Notizia[].class)[0];
         
-        // Log.d(DEBUG_TAG, "***** object: " + notizia.getTesto());
+        Log.d(DEBUG_TAG, "***** object: " + notizia.getTesto());
         webView.loadDataWithBaseURL("http://", notizia.getTesto(), "text/html", "utf-8", null);
         
     }

@@ -1,5 +1,21 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppTheme" parent="android:Theme.Light" />
+    <style name="Theme.PerDue" parent="@style/Theme.Sherlock.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/Widget.PerDue.ActionBar</item>
+        <item name="actionBarStyle">@style/Widget.PerDue.ActionBar</item>
+    </style>
+    <!--  
+    	bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#D65151")));
+    	android:textColor="#CC0033"
+    	android:textColor="#CC0033"
+    	
+    -->
+    
+    <style name="Widget.PerDue.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/ab_background</item> 
+        <item name="background">@drawable/ab_background</item>
+    </style>
+    
+    
 
 </resources>

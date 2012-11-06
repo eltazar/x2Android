@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/newsDate"
         android:layout_below="@+id/newsDate"
-        android:textColor="#CC0033"
+        android:textColor="@color/perdue_red"
         android:textSize="14dp"
         android:textStyle="bold" />
 
