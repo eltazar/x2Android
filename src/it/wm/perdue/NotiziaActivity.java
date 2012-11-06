@@ -30,9 +30,13 @@ public class NotiziaActivity extends SherlockActivity implements HTTPAccess.Resp
         TextView title = (TextView) findViewById(R.id.title);
         title.setText(notizia.getTitolo());
         webView = (WebView) findViewById(R.id.newsWebView);
+        
         ActionBar bar = getSupportActionBar();
         bar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
-                | ActionBar.DISPLAY_SHOW_HOME);
+                | ActionBar.DISPLAY_SHOW_HOME
+                | ActionBar.DISPLAY_SHOW_TITLE);
+        bar.setTitle(notizia.getTitolo());
+        bar.setSubtitle(notizia.getLocalizedDataString());
         
         if (savedInstanceState != null) {
             webView.restoreState(savedInstanceState);
