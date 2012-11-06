@@ -21,7 +21,6 @@ import it.wm.android.adaptor.JSONListAdapter;
 import it.wm.perdue.businessLogic.Notizia;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 public class NewsFragment extends SherlockListFragment implements HTTPAccess.ResponseListener,
@@ -193,8 +192,8 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
                     title.setText(str.getTitolo());
                 }
                 if (date != null) {
-                    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                    date.setText(df.format(str.getData()));
+                    // SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                    date.setText(str.getLocalizedDataString(false));
                 }
             }
             
