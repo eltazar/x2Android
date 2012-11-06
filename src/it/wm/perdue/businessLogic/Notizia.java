@@ -34,10 +34,14 @@ public class Notizia implements Serializable {
         return data;
     }
     
-    public String getLocalizedDataString() {
+    public String getLocalizedDataString(boolean withTime) {
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
         DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.DEFAULT, Locale.ITALIAN);
-        return dateFormat.format(data) + " " + timeFormat.format(data);
+        
+        if (withTime)
+            return dateFormat.format(data) + " " + timeFormat.format(data);
+        else
+            return dateFormat.format(data);
     }
     
     public String getTesto() {
