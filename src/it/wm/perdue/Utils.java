@@ -4,6 +4,9 @@
 
 package it.wm.perdue;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 /**
  * @author Gabriele "Whisky" Visconti
  */
@@ -25,5 +28,11 @@ public final class Utils {
             builder.replace(start, end, "]");
         }
         return builder.toString();
+    }
+    
+    public static Gson getGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("yyyy-MM-dd kk:mm:ss");
+        return gsonBuilder.create();
     }
 }

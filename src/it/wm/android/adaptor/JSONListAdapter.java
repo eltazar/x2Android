@@ -41,7 +41,7 @@ public class JSONListAdapter<T> extends ArrayAdapter<T> {
         Gson gson = gsonBuilder.create();
         T[] objects = null;
         try {
-            objects = gson.fromJson(builder.toString(), clazz);
+            objects = gson.fromJson(jsonString, clazz);
         } catch (JsonSyntaxException e) {
             // In teoria se siamo qui, significa che è arrivato un array vuoto,
             objects = gson.fromJson("[]", clazz);
