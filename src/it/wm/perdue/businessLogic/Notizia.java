@@ -14,13 +14,15 @@ import java.util.Locale;
 @SuppressWarnings("serial")
 public class Notizia implements Serializable {
     @SerializedName("ID")
-    private int    id     = -1;
+    private int    id           = -1;
     @SerializedName("post_title")
-    private String titolo = null;
+    private String titolo       = null;
     @SerializedName("post_date")
-    private Date   data   = null;
+    private Date   data         = null;
     @SerializedName("post_content")
-    private String testo  = null;
+    private String testo        = null;
+    @SerializedName("guid")
+    private String wordpressUrl = null;
     
     public int getId() {
         return id;
@@ -46,5 +48,9 @@ public class Notizia implements Serializable {
     
     public String getTesto() {
         return testo;
+    }
+    
+    public String getWordpressUrl() {
+        return wordpressUrl;
     }
 }

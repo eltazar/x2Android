@@ -27,6 +27,7 @@ public class NotiziaActivity extends SherlockActivity implements HTTPAccess.Resp
     private Notizia             notizia              = null;
     private WebView             webView              = null;
     private ShareActionProvider mShareActionProvider = null;
+    private String              wordpressUrl         = null;
     
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +36,7 @@ public class NotiziaActivity extends SherlockActivity implements HTTPAccess.Resp
         setContentView(R.layout.notizia);
         TextView title = (TextView) findViewById(R.id.title);
         title.setText(notizia.getTitolo());
+        wordpressUrl = notizia.getWordpressUrl();
         webView = (WebView) findViewById(R.id.newsWebView);
         
         ActionBar bar = getSupportActionBar();
@@ -70,6 +72,7 @@ public class NotiziaActivity extends SherlockActivity implements HTTPAccess.Resp
          * share
          */
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+        Log.d(DEBUG_TAG, item.toString());
         
         /** Getting the target intent */
         Intent intent = getDefaultShareIntent();
@@ -87,8 +90,8 @@ public class NotiziaActivity extends SherlockActivity implements HTTPAccess.Resp
         
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_SUBJECT, "SUBJECT");
-        intent.putExtra(Intent.EXTRA_TEXT, "Sample Content !!!");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Carta PerDue: " + notizia.getTitolo());
+        intent.putExtra(Intent.EXTRA_TEXT, notizia.getWordpressUrl());
         return intent;
     }
     
