@@ -1,6 +1,9 @@
 
 package it.wm.perdue;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
@@ -9,18 +12,21 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.ShareActionProvider;
 
 import it.wm.HTTPAccess;
 import it.wm.perdue.businessLogic.Notizia;
 
 public class NotiziaActivity extends SherlockActivity implements HTTPAccess.ResponseListener {
     
-    private static final String DEBUG_TAG  = "NotiziaActivity";
-    private HTTPAccess          httpAccess = null;
-    private String              urlString  = null;
-    private Notizia             notizia    = null;
-    private WebView             webView    = null;
+    private static final String DEBUG_TAG            = "NotiziaActivity";
+    private HTTPAccess          httpAccess           = null;
+    private String              urlString            = null;
+    private Notizia             notizia              = null;
+    private WebView             webView              = null;
+    private ShareActionProvider mShareActionProvider = null;
     
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,8 +41,10 @@ public class NotiziaActivity extends SherlockActivity implements HTTPAccess.Resp
         bar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
                 | ActionBar.DISPLAY_SHOW_HOME
                 | ActionBar.DISPLAY_SHOW_TITLE);
-        bar.setTitle(notizia.getTitolo());
-        bar.setSubtitle(notizia.getLocalizedDataString());
+        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#D65151")));
+        bar.setTitle(notizia.getLocalizedDataString(false));
+        // bar.setTitle(notizia.getTitolo());
+        // bar.setSubtitle(notizia.getLocalizedDataString(true));
         
         if (savedInstanceState != null) {
             webView.restoreState(savedInstanceState);
@@ -47,6 +55,41 @@ public class NotiziaActivity extends SherlockActivity implements HTTPAccess.Resp
             httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET, null, null);
             Log.d(DEBUG_TAG, "id " + notizia.getId());
         }
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        /** Inflating the current activity's menu with res/menu/items.xml */
+        getSupportMenuInflater().inflate(R.menu.share_menu, menu);
+        
+        // Locate MenuItem with ShareActionProvider
+        MenuItem item = menu.findItem(R.id.menu_item_share);
+        
+        /**
+         * Getting the actionprovider associated with the menu item whose id is
+         * share
+         */
+        mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+        
+        /** Getting the target intent */
+        Intent intent = getDefaultShareIntent();
+        
+        /** Setting a share intent */
+        if (intent != null) {
+            mShareActionProvider.setShareIntent(intent);
+        }
+        
+        return super.onCreateOptionsMenu(menu);
+    }
+    
+    /** Returns a share intent */
+    private Intent getDefaultShareIntent() {
+        
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "SUBJECT");
+        intent.putExtra(Intent.EXTRA_TEXT, "Sample Content !!!");
+        return intent;
     }
     
     @Override
@@ -67,11 +110,11 @@ public class NotiziaActivity extends SherlockActivity implements HTTPAccess.Resp
     
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
-        Log.d(DEBUG_TAG, "RICEVUTA RISPOSTA: " + response);
+        // Log.d(DEBUG_TAG, "RICEVUTA RISPOSTA: " + response);
         response = Utils.stripEsercente(response);
         notizia = Utils.getGson().fromJson(response, Notizia[].class)[0];
         
-        Log.d(DEBUG_TAG, "***** object: " + notizia.getTesto());
+        // Log.d(DEBUG_TAG, "***** object: " + notizia.getTesto());
         webView.loadData(notizia.getTesto(), "text/html; charset=UTF-8", null);
         
     }
