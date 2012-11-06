@@ -9,6 +9,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
+import it.wm.perdue.Utils;
+
 public class JSONListAdapter<T> extends ArrayAdapter<T> {
     Class<T[]> clazz = null;
     
@@ -18,18 +20,8 @@ public class JSONListAdapter<T> extends ArrayAdapter<T> {
     }
     
     public int addFromJSON(String jsonString) {
-        StringBuilder builder = new StringBuilder(jsonString);
-        
-        if (builder.substring(0, 13).equals("{\"Esercente\":")) {
-            builder.delete(0, 13);
-            builder.deleteCharAt(builder.length() - 1);
-        }
-        
-        int start = builder.length() - ",false]".length();
-        int end = builder.length();
-        if (builder.substring(start, end).equals(",false]")) {
-            builder.replace(start, end, "]");
-        }
+        jsonString = Utils.stripEsercente(jsonString);
+        jsonString = Utils.stripFinalFalse(jsonString);
         
         /*
          * new AsyncTask<String, Void, T[]>() {
