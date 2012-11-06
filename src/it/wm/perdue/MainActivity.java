@@ -2,8 +2,6 @@
 package it.wm.perdue;
 
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -41,7 +39,6 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             bar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
         }
-        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#D65151")));
         
         setContentView(R.layout.main_activity);
         setupTabs();
