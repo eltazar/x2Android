@@ -1,16 +1,20 @@
 
 package it.wm.perdue;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
+
 import it.wm.HTTPAccess;
 import it.wm.perdue.businessLogic.Notizia;
 
-public class NotiziaActivity extends Activity implements HTTPAccess.ResponseListener {
+public class NotiziaActivity extends SherlockActivity implements HTTPAccess.ResponseListener {
     
     private static final String DEBUG_TAG  = "NotiziaActivity";
     private HTTPAccess          httpAccess = null;
@@ -26,6 +30,9 @@ public class NotiziaActivity extends Activity implements HTTPAccess.ResponseList
         TextView title = (TextView) findViewById(R.id.title);
         title.setText(notizia.getTitolo());
         webView = (WebView) findViewById(R.id.newsWebView);
+        ActionBar bar = getSupportActionBar();
+        bar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
+                | ActionBar.DISPLAY_SHOW_HOME);
         
         if (savedInstanceState != null) {
             webView.restoreState(savedInstanceState);
@@ -42,6 +49,16 @@ public class NotiziaActivity extends Activity implements HTTPAccess.ResponseList
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         webView.saveState(outState);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
     
     @Override
