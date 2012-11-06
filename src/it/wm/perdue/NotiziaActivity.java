@@ -118,7 +118,7 @@ public class NotiziaActivity extends SherlockActivity implements HTTPAccess.Resp
         notizia = Utils.getGson().fromJson(response, Notizia[].class)[0];
         
         // Log.d(DEBUG_TAG, "***** object: " + notizia.getTesto());
-        webView.loadData(notizia.getTesto(), "text/html; charset=UTF-8", null);
+        webView.loadDataWithBaseURL("http://", notizia.getTesto(), "text/html", "utf-8", null);
         
     }
     
