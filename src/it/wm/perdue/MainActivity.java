@@ -1,6 +1,7 @@
 
 package it.wm.perdue;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,17 +21,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends SherlockFragmentActivity implements TabListener {
-    private static final String DEBUG_TAG = "MainActivity";
-    List<TabDescriptor>         tabList   = null;
-    ViewPager                   pager     = null;
+    public static final String  DOVE_USARLA_TAB_TAG = "doveusarla";
+    public static final String  NEWS_TAB_TAG        = "news";
+    private static final String DEBUG_TAG           = "MainActivity";
+    List<TabDescriptor>         tabList             = null;
+    ViewPager                   pager               = null;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         tabList = new ArrayList<TabDescriptor>();
-        tabList.add(new TabDescriptor("doveusarla", KindOfShopFragment.class, "Dove Usarla"));
-        tabList.add(new TabDescriptor("news", NewsFragment.class, "News"));
+        tabList.add(new TabDescriptor(DOVE_USARLA_TAB_TAG, KindOfShopFragment.class, "Dove Usarla"));
+        tabList.add(new TabDescriptor(NEWS_TAB_TAG, NewsFragment.class, "News"));
         
         ActionBar bar = getSupportActionBar();
         bar.setDisplayOptions(ActionBar.DISPLAY_USE_LOGO
@@ -50,6 +53,16 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
         
         if (savedInstanceState != null) {
             bar.setSelectedNavigationItem(savedInstanceState.getInt("selectedtab"));
+        }
+        
+        String tag = (String) getIntent().getSerializableExtra(Intent.EXTRA_TEXT);
+        if (tag != null) {
+            int i = 0;
+            for (TabDescriptor t : tabList) {
+                if (t.tag.equals(tag))
+                    bar.setSelectedNavigationItem(i);
+                i++;
+            }
         }
     }
     
