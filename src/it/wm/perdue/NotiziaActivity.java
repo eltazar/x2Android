@@ -45,15 +45,11 @@ public class NotiziaActivity extends SherlockActivity implements HTTPAccess.Resp
         // bar.setTitle(notizia.getTitolo());
         // bar.setSubtitle(notizia.getLocalizedDataString(true));
         
-        if (savedInstanceState != null) {
-            webView.restoreState(savedInstanceState);
-        } else {
-            httpAccess = new HTTPAccess();
-            httpAccess.setResponseListener(this);
-            urlString = "http://www.cartaperdue.it/partner/Notizia.php?id=" + notizia.getId();
-            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET, null, null);
-            Log.d(DEBUG_TAG, "id " + notizia.getId());
-        }
+        httpAccess = new HTTPAccess();
+        httpAccess.setResponseListener(this);
+        urlString = "http://www.cartaperdue.it/partner/Notizia.php?id=" + notizia.getId();
+        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET, null, null);
+        Log.d(DEBUG_TAG, "id " + notizia.getId());
     }
     
     @Override
@@ -84,18 +80,11 @@ public class NotiziaActivity extends SherlockActivity implements HTTPAccess.Resp
     
     /** Returns a share intent */
     private Intent getDefaultShareIntent() {
-        
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, "Carta PerDue: " + notizia.getTitolo());
-        intent.putExtra(Intent.EXTRA_TEXT, notizia.getWordpressUrl());
+        intent.putExtra(Intent.EXTRA_TEXT, wordpressUrl);
         return intent;
-    }
-    
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        webView.saveState(outState);
     }
     
     @Override
@@ -113,10 +102,7 @@ public class NotiziaActivity extends SherlockActivity implements HTTPAccess.Resp
         // Log.d(DEBUG_TAG, "RICEVUTA RISPOSTA: " + response);
         response = Utils.stripEsercente(response);
         notizia = Utils.getGson().fromJson(response, Notizia[].class)[0];
-        
-        Log.d(DEBUG_TAG, "***** object: " + notizia.getTesto());
-        webView.loadDataWithBaseURL("http://", notizia.getTesto(), "text/html", "utf-8", null);
-        
+        webView.loadDataWithBaseURL("html://", notizia.getTesto(), "text/html", "utf-8", null);
     }
     
     @Override
