@@ -91,7 +91,9 @@ public class NotiziaActivity extends SherlockActivity implements HTTPAccess.Resp
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+                Intent intent = NavUtils.getParentActivityIntent(this);
+                intent.putExtra(Intent.EXTRA_TEXT, MainActivity.NEWS_TAB_TAG);
+                NavUtils.navigateUpTo(this, intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
