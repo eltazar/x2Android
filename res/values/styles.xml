@@ -1,6 +1,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.PerDue" parent="@style/Theme.Sherlock.Light.DarkActionBar">
+    <style name="Theme.PerDue" parent="@style/Theme.Sherlock.Light"> <!-- .DarkActionBar"> -->
         <item name="android:actionBarStyle">@style/Widget.PerDue.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.PerDue.ActionBar</item>
     </style>
@@ -11,9 +11,9 @@
     	
     -->
     
-    <style name="Widget.PerDue.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@drawable/ab_background</item> 
-        <item name="background">@drawable/ab_background</item>
+    <style name="Widget.PerDue.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid"><!-- Inverse -->
+        <!--  <item name="android:background">@drawable/ab_background</item> -->
+        <!-- <item name="background">@drawable/ab_background</item> -->
     </style>
     
     
