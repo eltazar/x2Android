@@ -7,5 +7,10 @@
        android:title="Cerca" 
        android:icon="@drawable/ic_action_search"
       />
+     <!-- icona map: http://www.softicons.com/free-icons/android-icons/codex-icons-by-ilia-draznin/maps-icon -->
+     <item android:id="@+id/map_button"
+          android:title="map"
+          android:icon="@drawable/map"
+          android:showAsAction="ifRoom|withText" />
 
 </menu>
