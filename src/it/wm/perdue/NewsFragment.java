@@ -40,7 +40,6 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
         adapter = new NotiziaJSONListAdapter(
                 getActivity(),
                 R.layout.news_row,
-                R.id.newsTitle,
                 Notizia[].class);
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
@@ -167,9 +166,9 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
     
     private static class NotiziaJSONListAdapter extends JSONListAdapter<Notizia> {
         
-        public NotiziaJSONListAdapter(Context context, int resource, int textViewResourceId,
+        public NotiziaJSONListAdapter(Context context, int resource,
                 Class<Notizia[]> clazz) {
-            super(context, resource, textViewResourceId, clazz);
+            super(context, resource, clazz);
         }
         
         @SuppressWarnings("deprecation")
