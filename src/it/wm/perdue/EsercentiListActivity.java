@@ -39,6 +39,7 @@ public class EsercentiListActivity extends SherlockListActivity implements
     private int                      downloading = 0;
     private boolean                  noMoreData  = false;
     private View                     footerView  = null;
+    private String                   category    = "";
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,13 +71,18 @@ public class EsercentiListActivity extends SherlockListActivity implements
                 nRows = 10;
         }
         
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            category = extras.getString("category");
+        }
+        
         urlString = "http://www.cartaperdue.it/partner/v2.0/EsercentiNonRistorazione.php";
         Log.d(DEBUG_TAG, "nrows " + nRows);
         for (int i = 0; i < nRows / 10; i++) {
             HashMap<String, String> postMap = new HashMap<String, String>();
             postMap.put("from", "" + i * 10);
             postMap.put("request", "fetch");
-            postMap.put("categ", "teatri");
+            postMap.put("categ", category);
             postMap.put("prov", "Qui");
             postMap.put("giorno", "Venerdi");
             postMap.put("lat", "37.332331");
@@ -148,7 +154,17 @@ public class EsercentiListActivity extends SherlockListActivity implements
     /* *** BEGIN: OnQueryTextListener Methods **************** */
     @Override
     public boolean onQueryTextSubmit(String query) {
-        return false;
+        
+        // TODO: dismettere la tastiera quando si preme "cerca" sulla tastiera
+        
+        // Hide keyboard
+        // InputMethodManager imm = (InputMethodManager) this.getSystemService(
+        // SherlockListActivity.INPUT_METHOD_SERVICE);
+        // SearchView mSearchView = (SearchView) findViewById(R.id.abSearch);
+        // imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
+        // mSearchView.setFocusable(false);
+        // mSearchView.setFocusableInTouchMode(false);
+        return true;
     }
     
     @Override
@@ -243,7 +259,7 @@ public class EsercentiListActivity extends SherlockListActivity implements
             HashMap<String, String> postMap = new HashMap<String, String>();
             postMap.put("from", "" + adapter.getCount());
             postMap.put("request", "fetch");
-            postMap.put("categ", "teatri");
+            postMap.put("categ", category);
             postMap.put("prov", "Qui");
             postMap.put("giorno", "Venerdi");
             postMap.put("lat", "37.332331");
