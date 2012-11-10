@@ -3,6 +3,7 @@ package it.wm.android.adaptor;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import com.google.gson.Gson;
@@ -13,8 +14,8 @@ import it.wm.perdue.Utils;
 public class JSONListAdapter<T> extends ArrayAdapter<T> {
     Class<T[]> clazz = null;
     
-    public JSONListAdapter(Context context, int resource, int textViewResourceId, Class<T[]> clazz) {
-        super(context, resource, textViewResourceId);
+    public JSONListAdapter(Context context, int resource, Class<T[]> clazz) {
+        super(context, resource);
         this.clazz = clazz;
     }
     
@@ -22,6 +23,7 @@ public class JSONListAdapter<T> extends ArrayAdapter<T> {
         jsonString = Utils.stripEsercente(jsonString);
         jsonString = Utils.stripFinalFalse(jsonString);
         
+        Log.d("JSON ADAPTER", "JSONSTRING = " + Utils.stripEsercente(jsonString));
         /*
          * new AsyncTask<String, Void, T[]>() {
          * @Override protected T[] doInBackground(String... params) {
