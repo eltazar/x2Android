@@ -22,6 +22,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 
+import it.wm.CachedAsyncImageView;
 import it.wm.HTTPAccess;
 import it.wm.android.adaptor.JSONListAdapter;
 import it.wm.perdue.businessLogic.Esercente;
@@ -302,6 +303,18 @@ public class EsercentiListActivity extends SherlockListActivity implements
                 TextView title = (TextView) v.findViewById(R.id.eseTitle);
                 // Log.d("DEBUG_TAG", "title textView = " + title);
                 TextView address = (TextView) v.findViewById(R.id.address);
+                
+                CachedAsyncImageView caImageView = (CachedAsyncImageView) v
+                        .findViewById(R.id.eseImage);
+                
+                String urlImageString = "http://www.cartaperdue.it/partner/v2.0/ImmagineEsercente.php?id="
+                        + str.getId();
+                
+                if (caImageView != null) {
+                    Log.d("DEBUG_TAG", "esercente id  = " + str.getId());
+                    caImageView.loadImageFromURL(urlImageString);
+                }
+                
                 if (title != null) {
                     title.setText(str.getInsegna());
                 }
