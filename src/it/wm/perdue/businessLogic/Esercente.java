@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * @author Gabriele "Whisky" Visconti
  */
 public class Esercente {
-    @SerializedName("IDEsercente")
+    @SerializedName("IDesercente")
     private int     id             = -1;
     @SerializedName("Insegna_Esercente")
     private String  insegna        = null;
@@ -38,65 +38,65 @@ public class Esercente {
     private double  latitude       = 0.0;
     @SerializedName("Longitudine")
     private double  longitude      = 0.0;
-
+    
     public int getId() {
         return id;
     }
-
+    
     public String getInsegna() {
         return insegna;
     }
-
+    
     public String getIndirizzo() {
         return indirizzo;
     }
-
+    
     public String getCitta() {
         return citta;
     }
-
+    
     public String getZona() {
         return zona;
     }
-
+    
     public String getTelefono() {
         return telefono;
     }
-
+    
     public String getEmail() {
         return email;
     }
-
+    
     public String getUrl() {
         return url;
     }
-
+    
     public String getGiornoChiusura() {
         return giornoChiusura;
     }
-
+    
     public String getTipologia() {
         return tipologia;
     }
-
+    
     public String getNoteVarie() {
         return noteVarie;
     }
-
+    
     public boolean isUlterioriInfo() {
         return ulterioriInfo;
     }
-
+    
     public boolean isVirtuale() {
         return virtuale;
     }
-
+    
     public double getLatitude() {
         return latitude;
     }
-
+    
     public double getLongitude() {
         return longitude;
     }
-
+    
 }
