@@ -80,8 +80,8 @@ public class EsercentiListFragment extends SherlockListFragment implements
             postMap.put("long", "-122.031219");
             postMap.put("ordina", "distanza");
             postMap.put("filtro", "");
-            // httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
-            // postMap, null);
+            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
+                    postMap, null);
             downloading++;
             Log.d(DEBUG_TAG, "ONCREATE Donwloading " + downloading);
         }
