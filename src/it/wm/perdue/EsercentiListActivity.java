@@ -83,7 +83,7 @@ public class EsercentiListActivity extends SherlockListActivity implements
             HashMap<String, String> postMap = new HashMap<String, String>();
             postMap.put("from", "" + i * 10);
             postMap.put("request", "fetch");
-            postMap.put("categ", category);
+            postMap.put("categ", category.toLowerCase());
             postMap.put("prov", "Qui");
             postMap.put("giorno", "Venerdi");
             postMap.put("lat", "37.332331");
@@ -101,6 +101,7 @@ public class EsercentiListActivity extends SherlockListActivity implements
         bar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
                 | ActionBar.DISPLAY_SHOW_HOME
                 | ActionBar.DISPLAY_SHOW_TITLE);
+        bar.setTitle(category);
     }
     
     @Override
@@ -178,7 +179,7 @@ public class EsercentiListActivity extends SherlockListActivity implements
         HashMap<String, String> postMap = new HashMap<String, String>();
         postMap.put("from", "0");
         postMap.put("request", "search");
-        postMap.put("categ", category);
+        postMap.put("categ", category.toLowerCase());
         postMap.put("lat", "37.332331");
         postMap.put("long", "-122.031219");
         postMap.put("ordina", "distanza");
@@ -260,7 +261,7 @@ public class EsercentiListActivity extends SherlockListActivity implements
             HashMap<String, String> postMap = new HashMap<String, String>();
             postMap.put("from", "" + adapter.getCount());
             postMap.put("request", "fetch");
-            postMap.put("categ", category);
+            postMap.put("categ", category.toLowerCase());
             postMap.put("prov", "Qui");
             postMap.put("giorno", "Venerdi");
             postMap.put("lat", "37.332331");
