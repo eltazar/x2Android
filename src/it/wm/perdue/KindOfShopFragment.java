@@ -56,7 +56,7 @@ public class KindOfShopFragment extends SherlockListFragment {
          */
         
         Intent intent = new Intent(getActivity(), EsercentiListActivity.class);
-        intent.putExtra("category", l.getItemAtPosition(position).toString().toLowerCase());
+        intent.putExtra("category", l.getItemAtPosition(position).toString());
         startActivity(intent);
     }
     
