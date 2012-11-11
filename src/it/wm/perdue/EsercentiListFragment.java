@@ -102,6 +102,27 @@ public class EsercentiListFragment extends SherlockListFragment implements
         listState = getListView().onSaveInstanceState();
     }
     
+    protected void setDataForQuery(String data) {
+        Log.d("FRAGMENT", " DATI RICEVUTI = " + data);
+        
+        data = data.replace(" ", "-");
+        
+        // Log.d(DEBUG_TAG, "TEXT CHANGE query ");
+        HashMap<String, String> postMap = new HashMap<String, String>();
+        postMap.put("from", "0");
+        postMap.put("request", "search");
+        postMap.put("categ", category.toLowerCase());
+        postMap.put("lat", "37.332331");
+        postMap.put("long", "-122.031219");
+        postMap.put("ordina", "distanza");
+        postMap.put("chiave", data);
+        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
+    }
+    
+    protected void setCategory(String category) {
+        this.category = category;
+    }
+    
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -222,7 +243,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
                 
                 if (caImageView != null) {
                     Log.d("DEBUG_TAG", "esercente id  = " + str.getId());
-                    caImageView.loadImageFromURL(urlImageString);
+                    // caImageView.loadImageFromURL(urlImageString);
                 }
                 
                 if (title != null) {
