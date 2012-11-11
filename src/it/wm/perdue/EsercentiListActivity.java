@@ -177,7 +177,7 @@ public class EsercentiListActivity extends SherlockListActivity implements
         HashMap<String, String> postMap = new HashMap<String, String>();
         postMap.put("from", "0");
         postMap.put("request", "search");
-        postMap.put("categ", "teatri");
+        postMap.put("categ", category);
         postMap.put("lat", "37.332331");
         postMap.put("long", "-122.031219");
         postMap.put("ordina", "distanza");
