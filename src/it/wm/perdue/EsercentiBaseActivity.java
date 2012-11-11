@@ -2,7 +2,6 @@
 package it.wm.perdue;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
@@ -16,7 +15,8 @@ import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 
 public class EsercentiBaseActivity extends SherlockFragmentActivity implements OnQueryTextListener {
     
-    private String category = "";
+    private String                category = "";
+    private EsercentiListFragment esercentiFrag;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,13 +30,15 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         }
         
         ActionBar bar = getSupportActionBar();
-        bar.setDisplayOptions(ActionBar.DISPLAY_USE_LOGO
+        bar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
                 | ActionBar.DISPLAY_SHOW_HOME
                 | ActionBar.DISPLAY_SHOW_TITLE);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            bar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
-        }
+        
         bar.setTitle(category);
+        
+        esercentiFrag = (EsercentiListFragment) getSupportFragmentManager().findFragmentById(
+                R.id.esercentiFragment);
+        esercentiFrag.setCategory(category.toLowerCase());
     }
     
     /* *** BEGIN: OptionsMenu Methods **************** */
@@ -85,6 +87,8 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
     public boolean onQueryTextChange(String newText) {
         
         Log.d("EsercentiBaseActivity", "TEXT CHANGE query ");
+        
+        esercentiFrag.setDataForQuery(newText);
         
         return true;
     }
