@@ -55,8 +55,9 @@ public class KindOfShopFragment extends SherlockListFragment {
          * Toast.LENGTH_SHORT).show();
          */
         
-        Intent intent = new Intent(getActivity(), EsercentiListActivity.class);
-        intent.putExtra("category", l.getItemAtPosition(position).toString());
+        Intent intent = new Intent(getActivity(), EsercentiBaseActivity.class);
+        intent.putExtra("category",
+                l.getItemAtPosition(position).toString());
         startActivity(intent);
     }
     

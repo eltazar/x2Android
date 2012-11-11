@@ -18,6 +18,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.PerDue" >
+        
         <activity
             android:name=".MainActivity"
             android:label="@string/main_activity_title" >
@@ -34,6 +35,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".EsercentiBaseActivity"
+            android:label="" >
+       		<meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
             android:name=".EsercentiListActivity"
             android:label="" >
        		<meta-data
@@ -43,7 +51,8 @@
         <activity
             android:name=".NotiziaActivity"
             android:label="" 
-            android:configChanges="orientation|screenSize" >
+            android:configChanges="orientation|screenSize"
+            android:uiOptions="splitActionBarWhenNarrow" >
        		<meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
