@@ -10,6 +10,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 
@@ -47,9 +48,8 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
     public boolean onCreateOptionsMenu(Menu menu) {
         
         getSupportMenuInflater().inflate(R.menu.esercenti_menu, menu);
-        SearchView mSearchView = (SearchView) menu.findItem(R.id.abSearch)
-                .getActionView();
-        mSearchView.setOnQueryTextListener(this);
+        // mSearchView.setOnCloseListener(this);
+        setupSearchView(menu);
         return true;
     }
     
@@ -63,6 +63,29 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    
+    private void setupSearchView(Menu menu) {
+        
+        SearchView mSearchView = (SearchView) menu.findItem(R.id.abSearch)
+                .getActionView();
+        mSearchView.setOnQueryTextListener(this);
+        menu.findItem(R.id.abSearch).setOnActionExpandListener(new OnActionExpandListener() {
+            
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                // TODO Auto-generated method stub
+                return true;
+            }
+            
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                // do what you want to when close the sesarchview
+                // remember to return true;
+                Log.d("*******", "onMenuItemActionCollapse");
+                esercentiFrag.clearSearchingResults();
+                return true;
+            }
+        });
     }
     
     /* *** END: OptionsMenu Methods **************** */

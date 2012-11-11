@@ -123,6 +123,23 @@ public class EsercentiListFragment extends SherlockListFragment implements
         this.category = category;
     }
     
+    protected void clearSearchingResults() {
+        adapter.clear();
+        HashMap<String, String> postMap = new HashMap<String, String>();
+        postMap.put("from", "0");
+        postMap.put("request", "fetch");
+        postMap.put("categ", category.toLowerCase());
+        postMap.put("prov", "Qui");
+        postMap.put("giorno", "Venerdi");
+        postMap.put("lat", "37.332331");
+        postMap.put("long", "-122.031219");
+        postMap.put("ordina", "distanza");
+        postMap.put("filtro", "");
+        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
+                postMap, null);
+        downloading++;
+    }
+    
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
