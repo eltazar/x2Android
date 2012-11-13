@@ -36,11 +36,15 @@ public class EsercentiListFragment extends SherlockListFragment implements
     private static String            category    = "";
     private static String            sorting     = "";
     
+    // problema: perch al primo avvio di una categoria stampa due volte il log
+    // SORTING ? :|
+    // perch
+    
     public static EsercentiListFragment newInstance(String sort, String categ) {
         EsercentiListFragment fragment = new EsercentiListFragment();
         sorting = sort.toLowerCase();
         category = categ.toLowerCase();
-        Log.d("SORTING", "SORTING = " + sorting + " category = " + category);
+        Log.d(DEBUG_TAG, "NEW INSTANCE --> SORTING = " + sorting + " category = " + category);
         return fragment;
     }
     
@@ -94,6 +98,12 @@ public class EsercentiListFragment extends SherlockListFragment implements
             downloading++;
             Log.d(DEBUG_TAG, "ONCREATE Donwloading " + downloading);
         }
+    }
+    
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        Log.d(DEBUG_TAG, "ON CREATED VIEW --> SORTING = " + sorting + " category = " + category);
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
     
     @Override
