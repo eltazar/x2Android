@@ -26,6 +26,13 @@ public class EsercentiPagerAdapter extends FragmentPagerAdapter implements IconP
     @Override
     public Fragment getItem(int position) {
         
+        // il problema ora è che bisogna gestire con il fragment manager i vari
+        // fragment?
+        // inoltre bisognerebbe ritornare ad "esercentiBaseActivity" quale
+        // fragment è visualizzato,
+        // perchè quando si fa ad esempio la ricerca o si cambia filtro, bisogna
+        // inviare al fragment i dati per le nuove query
+        
         return EsercentiListFragment.newInstance(CONTENT[position % CONTENT.length], category);
         
         // return TestFragment.newInstance(CONTENT[position % CONTENT.length]);
