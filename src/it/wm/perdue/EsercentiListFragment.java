@@ -33,8 +33,8 @@ public class EsercentiListFragment extends SherlockListFragment implements
     private int                      downloading = 0;
     private boolean                  noMoreData  = false;
     private View                     footerView  = null;
-    private static String            category    = "";
-    private static String            sorting     = "";
+    private String                   category    = "";
+    private String                   sorting     = "";
     
     // problema: perchè al primo avvio di una categoria stampa due volte il log
     // SORTING ? :|
@@ -42,9 +42,10 @@ public class EsercentiListFragment extends SherlockListFragment implements
     
     public static EsercentiListFragment newInstance(String sort, String categ) {
         EsercentiListFragment fragment = new EsercentiListFragment();
-        sorting = sort.toLowerCase();
-        category = categ.toLowerCase();
-        Log.d(DEBUG_TAG, "NEW INSTANCE --> SORTING = " + sorting + " category = " + category);
+        fragment.sorting = sort.toLowerCase();
+        fragment.category = categ.toLowerCase();
+        Log.d(DEBUG_TAG, "NEW INSTANCE --> SORTING = " + fragment.sorting + " category = "
+                + fragment.category);
         return fragment;
     }
     
@@ -60,7 +61,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
         adapter = new EsercenteJSONListAdapter(
                 getActivity(),
                 R.layout.esercente_row,
-                Esercente[].class);
+                Esercente[].class, sorting);
     }
     
     @Override
@@ -91,8 +92,8 @@ public class EsercentiListFragment extends SherlockListFragment implements
             postMap.put("categ", category.toLowerCase());
             postMap.put("prov", "Qui");
             postMap.put("giorno", "Venerdi");
-            postMap.put("lat", "37.332331");
-            postMap.put("long", "-122.031219");
+            postMap.put("lat", "41.801007");
+            postMap.put("long", "12.454273");
             postMap.put("ordina", sorting);
             postMap.put("filtro", "");
             httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
@@ -133,8 +134,8 @@ public class EsercentiListFragment extends SherlockListFragment implements
         postMap.put("from", "0");
         postMap.put("request", "search");
         postMap.put("categ", category.toLowerCase());
-        postMap.put("lat", "37.332331");
-        postMap.put("long", "-122.031219");
+        postMap.put("lat", "41.801007");
+        postMap.put("long", "12.454273");
         postMap.put("ordina", sorting);
         postMap.put("chiave", data);
         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
@@ -152,8 +153,8 @@ public class EsercentiListFragment extends SherlockListFragment implements
         postMap.put("categ", category.toLowerCase());
         postMap.put("prov", "Qui");
         postMap.put("giorno", "Venerdi");
-        postMap.put("lat", "37.332331");
-        postMap.put("long", "-122.031219");
+        postMap.put("lat", "41.801007");
+        postMap.put("long", "12.454273");
         postMap.put("ordina", sorting);
         postMap.put("filtro", "");
         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
@@ -232,8 +233,8 @@ public class EsercentiListFragment extends SherlockListFragment implements
             postMap.put("categ", category.toLowerCase());
             postMap.put("prov", "Qui");
             postMap.put("giorno", "Venerdi");
-            postMap.put("lat", "37.332331");
-            postMap.put("long", "-122.031219");
+            postMap.put("lat", "41.801007");
+            postMap.put("long", "12.454273");
             postMap.put("ordina", sorting);
             postMap.put("filtro", "");
             httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
@@ -245,12 +246,14 @@ public class EsercentiListFragment extends SherlockListFragment implements
     /* *** END: AbsListView.OnScrollListener ****************** */
     
     private static class EsercenteJSONListAdapter extends JSONListAdapter<Esercente> {
+        private String sorting = null;
         
         public EsercenteJSONListAdapter(Context context, int resource,
-                Class<Esercente[]> clazz) {
+                Class<Esercente[]> clazz, String sorting) {
             super(context, resource, clazz);
             // TODO Auto-generated constructor stub
             // Log.d(DEBUG_TAG, "ESERCENTE JSON ADAPT CREATO ");
+            this.sorting = sorting;
         }
         
         public View getView(int position, View convertView, ViewGroup parent) {
@@ -285,7 +288,12 @@ public class EsercentiListFragment extends SherlockListFragment implements
                 }
                 
                 if (title != null) {
-                    title.setText(str.getInsegna());
+                    Log.d(DEBUG_TAG, "Sorting è: " + sorting);
+                    if (sorting.equals("distanza")) {
+                        title.setText("[" + str.getDistanza() + "] " + str.getInsegna());
+                    } else {
+                        title.setText(str.getInsegna());
+                    }
                 }
                 if (address != null) {
                     // SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");

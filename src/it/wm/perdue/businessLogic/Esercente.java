@@ -38,6 +38,8 @@ public class Esercente {
     private double  latitude       = 0.0;
     @SerializedName("Longitudine")
     private double  longitude      = 0.0;
+    @SerializedName("Distanza")
+    private double  distanza       = 0.0;
     
     public int getId() {
         return id;
@@ -99,4 +101,7 @@ public class Esercente {
         return longitude;
     }
     
+    public double getDistanza() {
+        return distanza;
+    }
 }
