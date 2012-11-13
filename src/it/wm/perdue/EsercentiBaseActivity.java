@@ -4,6 +4,7 @@ package it.wm.perdue;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -13,11 +14,18 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
+import com.viewpagerindicator.PageIndicator;
+import com.viewpagerindicator.TitlePageIndicator;
+
+import it.wm.android.adaptor.EsercentiPagerAdapter;
 
 public class EsercentiBaseActivity extends SherlockFragmentActivity implements OnQueryTextListener {
     
     private String                category = "";
-    private EsercentiListFragment esercentiFrag;
+    private EsercentiListFragment currentEsercentiFrag;
+    private EsercentiPagerAdapter mAdapter;
+    private ViewPager             mPager;
+    private PageIndicator         mIndicator;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,9 +45,29 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         
         bar.setTitle(category);
         
-        esercentiFrag = (EsercentiListFragment) getSupportFragmentManager().findFragmentById(
-                R.id.esercentiFragment);
-        esercentiFrag.setCategory(category.toLowerCase());
+        // FragmentManager fragmentManager = getSupportFragmentManager();
+        // FragmentTransaction fragmentTransaction =
+        // fragmentManager.beginTransaction();
+        
+        // currentEsercentiFrag = new EsercentiListFragment();
+        // currentEsercentiFrag.setCategory(category.toLowerCase());
+        // fragmentTransaction.replace(R.id.fragmentDistance,
+        // currentEsercentiFrag);
+        // fragmentTransaction.commit();
+        
+        // currentEsercentiFrag = (EsercentiListFragment)
+        // getSupportFragmentManager().
+        // findFragmentById(R.id.esercentiFragmentDistance);
+        // currentEsercentiFrag.setCategory(category.toLowerCase());
+        
+        mAdapter = new EsercentiPagerAdapter(getSupportFragmentManager(), category);
+        
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPager.setAdapter(mAdapter);
+        
+        mIndicator = (TitlePageIndicator) findViewById(R.id.indicator);
+        mIndicator.setViewPager(mPager);
+        
     }
     
     /* *** BEGIN: OptionsMenu Methods **************** */
@@ -82,7 +110,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
                 // do what you want to when close the sesarchview
                 // remember to return true;
                 Log.d("*******", "onMenuItemActionCollapse");
-                esercentiFrag.clearSearchingResults();
+                currentEsercentiFrag.clearSearchingResults();
                 return true;
             }
         });
@@ -111,10 +139,11 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         
         Log.d("EsercentiBaseActivity", "TEXT CHANGE query ");
         
-        esercentiFrag.setDataForQuery(newText);
+        currentEsercentiFrag.setDataForQuery(newText);
         
         return true;
     }
     
     /* *** END: OnQueryTextListener Methods **************** */
+    
 }
