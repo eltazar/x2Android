@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="60dip" >
 
         <it.wm.CachedAsyncImageView
             android:id="@+id/eseImage"
@@ -17,7 +17,6 @@
             android:gravity="center_horizontal"
             android:paddingLeft="5dip"
             android:paddingTop="5dip" >
-
         </it.wm.CachedAsyncImageView>
 
         <TextView
@@ -38,6 +37,16 @@
             android:layout_alignLeft="@+id/eseTitle"
             android:layout_below="@+id/eseTitle"
             android:text="Address" />
+
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="18dp"
+            android:gravity="bottom"
+            android:text="distance" />
 
     </RelativeLayout>
 

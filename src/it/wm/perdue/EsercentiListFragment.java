@@ -275,7 +275,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
                 TextView title = (TextView) v.findViewById(R.id.eseTitle);
                 // Log.d("DEBUG_TAG", "title textView = " + title);
                 TextView address = (TextView) v.findViewById(R.id.address);
-                
+                TextView distance = (TextView) v.findViewById(R.id.distance);
                 CachedAsyncImageView caImageView = (CachedAsyncImageView) v
                         .findViewById(R.id.eseImage);
                 
@@ -289,15 +289,19 @@ public class EsercentiListFragment extends SherlockListFragment implements
                 
                 if (title != null) {
                     Log.d(DEBUG_TAG, "Sorting è: " + sorting);
-                    if (sorting.equals("distanza")) {
-                        title.setText("[" + str.getDistanza() + "] " + str.getInsegna());
-                    } else {
-                        title.setText(str.getInsegna());
-                    }
+                    // if (sorting.equals("distanza")) {
+                    // title.setText("[" + str.getDistanza() + "] " +
+                    // str.getInsegna());
+                    // } else {
+                    title.setText(str.getInsegna());
+                    // }
                 }
                 if (address != null) {
                     // SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
                     address.setText(str.getIndirizzo());
+                }
+                if (distance != null) {
+                    distance.setText(String.format("%.3f km", str.getDistanza()));
                 }
             }
             
