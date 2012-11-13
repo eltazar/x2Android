@@ -33,7 +33,16 @@ public class EsercentiListFragment extends SherlockListFragment implements
     private int                      downloading = 0;
     private boolean                  noMoreData  = false;
     private View                     footerView  = null;
-    private String                   category    = "";
+    private static String            category    = "";
+    private static String            sorting     = "";
+    
+    public static EsercentiListFragment newInstance(String sort, String categ) {
+        EsercentiListFragment fragment = new EsercentiListFragment();
+        sorting = sort.toLowerCase();
+        category = categ.toLowerCase();
+        Log.d("SORTING", "SORTING = " + sorting + " category = " + category);
+        return fragment;
+    }
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,7 +87,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
             postMap.put("giorno", "Venerdi");
             postMap.put("lat", "37.332331");
             postMap.put("long", "-122.031219");
-            postMap.put("ordina", "distanza");
+            postMap.put("ordina", sorting);
             postMap.put("filtro", "");
             httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
                     postMap, null);
@@ -114,7 +123,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
         postMap.put("categ", category.toLowerCase());
         postMap.put("lat", "37.332331");
         postMap.put("long", "-122.031219");
-        postMap.put("ordina", "distanza");
+        postMap.put("ordina", sorting);
         postMap.put("chiave", data);
         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
     }
@@ -133,7 +142,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
         postMap.put("giorno", "Venerdi");
         postMap.put("lat", "37.332331");
         postMap.put("long", "-122.031219");
-        postMap.put("ordina", "distanza");
+        postMap.put("ordina", sorting);
         postMap.put("filtro", "");
         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
                 postMap, null);
@@ -213,7 +222,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
             postMap.put("giorno", "Venerdi");
             postMap.put("lat", "37.332331");
             postMap.put("long", "-122.031219");
-            postMap.put("ordina", "distanza");
+            postMap.put("ordina", sorting);
             postMap.put("filtro", "");
             httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
             downloading++;
