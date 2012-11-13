@@ -48,6 +48,11 @@ public class EsercentiListFragment extends SherlockListFragment implements
         return fragment;
     }
     
+    public EsercentiListFragment() {
+        httpAccess = new HTTPAccess();
+        httpAccess.setResponseListener(this);
+    }
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,9 +61,6 @@ public class EsercentiListFragment extends SherlockListFragment implements
                 getActivity(),
                 R.layout.esercente_row,
                 Esercente[].class);
-        
-        httpAccess = new HTTPAccess();
-        httpAccess.setResponseListener(this);
     }
     
     @Override

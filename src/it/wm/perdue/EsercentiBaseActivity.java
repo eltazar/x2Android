@@ -136,14 +136,13 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
     
     @Override
     public boolean onQueryTextChange(String newText) {
-        
         Log.d("EsercentiBaseActivity", "TEXT CHANGE query ");
-        
-        currentEsercentiFrag.setDataForQuery(newText);
-        
+        for (int i = 0; i < mAdapter.getCount(); i++) {
+            EsercentiListFragment f = (EsercentiListFragment) mAdapter.getItem(i);
+            f.setDataForQuery(newText);
+        }
         return true;
     }
-    
     /* *** END: OnQueryTextListener Methods **************** */
     
 }
