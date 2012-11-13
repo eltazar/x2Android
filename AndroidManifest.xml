@@ -36,7 +36,7 @@
         </activity>
         <activity
             android:name=".EsercentiBaseActivity"
-            android:label="" >
+            android:label="">
        		<meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -51,8 +51,7 @@
         <activity
             android:name=".NotiziaActivity"
             android:label="" 
-            android:configChanges="orientation|screenSize"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:configChanges="orientation|screenSize">
        		<meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
