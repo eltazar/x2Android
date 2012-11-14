@@ -4,7 +4,7 @@
 
 package it.wm;
 
-import it.wm.StringCache.StringCacheListener;
+import android.util.Log;
 
 import java.util.HashMap;
 
@@ -14,7 +14,7 @@ import java.util.HashMap;
  * 
  * @author Gabriele "Whisky" Visconti
  */
-public class HTTPAccess implements StringCacheListener {
+public class HTTPAccess implements DownloaderTask.DownloadListener {
     /**
      * Represents the HTTP connection method.
      * 
@@ -26,31 +26,26 @@ public class HTTPAccess implements StringCacheListener {
         /** POST request */
         POST
     }
-
+    
     /** tag meant to be used in ${Link android.util.Log} */
     private static final String              DEBUG_TAG = "HTTPAccess";
     private ResponseListener                 listener  = null;
     // private HashMap<DownloaderTask, ResponseListener> connectionMap = null;
     private HashMap<DownloadRequest, String> tagMap    = null;
-
+    
     public HTTPAccess() {
         // connectionMap = new HashMap<DownloaderTask, ResponseListener>();
         tagMap = new HashMap<DownloadRequest, String>();
     }
-
+    
     public ResponseListener getResponseListener() {
         return this.listener;
     }
-
+    
     public void setResponseListener(ResponseListener listener) {
         this.listener = listener;
-        if (this.listener == null) {
-            for (DownloadRequest r : tagMap.keySet()) {
-                StringCache.getInstance().removeListener(r, this);
-            }
-        }
     }
-
+    
     /**
      * Opens an HTTP connection and fetches the requested page, with a {$link
      * ResponseListener} object which handles received data and errors.
@@ -73,44 +68,34 @@ public class HTTPAccess implements StringCacheListener {
         } else {
             httpMethod = DownloadRequest.GET;
         }
-
+        
         DownloadRequest params = new DownloadRequest(urlString, httpMethod, postMap);
-        StringCache cache = StringCache.getInstance();
-        String data = cache.getCacheLine(params, this);
-        if (data != null && listener != null) {
-            listener.onHTTPResponseReceived(tag, data);
-        } else {
-            tag = (tag == null ? urlString : tag);
-            tagMap.put(params, tag);
-        }
+        tag = (tag == null ? urlString : tag);
+        tagMap.put(params, tag);
+        
+        DownloaderTask task = new DownloaderTask();
+        task.setListener(this);
+        task.execute(params);
     }
-
+    
+    /* *** BEGIN: DownloaderTask.ResponseListener **************** */
     @Override
-    public void onCacheLineLoaded(DownloadRequest request, String data) {
-        String tag;
-        synchronized (this) {
-            // listener = connectionMap.remove(task);
-            tag = tagMap.remove(request);
+    public void onDownloadCompleted(DownloadRequest request, byte[] responseBody) {
+        Log.d(DEBUG_TAG, "onDownloadCompleted");
+        String tag = tagMap.remove(request);
+        if (listener != null) {
+            listener.onHTTPResponseReceived(tag, new String(responseBody));
         }
-        if (listener == null) {
-            return;
-        }
-        listener.onHTTPResponseReceived(tag, data);
     }
-
+    
     @Override
-    public void onCacheLineError(DownloadRequest request) {
-        String tag;
-        synchronized (this) {
-            // listener = connectionMap.remove(task);
-            tag = tagMap.remove(request);
+    public void onDownloadError(DownloadRequest request) {
+        String tag = tagMap.remove(request);
+        if (listener != null) {
+            listener.onHTTPerror(tag);
         }
-        if (listener == null) {
-            return;
-        }
-        listener.onHTTPerror(tag);
     }
-
+    
     /**
      * This interface must be implemented by the object used as a Listener for
      * the HTTP request
@@ -124,7 +109,7 @@ public class HTTPAccess implements StringCacheListener {
          * @param response the contents of the requested HTTP page
          */
         public void onHTTPResponseReceived(String tag, String response);
-
+        
         /**
          * This method will be called if an error happened while trying to
          * download the requested HTTP page
