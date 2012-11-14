@@ -110,11 +110,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
                 // do what you want to when close the sesarchview
                 // remember to return true;
                 Log.d("*******", "onMenuItemActionCollapse");
-                // currentEsercentiFrag.clearSearchingResults();
-                for (int i = 0; i < mAdapter.getCount(); i++) {
-                    EsercentiListFragment f = (EsercentiListFragment) mAdapter.getItem(i);
-                    f.clearSearchingResults();
-                }
+                onQueryTextChange("");
                 return true;
             }
         });
