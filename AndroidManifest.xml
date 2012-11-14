@@ -28,28 +28,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TestActivity"
+            android:name=".test.TestActivity"
             android:label="TEST" >
        		<intent-filter>
                 <action   android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".EsercentiBaseActivity"
+            android:name=".doveusarla.EsercentiBaseActivity"
             android:label="">
        		<meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".EsercentiListActivity"
+            android:name=".doveusarla.EsercentiListActivity"
             android:label="" >
        		<meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".NotiziaActivity"
+            android:name=".NewsDetailActivity"
             android:label="" 
             android:configChanges="orientation|screenSize">
        		<meta-data

@@ -1,11 +1,9 @@
 
-package it.wm.perdue;
+package it.wm.perdue.doveusarla;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,22 +13,20 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.SearchView;
-import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
+import com.actionbarsherlock.app.SherlockListFragment;
 
 import it.wm.CachedAsyncImageView;
 import it.wm.HTTPAccess;
-import it.wm.android.adaptor.JSONListAdapter;
+import it.wm.perdue.JSONListAdapter;
+import it.wm.perdue.R;
+import it.wm.perdue.R.id;
+import it.wm.perdue.R.layout;
 import it.wm.perdue.businessLogic.Esercente;
 
 import java.util.HashMap;
 
-public class EsercentiListActivity extends SherlockListActivity implements
-        HTTPAccess.ResponseListener, OnScrollListener, OnQueryTextListener {
+public class EsercentiListFragment extends SherlockListFragment implements
+        HTTPAccess.ResponseListener, OnScrollListener {
     
     private static final String      DEBUG_TAG   = "EsercentiListFragment";
     private EsercenteJSONListAdapter adapter     = null;
@@ -41,28 +37,46 @@ public class EsercentiListActivity extends SherlockListActivity implements
     private boolean                  noMoreData  = false;
     private View                     footerView  = null;
     private String                   category    = "";
+    private String                   sorting     = "";
+    
+    // problema: perchè al primo avvio di una categoria stampa due volte il log
+    // SORTING ? :|
+    // perchè
+    
+    public static EsercentiListFragment newInstance(String sort, String categ) {
+        EsercentiListFragment fragment = new EsercentiListFragment();
+        fragment.sorting = sort.toLowerCase();
+        fragment.category = categ.toLowerCase();
+        Log.d(DEBUG_TAG, "NEW INSTANCE --> SORTING = " + fragment.sorting + " category = "
+                + fragment.category);
+        return fragment;
+    }
+    
+    public EsercentiListFragment() {
+        httpAccess = new HTTPAccess();
+        httpAccess.setResponseListener(this);
+    }
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        setContentView(R.layout.esercenti_list);
-        
         adapter = new EsercenteJSONListAdapter(
-                this,
+                getActivity(),
                 R.layout.esercente_row,
-                Esercente[].class);
-        httpAccess = new HTTPAccess();
-        httpAccess.setResponseListener(this);
-        
+                Esercente[].class, sorting);
+    }
+    
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         ListView lv = getListView();
-        LayoutInflater inflater = (LayoutInflater) this
+        LayoutInflater inflater = (LayoutInflater) getActivity()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         footerView = inflater.inflate(R.layout.endless_list_footer, null);
         lv.addFooterView(footerView);
-        
+        setListAdapter(adapter);
         lv.setOnScrollListener(this);
-        // setListShown(false);
         
         int nRows = 10;
         if (savedInstanceState != null) {
@@ -70,11 +84,6 @@ public class EsercentiListActivity extends SherlockListActivity implements
             nRows = savedInstanceState.getInt("nRows");
             if (nRows == 0)
                 nRows = 10;
-        }
-        
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            category = extras.getString("category");
         }
         
         urlString = "http://www.cartaperdue.it/partner/v2.0/EsercentiNonRistorazione.php";
@@ -86,22 +95,21 @@ public class EsercentiListActivity extends SherlockListActivity implements
             postMap.put("categ", category.toLowerCase());
             postMap.put("prov", "Qui");
             postMap.put("giorno", "Venerdi");
-            postMap.put("lat", "37.332331");
-            postMap.put("long", "-122.031219");
-            postMap.put("ordina", "distanza");
+            postMap.put("lat", "41.801007");
+            postMap.put("long", "12.454273");
+            postMap.put("ordina", sorting);
             postMap.put("filtro", "");
-            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
+            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
+                    postMap, null);
             downloading++;
             Log.d(DEBUG_TAG, "ONCREATE Donwloading " + downloading);
         }
-        
-        setListAdapter(adapter);
-        
-        ActionBar bar = getSupportActionBar();
-        bar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
-                | ActionBar.DISPLAY_SHOW_HOME
-                | ActionBar.DISPLAY_SHOW_TITLE);
-        bar.setTitle(category);
+    }
+    
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        Log.d(DEBUG_TAG, "ON CREATED VIEW --> SORTING = " + sorting + " category = " + category);
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
     
     @Override
@@ -111,6 +119,50 @@ public class EsercentiListActivity extends SherlockListActivity implements
             getListView().onRestoreInstanceState(listState);
             listState = null;
         }
+    }
+    
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        listState = getListView().onSaveInstanceState();
+    }
+    
+    protected void setDataForQuery(String data) {
+        Log.d("FRAGMENT", " DATI RICEVUTI = " + data);
+        
+        data = data.replace(" ", "-");
+        
+        // Log.d(DEBUG_TAG, "TEXT CHANGE query ");
+        HashMap<String, String> postMap = new HashMap<String, String>();
+        postMap.put("from", "0");
+        postMap.put("request", "search");
+        postMap.put("categ", category.toLowerCase());
+        postMap.put("lat", "41.801007");
+        postMap.put("long", "12.454273");
+        postMap.put("ordina", sorting);
+        postMap.put("chiave", data);
+        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
+    }
+    
+    protected void setCategory(String category) {
+        this.category = category;
+    }
+    
+    protected void clearSearchingResults() {
+        adapter.clear();
+        HashMap<String, String> postMap = new HashMap<String, String>();
+        postMap.put("from", "0");
+        postMap.put("request", "fetch");
+        postMap.put("categ", category.toLowerCase());
+        postMap.put("prov", "Qui");
+        postMap.put("giorno", "Venerdi");
+        postMap.put("lat", "41.801007");
+        postMap.put("long", "12.454273");
+        postMap.put("ordina", sorting);
+        postMap.put("filtro", "");
+        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
+                postMap, null);
+        downloading++;
     }
     
     @Override
@@ -125,86 +177,6 @@ public class EsercentiListActivity extends SherlockListActivity implements
             outState.putParcelable("listState", getListView().onSaveInstanceState());
         }
         
-    }
-    
-    /* *** BEGIN: OptionsMenu Methods **************** */
-    
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        
-        getSupportMenuInflater().inflate(R.menu.esercenti_menu, menu);
-        SearchView mSearchView = (SearchView) menu.findItem(R.id.abSearch)
-                .getActionView();
-        mSearchView.setOnQueryTextListener(this);
-        return true;
-    }
-    
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                Intent intent = NavUtils.getParentActivityIntent(this);
-                intent.putExtra(Intent.EXTRA_TEXT, MainActivity.DOVE_USARLA_TAB_TAG);
-                NavUtils.navigateUpTo(this, intent);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    
-    /* *** END: OptionsMenu Methods **************** */
-    
-    /* *** BEGIN: OnQueryTextListener Methods **************** */
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        
-        // TODO: dismettere la tastiera quando si preme "cerca" sulla tastiera
-        
-        // Hide keyboard
-        // InputMethodManager imm = (InputMethodManager) this.getSystemService(
-        // SherlockListActivity.INPUT_METHOD_SERVICE);
-        // SearchView mSearchView = (SearchView) findViewById(R.id.abSearch);
-        // imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
-        // mSearchView.setFocusable(false);
-        // mSearchView.setFocusableInTouchMode(false);
-        return true;
-    }
-    
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        
-        newText = newText.replace(" ", "-");
-        // Log.d("*********", "stringa replicata = " + newText);
-        
-        // Log.d(DEBUG_TAG, "TEXT CHANGE query ");
-        HashMap<String, String> postMap = new HashMap<String, String>();
-        postMap.put("from", "0");
-        postMap.put("request", "search");
-        postMap.put("categ", category.toLowerCase());
-        postMap.put("lat", "37.332331");
-        postMap.put("long", "-122.031219");
-        postMap.put("ordina", "distanza");
-        postMap.put("chiave", newText);
-        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
-        
-        return true;
-    }
-    
-    /* *** END: OnQueryTextListener Methods **************** */
-    
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        // TODO Auto-generated method stub
-        /*
-         * Toast.makeText( getActivity(),
-         * getListView().getItemAtPosition(position).toString(),
-         * Toast.LENGTH_SHORT).show();
-         */
-        /*
-         * Bundle extras = new Bundle(); extras.putSerializable("e",
-         * (Serializable) l.getItemAtPosition(position)); Intent intent = new
-         * Intent(getActivity(), NotiziaActivity.class);
-         * intent.putExtras(extras); startActivity(intent);
-         */
     }
     
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
@@ -264,9 +236,9 @@ public class EsercentiListActivity extends SherlockListActivity implements
             postMap.put("categ", category.toLowerCase());
             postMap.put("prov", "Qui");
             postMap.put("giorno", "Venerdi");
-            postMap.put("lat", "37.332331");
-            postMap.put("long", "-122.031219");
-            postMap.put("ordina", "distanza");
+            postMap.put("lat", "41.801007");
+            postMap.put("long", "12.454273");
+            postMap.put("ordina", sorting);
             postMap.put("filtro", "");
             httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
             downloading++;
@@ -277,12 +249,14 @@ public class EsercentiListActivity extends SherlockListActivity implements
     /* *** END: AbsListView.OnScrollListener ****************** */
     
     private static class EsercenteJSONListAdapter extends JSONListAdapter<Esercente> {
+        private String sorting = null;
         
         public EsercenteJSONListAdapter(Context context, int resource,
-                Class<Esercente[]> clazz) {
+                Class<Esercente[]> clazz, String sorting) {
             super(context, resource, clazz);
             // TODO Auto-generated constructor stub
             // Log.d(DEBUG_TAG, "ESERCENTE JSON ADAPT CREATO ");
+            this.sorting = sorting;
         }
         
         public View getView(int position, View convertView, ViewGroup parent) {
@@ -304,7 +278,7 @@ public class EsercentiListActivity extends SherlockListActivity implements
                 TextView title = (TextView) v.findViewById(R.id.eseTitle);
                 // Log.d("DEBUG_TAG", "title textView = " + title);
                 TextView address = (TextView) v.findViewById(R.id.address);
-                
+                TextView distance = (TextView) v.findViewById(R.id.distance);
                 CachedAsyncImageView caImageView = (CachedAsyncImageView) v
                         .findViewById(R.id.eseImage);
                 
@@ -313,19 +287,29 @@ public class EsercentiListActivity extends SherlockListActivity implements
                 
                 if (caImageView != null) {
                     Log.d("DEBUG_TAG", "esercente id  = " + str.getId());
-                    caImageView.loadImageFromURL(urlImageString);
+                    // caImageView.loadImageFromURL(urlImageString);
                 }
                 
                 if (title != null) {
+                    Log.d(DEBUG_TAG, "Sorting è: " + sorting);
+                    // if (sorting.equals("distanza")) {
+                    // title.setText("[" + str.getDistanza() + "] " +
+                    // str.getInsegna());
+                    // } else {
                     title.setText(str.getInsegna());
+                    // }
                 }
                 if (address != null) {
                     // SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
                     address.setText(str.getIndirizzo());
+                }
+                if (distance != null) {
+                    distance.setText(String.format("%.3f km", str.getDistanza()));
                 }
             }
             
             return v;
         }
     }
+    
 }

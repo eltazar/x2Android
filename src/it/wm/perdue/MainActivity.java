@@ -17,6 +17,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
+import it.wm.perdue.doveusarla.DoveUsarlaFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,8 +34,8 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
         super.onCreate(savedInstanceState);
         
         tabList = new ArrayList<TabDescriptor>();
-        tabList.add(new TabDescriptor(DOVE_USARLA_TAB_TAG, KindOfShopFragment.class, "Dove Usarla"));
-        tabList.add(new TabDescriptor(NEWS_TAB_TAG, NewsFragment.class, "News"));
+        tabList.add(new TabDescriptor(DOVE_USARLA_TAB_TAG, DoveUsarlaFragment.class, "Dove Usarla"));
+        tabList.add(new TabDescriptor(NEWS_TAB_TAG, NewsListFragment.class, "News"));
         
         ActionBar bar = getSupportActionBar();
         bar.setDisplayOptions(ActionBar.DISPLAY_USE_LOGO

@@ -1,5 +1,5 @@
 
-package it.wm.perdue;
+package it.wm.perdue.test;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -16,6 +16,9 @@ import com.google.gson.GsonBuilder;
 
 import it.wm.CachedAsyncImageView;
 import it.wm.HTTPAccess;
+import it.wm.perdue.R;
+import it.wm.perdue.R.id;
+import it.wm.perdue.R.layout;
 import it.wm.perdue.businessLogic.Commento;
 
 import java.util.ArrayList;

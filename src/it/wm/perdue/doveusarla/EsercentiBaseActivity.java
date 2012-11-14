@@ -1,8 +1,11 @@
 
-package it.wm.perdue;
+package it.wm.perdue.doveusarla;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -14,10 +17,15 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
+import com.viewpagerindicator.IconPagerAdapter;
 import com.viewpagerindicator.PageIndicator;
 import com.viewpagerindicator.TitlePageIndicator;
 
-import it.wm.android.adaptor.EsercentiPagerAdapter;
+import it.wm.perdue.MainActivity;
+import it.wm.perdue.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EsercentiBaseActivity extends SherlockFragmentActivity implements OnQueryTextListener {
     private static final String   DEBUG_TAG = "EsercentiBaseActivity";
@@ -56,7 +64,6 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
         getSupportMenuInflater().inflate(R.menu.esercenti_menu, menu);
         // mSearchView.setOnCloseListener(this);
         setupSearchView(menu);
@@ -76,7 +83,6 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
     }
     
     private void setupSearchView(Menu menu) {
-        
         SearchView mSearchView = (SearchView) menu.findItem(R.id.abSearch)
                 .getActionView();
         mSearchView.setOnQueryTextListener(this);
@@ -84,13 +90,10 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
             
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                // TODO Auto-generated method stub
                 return true;
             }
             
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                // do what you want to when close the sesarchview
-                // remember to return true;
                 Log.d(DEBUG_TAG, "onMenuItemActionCollapse");
                 onQueryTextChange("");
                 return true;
@@ -124,6 +127,68 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         }
         return true;
     }
+    
     /* *** END: OnQueryTextListener Methods **************** */
+    
+    private static class EsercentiPagerAdapter extends FragmentPagerAdapter implements
+            IconPagerAdapter {
+        protected String[]     CONTENT      = new String[] {
+                                                    "Distanza",
+                                                    "Nome"
+                                            };
+        private int            mCount       = CONTENT.length;
+        private String         category     = null;
+        private List<Fragment> fragmentList = null;
+        
+        public EsercentiPagerAdapter(FragmentManager fm, String category) {
+            super(fm);
+            this.category = category;
+            fragmentList = new ArrayList<Fragment>(mCount);
+            for (int i = 0; i < mCount; i++) {
+                fragmentList.add(i, null);
+            }
+        }
+        
+        @Override
+        public Fragment getItem(int position) {
+            
+            // il problema ora  che bisogna gestire con il fragment manager i
+            // vari
+            // fragment?
+            // inoltre bisognerebbe ritornare ad "esercentiBaseActivity" quale
+            // fragment  visualizzato,
+            // perch quando si fa ad esempio la ricerca o si cambia filtro,
+            // bisogna
+            // inviare al fragment i dati per le nuove query
+            
+            // Mario, vanno i dati per le nuove query vanno inviati a TUTTI i
+            // fragment, perchŽ quando fai lo swipe le views devono apparire giˆ
+            // aggiornate
+            
+            // TODO: dirty, bisognrebbe usare il Fragment Manager
+            Fragment f = fragmentList.get(position);
+            if (f == null) {
+                f = EsercentiListFragment
+                        .newInstance(CONTENT[position % CONTENT.length], category);
+                fragmentList.add(position, f);
+            }
+            return f;
+        }
+        
+        @Override
+        public int getCount() {
+            return mCount;
+        }
+        
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return CONTENT[position % CONTENT.length];
+        }
+        
+        @Override
+        public int getIconResId(int index) {
+            return 0;
+        }
+    }
     
 }

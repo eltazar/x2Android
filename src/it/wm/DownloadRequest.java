@@ -13,6 +13,7 @@ import java.util.Iterator;
  * @author Gabriele "Whisky" Visconti
  */
 public class DownloadRequest {
+    @SuppressWarnings("unused")
     private static final String     DEBUG_TAG  = "DownloadRequest";
     public static final int         GET        = 1;
     public static final int         POST       = 2;

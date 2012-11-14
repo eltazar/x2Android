@@ -17,7 +17,7 @@ import com.actionbarsherlock.widget.ShareActionProvider;
 import it.wm.HTTPAccess;
 import it.wm.perdue.businessLogic.Notizia;
 
-public class NotiziaActivity extends SherlockActivity implements HTTPAccess.ResponseListener {
+public class NewsDetailActivity extends SherlockActivity implements HTTPAccess.ResponseListener {
     
     private static final String DEBUG_TAG            = "NotiziaActivity";
     private HTTPAccess          httpAccess           = null;
