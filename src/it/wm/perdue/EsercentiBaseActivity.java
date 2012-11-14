@@ -20,12 +20,9 @@ import com.viewpagerindicator.TitlePageIndicator;
 import it.wm.android.adaptor.EsercentiPagerAdapter;
 
 public class EsercentiBaseActivity extends SherlockFragmentActivity implements OnQueryTextListener {
-    
-    private String                category = "";
-    private EsercentiListFragment currentEsercentiFrag;
-    private EsercentiPagerAdapter mAdapter;
-    private ViewPager             mPager;
-    private PageIndicator         mIndicator;
+    private static final String   DEBUG_TAG = "EsercentiBaseActivity";
+    private String                category  = "";
+    private EsercentiPagerAdapter pagerAdapter;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,28 +42,13 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         
         bar.setTitle(category);
         
-        // FragmentManager fragmentManager = getSupportFragmentManager();
-        // FragmentTransaction fragmentTransaction =
-        // fragmentManager.beginTransaction();
+        pagerAdapter = new EsercentiPagerAdapter(getSupportFragmentManager(), category);
         
-        // currentEsercentiFrag = new EsercentiListFragment();
-        // currentEsercentiFrag.setCategory(category.toLowerCase());
-        // fragmentTransaction.replace(R.id.fragmentDistance,
-        // currentEsercentiFrag);
-        // fragmentTransaction.commit();
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(pagerAdapter);
         
-        // currentEsercentiFrag = (EsercentiListFragment)
-        // getSupportFragmentManager().
-        // findFragmentById(R.id.esercentiFragmentDistance);
-        // currentEsercentiFrag.setCategory(category.toLowerCase());
-        
-        mAdapter = new EsercentiPagerAdapter(getSupportFragmentManager(), category);
-        
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPager.setAdapter(mAdapter);
-        
-        mIndicator = (TitlePageIndicator) findViewById(R.id.indicator);
-        mIndicator.setViewPager(mPager);
+        PageIndicator pageIndicator = (TitlePageIndicator) findViewById(R.id.indicator);
+        pageIndicator.setViewPager(viewPager);
         
     }
     
@@ -109,7 +91,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 // do what you want to when close the sesarchview
                 // remember to return true;
-                Log.d("*******", "onMenuItemActionCollapse");
+                Log.d(DEBUG_TAG, "onMenuItemActionCollapse");
                 onQueryTextChange("");
                 return true;
             }
@@ -121,7 +103,6 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
     /* *** BEGIN: OnQueryTextListener Methods **************** */
     @Override
     public boolean onQueryTextSubmit(String query) {
-        
         // TODO: dismettere la tastiera quando si preme "cerca" sulla tastiera
         
         // Hide keyboard
@@ -136,9 +117,9 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
     
     @Override
     public boolean onQueryTextChange(String newText) {
-        Log.d("EsercentiBaseActivity", "TEXT CHANGE query ");
-        for (int i = 0; i < mAdapter.getCount(); i++) {
-            EsercentiListFragment f = (EsercentiListFragment) mAdapter.getItem(i);
+        Log.d(DEBUG_TAG, "Query text changed: " + newText);
+        for (int i = 0; i < pagerAdapter.getCount(); i++) {
+            EsercentiListFragment f = (EsercentiListFragment) pagerAdapter.getItem(i);
             f.setDataForQuery(newText);
         }
         return true;
