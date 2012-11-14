@@ -1,4 +1,4 @@
-package it.wm.perdue;
+package it.wm.perdue.test;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

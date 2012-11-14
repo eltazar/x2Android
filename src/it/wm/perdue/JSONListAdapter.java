@@ -1,5 +1,5 @@
 
-package it.wm.android.adaptor;
+package it.wm.perdue;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import it.wm.perdue.Utils;
 
 public class JSONListAdapter<T> extends ArrayAdapter<T> {
     Class<T[]> clazz = null;

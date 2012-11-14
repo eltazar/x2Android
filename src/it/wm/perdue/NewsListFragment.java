@@ -17,27 +17,26 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockListFragment;
 
 import it.wm.HTTPAccess;
-import it.wm.android.adaptor.JSONListAdapter;
 import it.wm.perdue.businessLogic.Notizia;
 
 import java.io.Serializable;
 import java.util.HashMap;
 
-public class NewsFragment extends SherlockListFragment implements HTTPAccess.ResponseListener,
+public class NewsListFragment extends SherlockListFragment implements HTTPAccess.ResponseListener,
         OnScrollListener {
-    private static final String    DEBUG_TAG   = "NewsFragment";
-    private NotiziaJSONListAdapter adapter     = null;
-    private String                 urlString   = null;
-    private HTTPAccess             httpAccess  = null;
-    private Parcelable             listState   = null;
-    private int                    downloading = 0;
-    private boolean                noMoreData  = false;
-    private View                   footerView  = null;
+    private static final String DEBUG_TAG   = "NewsFragment";
+    private NewsJSONListAdapter adapter     = null;
+    private String              urlString   = null;
+    private HTTPAccess          httpAccess  = null;
+    private Parcelable          listState   = null;
+    private int                 downloading = 0;
+    private boolean             noMoreData  = false;
+    private View                footerView  = null;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new NotiziaJSONListAdapter(
+        adapter = new NewsJSONListAdapter(
                 getActivity(),
                 R.layout.news_row,
                 Notizia[].class);
@@ -114,7 +113,7 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
          */
         Bundle extras = new Bundle();
         extras.putSerializable("notizia", (Serializable) l.getItemAtPosition(position));
-        Intent intent = new Intent(getActivity(), NotiziaActivity.class);
+        Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
         intent.putExtras(extras);
         startActivity(intent);
     }
@@ -164,9 +163,9 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
     
     /* *** END: AbsListView.OnScrollListener ****************** */
     
-    private static class NotiziaJSONListAdapter extends JSONListAdapter<Notizia> {
+    private static class NewsJSONListAdapter extends JSONListAdapter<Notizia> {
         
-        public NotiziaJSONListAdapter(Context context, int resource,
+        public NewsJSONListAdapter(Context context, int resource,
                 Class<Notizia[]> clazz) {
             super(context, resource, clazz);
         }
@@ -191,7 +190,6 @@ public class NewsFragment extends SherlockListFragment implements HTTPAccess.Res
                     title.setText(str.getTitolo());
                 }
                 if (date != null) {
-                    // SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
                     date.setText(str.getLocalizedDataString(false));
                 }
             }
