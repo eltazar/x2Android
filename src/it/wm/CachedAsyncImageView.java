@@ -12,13 +12,14 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import it.wm.DrawableCache.DrawableCacheListener;
-
 /**
  * TODO: document your custom view class.
  */
-public class CachedAsyncImageView extends RelativeLayout implements DrawableCacheListener {
-
+public class CachedAsyncImageView extends RelativeLayout /*
+                                                          * implements
+                                                          * DrawableCacheListener
+                                                          */{
+    
     private static final String              DEBUG_TAG   = "CachedAsyncImageView";
     private Listener                         listener    = null;
     private DownloadRequest                  request     = null;
@@ -26,30 +27,30 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
     private ProgressBar                      progressBar = null;
     private android.animation.ObjectAnimator fadeIn      = null;
     private android.animation.ObjectAnimator fadeOut     = null;
-
+    
     public Listener getListener() {
         return this.listener;
     }
-
+    
     public void setListener(Listener listener) {
         this.listener = listener;
     }
-
+    
     public CachedAsyncImageView(Context context) {
         super(context);
         initialize();
     }
-
+    
     public CachedAsyncImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initialize();
     }
-
+    
     public CachedAsyncImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initialize();
     }
-
+    
     private void initialize() {
         Log.d(DEBUG_TAG, "Inizializing");
         imageView = new ImageView(getContext());
@@ -59,14 +60,14 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
         progressBar.setIndeterminate(true);
         this.addView(imageView);
         this.addView(progressBar);
-
+        
         LayoutParams layoutParams = new LayoutParams(imageView.getLayoutParams());
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         imageView.setLayoutParams(layoutParams);
         layoutParams = new LayoutParams(progressBar.getLayoutParams());
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         progressBar.setLayoutParams(layoutParams);
-
+        
         progressBar.setVisibility(INVISIBLE); // Sembra che fermi il calcolo
                                               // dell'animazione, così non
                                               // sprechiamo cicli di cpu.
@@ -75,29 +76,30 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
                                               // visibile a questo punto, quindi
                                               // tanto di guadagnato. Nice side
                                               // effects.
-
+        
     }
-
+    
     @TargetApi(11)
     @Override
     /*
-     * Questo metodo risolve un "bug" (se così si può dire...) con le animazioni
-     * post-Honeycomb: se il dispositivo è ruotato durante l'animazione, nel
-     * layout ruotato l'imageView inspiegabilmente conserva l'animazione
-     * (l'animazione riprende da dove era rimasta). La cosa è piuttosto strana
-     * dato che l'istanza di imageView è diversa.... Cmq così facendo facciamo
-     * in modo che gli oggetti di animazione vengano rilasciati subito, insieme
-     * all'activity in cui stiamo lavorando. In pratica gli oggetti fade
-     * conservano una reference al listener, che a sua volta essendo una inner
-     * class conserva una reference al CachedAsyncImageView, che conserva una
-     * reference al context, cioè all'activity e a un mucchio di altre cose,
-     * lasciandole appese finché l'oggetto non si autodistrugge (?) cioè fino
-     * alla fine dell'animazione.
+     * Questo metodo risolve un "bug" (se così si può dire...) con le
+     * animazioni post-Honeycomb: se il dispositivo è ruotato durante
+     * l'animazione, nel layout ruotato l'imageView inspiegabilmente conserva
+     * l'animazione (l'animazione riprende da dove era rimasta). La cosa è
+     * piuttosto strana dato che l'istanza di imageView è diversa.... Cmq così
+     * facendo facciamo in modo che gli oggetti di animazione vengano rilasciati
+     * subito, insieme all'activity in cui stiamo lavorando. In pratica gli
+     * oggetti fade conservano una reference al listener, che a sua volta
+     * essendo una inner class conserva una reference al CachedAsyncImageView,
+     * che conserva una reference al context, cioè all'activity e a un mucchio
+     * di altre cose, lasciandole appese finché l'oggetto non si autodistrugge
+     * (?) cioè fino alla fine dell'animazione.
      */
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         Log.d(DEBUG_TAG, "Detached!");
-        DrawableCache.getInstance(this.getContext()).removeListener(request, this);
+        // DrawableCache.getInstance(this.getContext()).removeListener(request,
+        // this);
         if (fadeIn != null) {
             fadeIn.end();
             fadeIn.removeAllListeners();
@@ -107,30 +109,30 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
             fadeOut.removeAllListeners();
         }
     }
-
+    
     public void loadImageFromURL(String url) {
         if (request != null) {
             request = null;
         }
-
+        
         request = new DownloadRequest(url, DownloadRequest.GET, null);
-
-        DrawableCache cache = DrawableCache.getInstance(this.getContext());
-        Drawable data = cache.getCacheLine(request, this);
+        
+        // DrawableCache cache = DrawableCache.getInstance(this.getContext());
+        Drawable data = null;// cache.getCacheLine(request, this);
         Log.d(DEBUG_TAG, "Loading image from: " + url.toString());
-
+        
         if (data != null) {
             Log.d(DEBUG_TAG, "Cache hit!");
-
+            
             imageView.setImageDrawable(data);
             progressBar.setVisibility(INVISIBLE);
             /*
-             * La sezione seguente risolve un "bug" (se così si può dire..) con
-             * le animazioni pre-Honeycomb: se il device è ruotato durante il
-             * fadeIn/fadeOut, l'immagine nel layout ruotato conserva l'ultima
-             * Alpha che ha avuto nell'animazione nel layout non ruotato, così
-             * facendo forziamo l'alpha a 1. Resterebbe da capire perché succede
-             * sta cosa, e se stiamo leakando oggetti :/
+             * La sezione seguente risolve un "bug" (se così si può dire..)
+             * con le animazioni pre-Honeycomb: se il device è ruotato durante
+             * il fadeIn/fadeOut, l'immagine nel layout ruotato conserva
+             * l'ultima Alpha che ha avuto nell'animazione nel layout non
+             * ruotato, così facendo forziamo l'alpha a 1. Resterebbe da capire
+             * perché succede sta cosa, e se stiamo leakando oggetti :/
              */
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
                 Log.d(DEBUG_TAG, "Fading in instantly");
@@ -146,8 +148,8 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
             progressBar.setVisibility(VISIBLE);
         }
     }
-
-    @Override
+    
+    // @Override
     public void onCacheLineLoaded(DownloadRequest request, Drawable data) {
         if (!request.equals(this.request)) {
             return;
@@ -159,10 +161,10 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
         // ulteriormente thread safe. Il discorso poi cambia se uno inizia a
         // richiamare i metodi dell'interfaccia ResponseListener al di fuori dal
         // DownloaderTask.... ma questa è un'altra storia
-
+        
         imageView.setImageDrawable(data);
         long duration = 10000;
-
+        
         // Ok, questo si sarebbe potuto scrivere usando solo la classe di
         // compatibilità ObjectAnimator fornita da ActionBarSherlock... Ma... e
         // se l'implementazione fosse subottima? Se da HoneyComb in poi non
@@ -171,7 +173,7 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
         // cose a manina.
         // EDIT: No, la classe di compatibilità essenzialmente non funziona -.-
         // quindi o così o pomì
-
+        
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
             crossFadeFromHoneycomb(duration);
         } else {
@@ -181,8 +183,8 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
             listener.onImageLoadingCompleted(this);
         }
     }
-
-    @Override
+    
+    // @Override
     public void onCacheLineError(DownloadRequest request) {
         if (!request.equals(this.request)) {
             return;
@@ -194,7 +196,7 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
             listener.onImageLoadingFailed(this);
         }
     }
-
+    
     private void crossFadeBeforeHoneycomb(long duration) {
         Log.d(DEBUG_TAG, "Animazioni Base");
         Animation cFadeIn = new AlphaAnimation(0.0f, 1.0f);
@@ -206,11 +208,11 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
             @Override
             public void onAnimationStart(Animation animation) {
             }
-
+            
             @Override
             public void onAnimationRepeat(Animation animation) {
             }
-
+            
             @Override
             public void onAnimationEnd(Animation animation) {
                 progressBar.setVisibility(INVISIBLE);
@@ -219,7 +221,7 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
         imageView.startAnimation(cFadeIn);
         progressBar.startAnimation(cFadeOut);
     }
-
+    
     @TargetApi(11)
     private void crossFadeFromHoneycomb(long duration) {
         Log.d(DEBUG_TAG, "Animazioni HoneyComb");
@@ -231,17 +233,17 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
             @Override
             public void onAnimationStart(android.animation.Animator animation) {
             }
-
+            
             @Override
             public void onAnimationRepeat(android.animation.Animator animation) {
             }
-
+            
             @Override
             public void onAnimationEnd(android.animation.Animator animation) {
                 Log.d(DEBUG_TAG, "Honeycomb animation ended");
                 progressBar.setVisibility(INVISIBLE);
             }
-
+            
             @Override
             public void onAnimationCancel(android.animation.Animator animation) {
                 Log.d(DEBUG_TAG, "Anim interrupted");
@@ -250,11 +252,11 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
         fadeIn.start();
         fadeOut.start();
     }
-
+    
     public interface Listener {
         public void onImageLoadingCompleted(CachedAsyncImageView imageView);
-
+        
         public void onImageLoadingFailed(CachedAsyncImageView imageView);
     }
-
+    
 }
