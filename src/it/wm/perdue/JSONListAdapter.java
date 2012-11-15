@@ -57,4 +57,10 @@ public class JSONListAdapter<T extends HasID> extends ArrayAdapter<T> {
         }
         return objects.length;
     }
+    
+    @Override
+    public void clear() {
+        super.clear();
+        ids.clear();
+    }
 }
