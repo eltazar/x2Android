@@ -36,8 +36,8 @@ public class EsercentiListFragment extends SherlockListFragment implements
     private String                     sorting          = "";
     // Gestione dei download:
     private HTTPAccess                 httpAccess       = null;
-    private String                     urlString        = null;
-    private HashMap<String, String>    postMap          = null;
+    protected String                   urlString        = null;
+    protected HashMap<String, String>  postMap          = null;
     // private int downloading = 0;
     private boolean                    noMoreData       = false;
     private boolean                    searchNoMoreData = false;
@@ -75,7 +75,6 @@ public class EsercentiListFragment extends SherlockListFragment implements
         postMap.put("long", "12.454273");
         postMap.put("ordina", sorting);
         Log.d(DEBUG_TAG, "Ctor: ordina =" + "[" + postMap.get("ordina") + "]");
-        
     }
     
     @Override
@@ -149,7 +148,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
     }
     
     protected void setDataForQuery(String data) {
-        Log.d(DEBUG_TAG, " DATI RICEVUTI = " + data);
+        Log.d(DEBUG_TAG, "setDataForQuery = " + data);
         if (data.equals("")) {
             state = STATE_NORMAL;
             setListAdapter(adapter);
@@ -162,17 +161,12 @@ public class EsercentiListFragment extends SherlockListFragment implements
             footerView.setVisibility(searchNoMoreData ? View.INVISIBLE : View.VISIBLE);
             
             data = data.replace(" ", "-");
-            // Log.d(DEBUG_TAG, "TEXT CHANGE query ");
             postMap.put("from", "0");
             postMap.put("request", "search");
             postMap.put("chiave", data);
             if (TAG_SEARCH == null)
                 throw new RuntimeException();
             httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, TAG_SEARCH);
-            // Log.d(DEBUG_TAG,
-            // "setDataForQuery: Donwloading " + downloading + "[" +
-            // postMap.get("ordina")
-            // + "]");
         }
     }
     
@@ -334,9 +328,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
                     distance.setText(String.format("%.3f km", esercente.getDistanza()));
                 }
             }
-            
             return v;
         }
     }
-    
 }
