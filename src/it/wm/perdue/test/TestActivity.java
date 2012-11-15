@@ -17,8 +17,6 @@ import com.google.gson.GsonBuilder;
 import it.wm.CachedAsyncImageView;
 import it.wm.HTTPAccess;
 import it.wm.perdue.R;
-import it.wm.perdue.R.id;
-import it.wm.perdue.R.layout;
 import it.wm.perdue.businessLogic.Commento;
 
 import java.util.ArrayList;
@@ -168,7 +166,7 @@ public class TestActivity extends Activity {
                     b.append("\n===\n");
                     b.append(data.getData());
                     b.append("\n===\n");
-                    b.append("" + data.getId());
+                    b.append("" + data.getID());
                 }
                 tv.setText(b.toString(), TextView.BufferType.NORMAL);
             }

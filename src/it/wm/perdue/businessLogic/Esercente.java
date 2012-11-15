@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author Gabriele "Whisky" Visconti
  */
-public class Esercente {
+public class Esercente implements HasID {
     @SerializedName("IDesercente")
     private int     id             = -1;
     @SerializedName("Insegna_Esercente")
@@ -41,7 +41,7 @@ public class Esercente {
     @SerializedName("Distanza")
     private double  distanza       = 0.0;
     
-    public int getId() {
+    public int getID() {
         return id;
     }
     

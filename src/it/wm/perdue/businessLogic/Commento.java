@@ -10,7 +10,7 @@ import java.util.Locale;
 /**
  * @author Gabriele "Whisky" Visconti
  */
-public class Commento {
+public class Commento implements HasID {
     @SerializedName("comment_ID")
     private int    id     = -1;
     @SerializedName("comment_author")
@@ -20,7 +20,7 @@ public class Commento {
     @SerializedName("comment_date")
     private Date   data   = null;
     
-    public int getId() {
+    public int getID() {
         return id;
     }
     

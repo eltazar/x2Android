@@ -43,77 +43,77 @@ public class EsercenteRistorazione extends Esercente {
     private boolean domMattina     = false;
     @SerializedName("Domenica_sera_CE")
     private boolean domSera        = false;
-
+    
     public String getFasciaPrezzo() {
         return fasciaPrezzo;
     }
-
+    
     public String getAmbiente() {
         return ambiente;
     }
-
+    
     public String getSottoTipologia() {
         return sottoTipologia;
     }
-
+    
     public String getSpecialita() {
         return specialita;
     }
-
+    
     public boolean isLunMattina() {
         return lunMattina;
     }
-
+    
     public boolean isLunSera() {
         return lunSera;
     }
-
+    
     public boolean isMarMattina() {
         return marMattina;
     }
-
+    
     public boolean isMarSera() {
         return marSera;
     }
-
+    
     public boolean isMerMattina() {
         return merMattina;
     }
-
+    
     public boolean isMerSera() {
         return merSera;
     }
-
+    
     public boolean isGioMattina() {
         return gioMattina;
     }
-
+    
     public boolean isGioSera() {
         return gioSera;
     }
-
+    
     public boolean isVenMattina() {
         return venMattina;
     }
-
+    
     public boolean isVenSera() {
         return venSera;
     }
-
+    
     public boolean isSabMattina() {
         return sabMattina;
     }
-
+    
     public boolean isSabSera() {
         return sabSera;
     }
-
+    
     public boolean isDomMattina() {
         return domMattina;
     }
-
+    
     public boolean isDomSera() {
         return domSera;
     }
-
+    
 }
