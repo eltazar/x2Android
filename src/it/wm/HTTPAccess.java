@@ -70,12 +70,14 @@ public class HTTPAccess implements DownloaderTask.DownloadListener {
         }
         
         DownloadRequest params = new DownloadRequest(urlString, httpMethod, postMap);
+        Log.d(DEBUG_TAG, "postMap is: " + postMap);
         tag = (tag == null ? urlString : tag);
-        tagMap.put(params, tag);
-        
-        DownloaderTask task = new DownloaderTask();
-        task.setListener(this);
-        task.execute(params);
+        if (tagMap.put(params, tag) == null) {
+            // Eseguiamo la richiesta solo se non è già in corso
+            DownloaderTask task = new DownloaderTask();
+            task.setListener(this);
+            task.execute(params);
+        }
     }
     
     /* *** BEGIN: DownloaderTask.ResponseListener **************** */

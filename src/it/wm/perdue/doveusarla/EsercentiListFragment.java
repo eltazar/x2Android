@@ -19,52 +19,78 @@ import it.wm.CachedAsyncImageView;
 import it.wm.HTTPAccess;
 import it.wm.perdue.JSONListAdapter;
 import it.wm.perdue.R;
-import it.wm.perdue.R.id;
-import it.wm.perdue.R.layout;
 import it.wm.perdue.businessLogic.Esercente;
 
 import java.util.HashMap;
 
 public class EsercentiListFragment extends SherlockListFragment implements
         HTTPAccess.ResponseListener, OnScrollListener {
-    
-    private static final String      DEBUG_TAG   = "EsercentiListFragment";
-    private EsercenteJSONListAdapter adapter     = null;
-    private String                   urlString   = null;
-    private HTTPAccess               httpAccess  = null;
-    private Parcelable               listState   = null;
-    private int                      downloading = 0;
-    private boolean                  noMoreData  = false;
-    private View                     footerView  = null;
-    private String                   category    = "";
-    private String                   sorting     = "";
+    private static final String        DEBUG_TAG        = "EsercentiListFragment";
+    private static final int           STATE_NORMAL     = 1;
+    private static final int           STATE_SEARCH     = 2;
+    private static final String        TAG_NORMAL       = "normal";
+    private static final String        TAG_SEARCH       = "search";
+    private static final String        TAG_SEARCH_MORE  = "searchmore";
+    private int                        state            = 0;
+    private String                     category         = "";
+    private String                     sorting          = "";
+    // Gestione dei download:
+    private HTTPAccess                 httpAccess       = null;
+    private String                     urlString        = null;
+    private HashMap<String, String>    postMap          = null;
+    // private int downloading = 0;
+    private boolean                    noMoreData       = false;
+    private boolean                    searchNoMoreData = false;
+    private View                       footerView       = null;
+    // Gestione dello stato della lista:
+    protected EsercenteJSONListAdapter adapter          = null;
+    protected EsercenteJSONListAdapter searchAdapter    = null;
+    private Parcelable                 listState        = null;
     
     // problema: perchè al primo avvio di una categoria stampa due volte il log
     // SORTING ? :|
     // perchè
     
     public static EsercentiListFragment newInstance(String sort, String categ) {
-        EsercentiListFragment fragment = new EsercentiListFragment();
-        fragment.sorting = sort.toLowerCase();
-        fragment.category = categ.toLowerCase();
+        EsercentiListFragment fragment = new EsercentiListFragment(sort.toLowerCase(),
+                categ.toLowerCase());
         Log.d(DEBUG_TAG, "NEW INSTANCE --> SORTING = " + fragment.sorting + " category = "
                 + fragment.category);
         return fragment;
     }
     
-    public EsercentiListFragment() {
+    public EsercentiListFragment(String sorting, String category) {
+        this.state = STATE_NORMAL;
+        this.sorting = sorting;
+        this.category = category;
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
+        urlString = "http://www.cartaperdue.it/partner/v2.0/EsercentiNonRistorazione.php";
+        postMap = new HashMap<String, String>();
+        postMap.put("request", "fetch");
+        postMap.put("categ", category.toLowerCase());
+        postMap.put("prov", "Qui");
+        postMap.put("giorno", "Venerdi");
+        postMap.put("lat", "41.801007");
+        postMap.put("long", "12.454273");
+        postMap.put("ordina", sorting);
+        Log.d(DEBUG_TAG, "Ctor: ordina =" + "[" + postMap.get("ordina") + "]");
+        
     }
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
         adapter = new EsercenteJSONListAdapter(
                 getActivity(),
                 R.layout.esercente_row,
-                Esercente[].class, sorting);
+                Esercente[].class,
+                sorting);
+        searchAdapter = new EsercenteJSONListAdapter(
+                getActivity(),
+                R.layout.esercente_row,
+                Esercente[].class,
+                sorting);
     }
     
     @Override
@@ -86,23 +112,18 @@ public class EsercentiListFragment extends SherlockListFragment implements
                 nRows = 10;
         }
         
-        urlString = "http://www.cartaperdue.it/partner/v2.0/EsercentiNonRistorazione.php";
         Log.d(DEBUG_TAG, "nrows " + nRows);
         for (int i = 0; i < nRows / 10; i++) {
-            HashMap<String, String> postMap = new HashMap<String, String>();
             postMap.put("from", "" + i * 10);
             postMap.put("request", "fetch");
-            postMap.put("categ", category.toLowerCase());
-            postMap.put("prov", "Qui");
-            postMap.put("giorno", "Venerdi");
-            postMap.put("lat", "41.801007");
-            postMap.put("long", "12.454273");
-            postMap.put("ordina", sorting);
-            postMap.put("filtro", "");
-            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
-                    postMap, null);
-            downloading++;
-            Log.d(DEBUG_TAG, "ONCREATE Donwloading " + downloading);
+            if (TAG_NORMAL == null)
+                throw new RuntimeException();
+            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, TAG_NORMAL);
+            // downloading++;
+            // Log.d(DEBUG_TAG,
+            // "onActivityCreated: Donwloading " + downloading + "[" +
+            // postMap.get("ordina")
+            // + "]");
         }
     }
     
@@ -128,42 +149,47 @@ public class EsercentiListFragment extends SherlockListFragment implements
     }
     
     protected void setDataForQuery(String data) {
-        Log.d("FRAGMENT", " DATI RICEVUTI = " + data);
-        
-        data = data.replace(" ", "-");
-        
-        // Log.d(DEBUG_TAG, "TEXT CHANGE query ");
-        HashMap<String, String> postMap = new HashMap<String, String>();
-        postMap.put("from", "0");
-        postMap.put("request", "search");
-        postMap.put("categ", category.toLowerCase());
-        postMap.put("lat", "41.801007");
-        postMap.put("long", "12.454273");
-        postMap.put("ordina", sorting);
-        postMap.put("chiave", data);
-        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
+        Log.d(DEBUG_TAG, " DATI RICEVUTI = " + data);
+        if (data.equals("")) {
+            state = STATE_NORMAL;
+            setListAdapter(adapter);
+            footerView.setVisibility(noMoreData ? View.INVISIBLE : View.VISIBLE);
+        } else {
+            state = STATE_SEARCH;
+            searchAdapter.clear();
+            setListAdapter(searchAdapter);
+            searchNoMoreData = false;
+            footerView.setVisibility(searchNoMoreData ? View.INVISIBLE : View.VISIBLE);
+            
+            data = data.replace(" ", "-");
+            // Log.d(DEBUG_TAG, "TEXT CHANGE query ");
+            postMap.put("from", "0");
+            postMap.put("request", "search");
+            postMap.put("chiave", data);
+            if (TAG_SEARCH == null)
+                throw new RuntimeException();
+            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, TAG_SEARCH);
+            // Log.d(DEBUG_TAG,
+            // "setDataForQuery: Donwloading " + downloading + "[" +
+            // postMap.get("ordina")
+            // + "]");
+        }
     }
     
     protected void setCategory(String category) {
         this.category = category;
     }
     
-    protected void clearSearchingResults() {
-        adapter.clear();
-        HashMap<String, String> postMap = new HashMap<String, String>();
-        postMap.put("from", "0");
-        postMap.put("request", "fetch");
-        postMap.put("categ", category.toLowerCase());
-        postMap.put("prov", "Qui");
-        postMap.put("giorno", "Venerdi");
-        postMap.put("lat", "41.801007");
-        postMap.put("long", "12.454273");
-        postMap.put("ordina", sorting);
-        postMap.put("filtro", "");
-        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
-                postMap, null);
-        downloading++;
-    }
+    /*
+     * protected void clearSearchingResults() { adapter.clear(); HashMap<String,
+     * String> postMap = new HashMap<String, String>(); postMap.put("from",
+     * "0"); postMap.put("request", "fetch"); postMap.put("categ",
+     * category.toLowerCase()); postMap.put("prov", "Qui");
+     * postMap.put("giorno", "Venerdi"); postMap.put("lat", "41.801007");
+     * postMap.put("long", "12.454273"); postMap.put("ordina", sorting);
+     * postMap.put("filtro", ""); httpAccess.startHTTPConnection(urlString,
+     * HTTPAccess.Method.POST, postMap, null); downloading++; }
+     */
     
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -182,33 +208,39 @@ public class EsercentiListFragment extends SherlockListFragment implements
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
-        
-        // Log.d(DEBUG_TAG, "response " + response);
-        
-        // se il risultato è dovuto ad una query di ricerca cancella la lista
-        try {
-            if (response.substring(0, 20).equals("{\"Esercente:Search\":")) {
-                adapter.clear();
+        // downloading--;
+        // Log.d(DEBUG_TAG, "Donwloading " + downloading);
+        int n;
+        if (tag.equals(TAG_NORMAL)) {
+            // Se riceviamo un risultato non di ricerca, lo aggiungiamo sempre e
+            // comunque:
+            n = adapter.addFromJSON(response);
+            if (n == 0) {
+                noMoreData = true;
+                footerView.setVisibility(View.INVISIBLE);
             }
-        } catch (StringIndexOutOfBoundsException ex) {
-            Log.d("EXCEPTION", ex.getLocalizedMessage());
+        } else {
+            /*
+             * Se invece riceviamo un risultato di ricerca, lo aggiungiamo solo
+             * se siamo in modalità di ricerca, altrimenti è tempo perso: al
+             * prossimo rientro in search mode l'adapter verrà svuotato.
+             */
+            if (state != STATE_SEARCH) {
+                return;
+            }
+            n = searchAdapter.addFromJSON(response);
+            if (n == 0) {
+                noMoreData = true;
+                footerView.setVisibility(View.INVISIBLE);
+            }
         }
-        
-        int n = adapter.addFromJSON(response);
-        if (n == 0) {
-            noMoreData = true;
-            getListView().removeFooterView(footerView);
-        }
-        // setListShown(true);
-        downloading--;
-        Log.d(DEBUG_TAG, "Donwloading " + downloading);
     }
     
     @Override
     public void onHTTPerror(String tag) {
         Log.d(DEBUG_TAG, "Errore nel download");
-        downloading--;
-        Log.d(DEBUG_TAG, "Donwloading " + downloading);
+        // downloading--;
+        // Log.d(DEBUG_TAG, "Donwloading " + downloading);
     }
     
     /* *** END: HTTPAccess.ResponseListener ******************* */
@@ -227,22 +259,32 @@ public class EsercentiListFragment extends SherlockListFragment implements
         
         // Log.d(DEBUG_TAG, "load more = " + loadMore + " downloading = " +
         // downloading+ " noMoreData = " + noMoreData);
+        String tag = null;
+        boolean noMoreData = false;
+        switch (state) {
+            case STATE_NORMAL:
+                tag = TAG_NORMAL;
+                noMoreData = this.noMoreData;
+                break;
+            
+            case STATE_SEARCH:
+                tag = TAG_SEARCH_MORE;
+                noMoreData = this.searchNoMoreData;
+                break;
+        }
+        if (tag == null)
+            throw new RuntimeException();
         
-        if (loadMore && downloading == 0 && !noMoreData) {
+        if (loadMore /* && downloading == 0 */&& !noMoreData) {
             Log.d(DEBUG_TAG, "Donwload from: " + adapter.getCount());
-            HashMap<String, String> postMap = new HashMap<String, String>();
             postMap.put("from", "" + adapter.getCount());
             postMap.put("request", "fetch");
-            postMap.put("categ", category.toLowerCase());
-            postMap.put("prov", "Qui");
-            postMap.put("giorno", "Venerdi");
-            postMap.put("lat", "41.801007");
-            postMap.put("long", "12.454273");
-            postMap.put("ordina", sorting);
             postMap.put("filtro", "");
-            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
-            downloading++;
-            Log.d(DEBUG_TAG, "Donwloading " + downloading);
+            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, tag);
+            // downloading++;
+            // Log.d(DEBUG_TAG, "onScroll: Donwloading " + downloading + "[" +
+            // postMap.get("ordina")
+            // + "]");
         }
     }
     
@@ -254,57 +296,42 @@ public class EsercentiListFragment extends SherlockListFragment implements
         public EsercenteJSONListAdapter(Context context, int resource,
                 Class<Esercente[]> clazz, String sorting) {
             super(context, resource, clazz);
-            // TODO Auto-generated constructor stub
-            // Log.d(DEBUG_TAG, "ESERCENTE JSON ADAPT CREATO ");
             this.sorting = sorting;
         }
         
         public View getView(int position, View convertView, ViewGroup parent) {
-            
-            // Log.d(DEBUG_TAG, "GET VIEW ADAPTER ESERCENTI");
-            
             View v = convertView;
             if (v == null) {
                 v = ((LayoutInflater) super.getContext().getSystemService(
-                        
                         Context.LAYOUT_INFLATER_SERVICE))
                         .inflate(R.layout.esercente_row, null);
             }
             
-            Esercente str = getItem(position);
-            // Log.d("DEBUG_TAG", "esercente.insegna = " + str.getInsegna() +
-            // " esercente.indirizzo = " + str.getIndirizzo());
-            if (str != null) {
+            Esercente esercente = getItem(position);
+            if (esercente != null) {
                 TextView title = (TextView) v.findViewById(R.id.eseTitle);
-                // Log.d("DEBUG_TAG", "title textView = " + title);
                 TextView address = (TextView) v.findViewById(R.id.address);
                 TextView distance = (TextView) v.findViewById(R.id.distance);
                 CachedAsyncImageView caImageView = (CachedAsyncImageView) v
                         .findViewById(R.id.eseImage);
                 
                 String urlImageString = "http://www.cartaperdue.it/partner/v2.0/ImmagineEsercente.php?id="
-                        + str.getId();
+                        + esercente.getID();
                 
                 if (caImageView != null) {
-                    Log.d("DEBUG_TAG", "esercente id  = " + str.getId());
+                    Log.d("DEBUG_TAG", "esercente id  = " + esercente.getID());
                     // caImageView.loadImageFromURL(urlImageString);
                 }
                 
                 if (title != null) {
                     Log.d(DEBUG_TAG, "Sorting è: " + sorting);
-                    // if (sorting.equals("distanza")) {
-                    // title.setText("[" + str.getDistanza() + "] " +
-                    // str.getInsegna());
-                    // } else {
-                    title.setText(str.getInsegna());
-                    // }
+                    title.setText(esercente.getInsegna());
                 }
                 if (address != null) {
-                    // SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                    address.setText(str.getIndirizzo());
+                    address.setText(esercente.getIndirizzo());
                 }
                 if (distance != null) {
-                    distance.setText(String.format("%.3f km", str.getDistanza()));
+                    distance.setText(String.format("%.3f km", esercente.getDistanza()));
                 }
             }
             

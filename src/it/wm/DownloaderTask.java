@@ -22,7 +22,7 @@ import java.net.URL;
  * @author Gabriele "Whisky" Visconti
  */
 class DownloaderTask extends AsyncTask<DownloadRequest, Void, byte[]> {
-
+    
     /** tag meant to be used in ${Link android.util.Log} */
     private static final String DEBUG_TAG = "DownloaderTask";
     /**
@@ -30,17 +30,17 @@ class DownloaderTask extends AsyncTask<DownloadRequest, Void, byte[]> {
      * connection error and will receive the requsted HTTP page
      */
     private DownloadListener    listener  = null;
-
+    
     private DownloadRequest     params    = null;
-
+    
     /** Object used to open the socket and handle the HTTP socket. */
     private HttpURLConnection   conn      = null;
-
+    
     /** Sets the listener */
     public void setListener(DownloadListener l) {
         this.listener = l;
     }
-
+    
     @Override
     protected byte[] doInBackground(DownloadRequest... paramsArray) {
         // Se method è null viene assunto GET.
@@ -57,16 +57,17 @@ class DownloaderTask extends AsyncTask<DownloadRequest, Void, byte[]> {
             e.printStackTrace();
             return null;
         }
-
+        
         try {
             conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(10000 /* milliseconds */);
             conn.setConnectTimeout(15000 /* milliseconds */);
             conn.setDoInput(true);
-
+            
             if (params.httpMethod == DownloadRequest.POST) {
                 // Setting POST data:
                 String postString = params.getPostString();
+                Log.d(DEBUG_TAG, "Post string is: " + postString);
                 conn.setDoOutput(true);
                 conn.setRequestMethod("POST");
                 conn.setFixedLengthStreamingMode(postString.getBytes().length);
@@ -79,12 +80,12 @@ class DownloaderTask extends AsyncTask<DownloadRequest, Void, byte[]> {
             } else {
                 throw new RuntimeException("Invalid Connection Method");
             }
-
+            
             conn.connect();
             // int responseCode = conn.getResponseCode();
             // Log.d(DEBUG_TAG, "Content Type: " + conn.getContentType());
             // Log.d(DEBUG_TAG, "The response is: " + responseCode);
-
+            
             return fetchResponse();
         } catch (IOException e) {
             Log.d(DEBUG_TAG, "Unable to connect to " + url.toString() + ": " + e.getMessage());
@@ -94,7 +95,7 @@ class DownloaderTask extends AsyncTask<DownloadRequest, Void, byte[]> {
             conn.disconnect();
         }
     }
-
+    
     public void onPostExecute(byte[] result) {
         Log.d(DEBUG_TAG, "***onPostExecute");
         if (listener == null) {
@@ -108,7 +109,7 @@ class DownloaderTask extends AsyncTask<DownloadRequest, Void, byte[]> {
             listener.onDownloadError(params);
         }
     }
-
+    
     /**
      * Receives the requested HTTP page, through the
      * <code>HttpURLConnection</code> object
@@ -118,24 +119,24 @@ class DownloaderTask extends AsyncTask<DownloadRequest, Void, byte[]> {
         InputStream inputStream = conn.getInputStream();
         // Log.d(DEBUG_TAG, "Headers in the HTTP response: \n" +
         // conn.getHeaderFields().toString());
-
+        
         // Premature optimization is the root of all evil. Donald Knuth
         // maledicimi.
         /*
          * List<Byte> bytesList = new LinkedList<Byte>(); int n = 0; // int
-         * length = 0; byte[] chunk = new byte[1500]; // 1500 bytes è MTU tipica
-         * su internet. while ((n = inputStream.read(chunk)) > 0) { for (int i =
-         * 0; i < n; i++) { bytesList.add(chunk[i]); } // length += n; //
-         * Log.d(DEBUG_TAG, "Read " + n + " bytes.\n"); } // Log.d(DEBUG_TAG,
+         * length = 0; byte[] chunk = new byte[1500]; // 1500 bytes è MTU
+         * tipica su internet. while ((n = inputStream.read(chunk)) > 0) { for
+         * (int i = 0; i < n; i++) { bytesList.add(chunk[i]); } // length += n;
+         * // Log.d(DEBUG_TAG, "Read " + n + " bytes.\n"); } // Log.d(DEBUG_TAG,
          * "Total: " + length + " bytes.\n"); byte[] responseBody = new
          * byte[bytesList.size()]; int i = 0; for (Byte b : bytesList) {
          * responseBody[i++] = b; } return responseBody;
          */
         ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
-
+        
         int nRead;
         byte[] data = new byte[512];
-
+        
         while ((nRead = inputStream.read(data, 0, data.length)) > 0) {
             /*
              * try { synchronized (this) { this.wait(200); } } catch
@@ -143,12 +144,12 @@ class DownloaderTask extends AsyncTask<DownloadRequest, Void, byte[]> {
              */
             outBuffer.write(data, 0, nRead);
         }
-
+        
         outBuffer.flush();
         Log.d(DEBUG_TAG, "***fetchResponse: [" + outBuffer.toString() + "]");
         return outBuffer.toByteArray();
     }
-
+    
     /**
      * This interface must be implemented by the object used as a Listener for
      * the HTTP request
@@ -162,7 +163,7 @@ class DownloaderTask extends AsyncTask<DownloadRequest, Void, byte[]> {
          * @param responseBody the contents of the requested HTTP page
          */
         public void onDownloadCompleted(DownloadRequest request, byte[] responseBody);
-
+        
         /**
          * This method will be called if an error happened while trying to
          * download the requested HTTP page
