@@ -47,9 +47,9 @@ public class NewsDetailActivity extends SherlockActivity implements HTTPAccess.R
         
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
-        urlString = "http://www.cartaperdue.it/partner/Notizia.php?id=" + notizia.getId();
+        urlString = "http://www.cartaperdue.it/partner/Notizia.php?id=" + notizia.getID();
         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET, null, null);
-        Log.d(DEBUG_TAG, "id " + notizia.getId());
+        Log.d(DEBUG_TAG, "id " + notizia.getID());
     }
     
     @Override

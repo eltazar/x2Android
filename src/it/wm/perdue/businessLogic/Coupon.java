@@ -12,7 +12,7 @@ import java.util.Date;
 /**
  * @author Gabriele "Whisky" Visconti
  */
-public class Coupon {
+public class Coupon implements HasID {
     @SerializedName("idofferta")
     private int     id                 = -1;
     @SerializedName("offerta_title")
@@ -49,77 +49,77 @@ public class Coupon {
     private String  indirizzoEsercente = null;
     @SerializedName("esercente_comune")
     private boolean esercenteComune    = false;
-
-    public int getId() {
+    
+    public int getID() {
         return id;
     }
-
+    
     public String getTitolo() {
         return titolo;
     }
-
+    
     public String getTitoloBreve() {
         return titoloBreve;
     }
-
+    
     public URL getUrlImmagine() {
         return urlImmagine;
     }
-
+    
     public float getValoreAcquisto() {
         return valoreAcquisto;
     }
-
+    
     public float getValoreFacciale() {
         return valoreFacciale;
     }
-
+    
     public float getSconto() {
         return sconto;
     }
-
+    
     public String getScontoPer() {
         return scontoPer;
     }
-
+    
     public String getDescrizione() {
         return descrizione;
     }
-
+    
     public String getDescrizioneBreve() {
         return descrizioneBreve;
     }
-
+    
     public String getCondizioni() {
         return condizioni;
     }
-
+    
     public Date getCouponPeriodoDal() {
         return couponPeriodoDal;
     }
-
+    
     public Date getInizioValidita() {
         return inizioValidita;
     }
-
+    
     public Date getFineValidita() {
         return fineValidita;
     }
-
+    
     public int getIdEsercente() {
         return idEsercente;
     }
-
+    
     public String getNomeEsercente() {
         return nomeEsercente;
     }
-
+    
     public String getIndirizzoEsercente() {
         return indirizzoEsercente;
     }
-
+    
     public boolean isEsercenteComune() {
         return esercenteComune;
     }
-
+    
 }

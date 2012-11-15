@@ -1,7 +1,6 @@
 
 package it.wm.perdue;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -9,13 +8,19 @@ import android.widget.ArrayAdapter;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import it.wm.perdue.businessLogic.HasID;
 
-public class JSONListAdapter<T> extends ArrayAdapter<T> {
-    Class<T[]> clazz = null;
+import java.util.ArrayList;
+import java.util.List;
+
+public class JSONListAdapter<T extends HasID> extends ArrayAdapter<T> {
+    Class<T[]>    clazz = null;
+    List<Integer> ids   = null;
     
     public JSONListAdapter(Context context, int resource, Class<T[]> clazz) {
         super(context, resource);
         this.clazz = clazz;
+        this.ids = new ArrayList<Integer>();
     }
     
     public int addFromJSON(String jsonString) {
@@ -43,18 +48,13 @@ public class JSONListAdapter<T> extends ArrayAdapter<T> {
             // In teoria se siamo qui, significa che è arrivato un array vuoto,
             objects = gson.fromJson("[]", clazz);
         }
-        this.supportAddAll(objects);
-        return objects.length;
-    }
-    
-    @SuppressLint("NewApi")
-    public void supportAddAll(T... items) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-            super.addAll(items);
-        } else {
-            for (T item : items) {
-                super.add(item);
+        for (T object : objects) {
+            int id = object.getID();
+            if (!ids.contains(id)) {
+                ids.add(id);
+                super.add(object);
             }
         }
+        return objects.length;
     }
 }

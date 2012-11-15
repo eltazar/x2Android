@@ -12,7 +12,7 @@ import java.util.Locale;
  * @author Gabriele "Whisky" Visconti
  */
 @SuppressWarnings("serial")
-public class Notizia implements Serializable {
+public class Notizia implements Serializable, HasID {
     @SerializedName("ID")
     private int    id           = -1;
     @SerializedName("post_title")
@@ -24,7 +24,7 @@ public class Notizia implements Serializable {
     @SerializedName("guid")
     private String wordpressUrl = null;
     
-    public int getId() {
+    public int getID() {
         return id;
     }
     
