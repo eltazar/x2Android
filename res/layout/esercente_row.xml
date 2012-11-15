@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dip" >
+        android:layout_height="66dip" >
 
         <it.wm.CachedAsyncImageView
             android:id="@+id/eseImage"
@@ -35,7 +35,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/eseTitle"
+            android:layout_alignParentRight="false"
             android:layout_below="@+id/eseTitle"
+            android:maxLength="35"
             android:text="Address" />
 
         <TextView
