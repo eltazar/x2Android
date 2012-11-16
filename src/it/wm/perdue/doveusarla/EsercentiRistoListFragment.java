@@ -1,6 +1,114 @@
 
 package it.wm.perdue.doveusarla;
 
-public class EsercentiRistoListFragment {
+import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import it.wm.CachedAsyncImageView;
+import it.wm.perdue.JSONListAdapter;
+import it.wm.perdue.R;
+import it.wm.perdue.businessLogic.EsercenteRistorazione;
+
+public class EsercentiRistoListFragment extends EsercentiListFragment {
     
+    private static final String DEBUG_TAG = "EsercentiRistoListFragment";
+    
+    // Gestione dello stato della lista:
+    // protected EsercenteRistoJSONListAdapter adapter = null;
+    // protected EsercenteRistoJSONListAdapter searchAdapter = null;
+    
+    public static EsercentiRistoListFragment newInstance(String sort, String categ) {
+        EsercentiRistoListFragment fragment = new EsercentiRistoListFragment(sort.toLowerCase(),
+                categ.toLowerCase());
+        Log.d("***************", "NEW INSTANCE --> SORTING = " + fragment.sorting + " category = "
+                + fragment.category);
+        return fragment;
+    }
+    
+    public EsercentiRistoListFragment(String sorting, String category) {
+        
+        super(sorting, category);
+        
+        urlString = "http://www.cartaperdue.it/partner/v2.0/EsercentiRistorazione.php";
+        
+        // Log.d(DEBUG_TAG, "Ctor: ordina =" + "[" + postMap.get("ordina") +
+        // "]");
+        Log.d(DEBUG_TAG, "url string = " + urlString);
+    }
+    
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        adapter = null;
+        searchAdapter = null;
+        
+        adapter = new EsercenteRistoJSONListAdapter(
+                getActivity(),
+                R.layout.esercente_risto_row,
+                EsercenteRistorazione[].class,
+                sorting);
+        searchAdapter = new EsercenteRistoJSONListAdapter(
+                getActivity(),
+                R.layout.esercente_risto_row,
+                EsercenteRistorazione[].class,
+                sorting);
+    }
+    
+    private static class EsercenteRistoJSONListAdapter extends
+            JSONListAdapter<EsercenteRistorazione> {
+        private String sorting = null;
+        
+        public EsercenteRistoJSONListAdapter(Context context, int resource,
+                Class<EsercenteRistorazione[]> clazz, String sorting) {
+            super(context, resource, clazz);
+            Log.d("--------------", " RISTO ADAPTER ISTANZIATO");
+            this.sorting = sorting;
+        }
+        
+        public View getView(int position, View convertView, ViewGroup parent) {
+            
+            Log.d("--------------", " GET VIEW DI RISTO LIST");
+            
+            View v = convertView;
+            if (v == null) {
+                v = ((LayoutInflater) super.getContext().getSystemService(
+                        Context.LAYOUT_INFLATER_SERVICE))
+                        .inflate(R.layout.esercente_risto_row, null);
+            }
+            
+            EsercenteRistorazione esercente = getItem(position);
+            if (esercente != null) {
+                TextView title = (TextView) v.findViewById(R.id.eseTitle2);
+                TextView address = (TextView) v.findViewById(R.id.address2);
+                TextView distance = (TextView) v.findViewById(R.id.distance2);
+                CachedAsyncImageView caImageView = (CachedAsyncImageView) v
+                        .findViewById(R.id.eseImage2);
+                
+                String urlImageString = "http://www.cartaperdue.it/partner/v2.0/ImmagineEsercente.php?id="
+                        + esercente.getID();
+                
+                if (caImageView != null) {
+                    Log.d("DEBUG_TAG", "esercente id  = " + esercente.getID());
+                    // caImageView.loadImageFromURL(urlImageString);
+                }
+                
+                if (title != null) {
+                    Log.d(DEBUG_TAG, "Sorting è: " + sorting);
+                    title.setText(esercente.getInsegna());
+                }
+                if (address != null) {
+                    address.setText(esercente.getIndirizzo());
+                }
+                if (distance != null) {
+                    distance.setText(String.format("%.3f km", esercente.getDistanza()));
+                }
+            }
+            return v;
+        }
+    }
 }
