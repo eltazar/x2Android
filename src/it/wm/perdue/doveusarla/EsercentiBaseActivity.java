@@ -132,17 +132,27 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
     
     private static class EsercentiPagerAdapter extends FragmentPagerAdapter implements
             IconPagerAdapter {
-        protected String[]     CONTENT      = new String[] {
-                                                    "Distanza",
-                                                    "Nome"
-                                            };
-        private int            mCount       = CONTENT.length;
-        private String         category     = null;
-        private List<Fragment> fragmentList = null;
+        protected ArrayList<String> CONTENT      = new ArrayList<String>() {
+                                                     {
+                                                         add("Distanza");
+                                                         add("Nome");
+                                                     }
+                                                 };
+        private int                 mCount       = CONTENT.size();
+        private String              category     = null;
+        private List<Fragment>      fragmentList = null;
+        private boolean             isRisto      = false;
         
         public EsercentiPagerAdapter(FragmentManager fm, String category) {
             super(fm);
             this.category = category;
+            
+            if (category.equals("Ristoranti") || category.equals("Pubs e Bar")) {
+                CONTENT.add("Prezzo");
+                mCount++;
+                isRisto = true;
+            }
+            
             fragmentList = new ArrayList<Fragment>(mCount);
             for (int i = 0; i < mCount; i++) {
                 fragmentList.add(i, null);
@@ -168,8 +178,14 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
             // TODO: dirty, bisognrebbe usare il Fragment Manager
             Fragment f = fragmentList.get(position);
             if (f == null) {
-                f = EsercentiListFragment
-                        .newInstance(CONTENT[position % CONTENT.length], category);
+                if (isRisto) {
+                    f = EsercentiRistoListFragment
+                            .newInstance(CONTENT.get(position % CONTENT.size()), category);
+                }
+                else {
+                    f = EsercentiListFragment
+                            .newInstance(CONTENT.get(position % CONTENT.size()), category);
+                }
                 fragmentList.add(position, f);
             }
             return f;
@@ -182,7 +198,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         
         @Override
         public CharSequence getPageTitle(int position) {
-            return CONTENT[position % CONTENT.length];
+            return CONTENT.get(position % CONTENT.size());
         }
         
         @Override
