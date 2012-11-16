@@ -8,6 +8,45 @@
         android:layout_width="match_parent"
         android:layout_height="60dip" >
 
+   	    <it.wm.CachedAsyncImageView
+            android:id="@+id/eseImage2"
+            android:layout_width="60dip"
+            android:layout_height="50dip"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:paddingLeft="5dip"
+            android:paddingTop="5dip" >
+
+   	        <TextView
+   	            android:id="@+id/address2"
+   	            android:layout_width="wrap_content"
+   	            android:layout_height="wrap_content"
+   	            android:layout_alignParentLeft="true"
+   	            android:layout_centerVertical="true"
+   	            android:maxLength="35"
+   	            android:text="Address" />
+
+        </it.wm.CachedAsyncImageView>
+
+        <TextView
+            android:id="@+id/distance2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="18dp"
+            android:gravity="bottom"
+            android:text="distance" />
+
+        <TextView
+            android:id="@+id/eseTitle2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@+id/eseImage2"
+            android:text="EseTitle"
+            android:textStyle="bold" />
        
     </RelativeLayout>
 
