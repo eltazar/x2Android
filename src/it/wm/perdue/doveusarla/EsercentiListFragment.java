@@ -31,6 +31,8 @@ public class EsercentiListFragment extends SherlockListFragment implements
     private static final String                    TAG_NORMAL       = "normal";
     private static final String                    TAG_SEARCH       = "search";
     private static final String                    TAG_SEARCH_MORE  = "searchmore";
+    public static final String                     ARGS_CATEGORY    = "category";
+    public static final String                     ARGS_SORTING     = "sorting";
     private int                                    state            = 0;
     protected String                               category         = "";
     protected String                               sorting          = "";
@@ -52,17 +54,24 @@ public class EsercentiListFragment extends SherlockListFragment implements
     // perch
     
     public static EsercentiListFragment newInstance(String sort, String categ) {
-        EsercentiListFragment fragment = new EsercentiListFragment(sort.toLowerCase(),
-                categ.toLowerCase());
+        EsercentiListFragment fragment = new EsercentiListFragment();
+        Bundle args = new Bundle();
+        args.putString(ARGS_CATEGORY, categ.toLowerCase());
+        args.putString(ARGS_SORTING, sort.toLowerCase());
+        fragment.setArguments(args);
         Log.d(DEBUG_TAG, "NEW INSTANCE --> SORTING = " + fragment.sorting + " category = "
                 + fragment.category);
         return fragment;
     }
     
-    public EsercentiListFragment(String sorting, String category) {
-        this.state = STATE_NORMAL;
-        this.sorting = sorting;
-        this.category = category;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        state = STATE_NORMAL;
+        Bundle args = getArguments();
+        category = args.getString(ARGS_CATEGORY);
+        sorting = args.getString(ARGS_SORTING);
+        Log.d(DEBUG_TAG, "onCreate: sorting =" + "[" + sorting + "]");
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
         urlString = "http://www.cartaperdue.it/partner/v2.0/EsercentiNonRistorazione.php";
@@ -74,22 +83,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
         postMap.put("lat", "41.801007");
         postMap.put("long", "12.454273");
         postMap.put("ordina", sorting);
-        Log.d(DEBUG_TAG, "Ctor: ordina =" + "[" + postMap.get("ordina") + "]");
-    }
-    
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        adapter = new EsercenteJSONListAdapter(
-                getActivity(),
-                R.layout.esercente_row,
-                Esercente[].class,
-                sorting);
-        searchAdapter = new EsercenteJSONListAdapter(
-                getActivity(),
-                R.layout.esercente_row,
-                Esercente[].class,
-                sorting);
+        onCreateAdapters();
     }
     
     @Override
@@ -146,6 +140,19 @@ public class EsercentiListFragment extends SherlockListFragment implements
         super.onDestroyView();
         Log.d(DEBUG_TAG, "on destroy view");
         // listState = getListView().onSaveInstanceState();
+    }
+    
+    protected void onCreateAdapters() {
+        adapter = new EsercenteJSONListAdapter(
+                getActivity(),
+                R.layout.esercente_row,
+                Esercente[].class,
+                sorting);
+        searchAdapter = new EsercenteJSONListAdapter(
+                getActivity(),
+                R.layout.esercente_row,
+                Esercente[].class,
+                sorting);
     }
     
     protected void setDataForQuery(String data) {
