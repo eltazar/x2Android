@@ -23,30 +23,25 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
     // protected EsercenteRistoJSONListAdapter searchAdapter = null;
     
     public static EsercentiRistoListFragment newInstance(String sort, String categ) {
-        EsercentiRistoListFragment fragment = new EsercentiRistoListFragment(sort.toLowerCase(),
-                categ.toLowerCase());
+        EsercentiRistoListFragment fragment = new EsercentiRistoListFragment();
+        Bundle args = new Bundle();
+        args.putString(ARGS_CATEGORY, categ.toLowerCase());
+        args.putString(ARGS_SORTING, sort.toLowerCase());
+        fragment.setArguments(args);
         Log.d("***************", "NEW INSTANCE --> SORTING = " + fragment.sorting + " category = "
                 + fragment.category);
         return fragment;
     }
     
-    public EsercentiRistoListFragment(String sorting, String category) {
-        
-        super(sorting, category);
-        
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         urlString = "http://www.cartaperdue.it/partner/v2.0/EsercentiRistorazione.php";
-        
-        // Log.d(DEBUG_TAG, "Ctor: ordina =" + "[" + postMap.get("ordina") +
-        // "]");
         Log.d(DEBUG_TAG, "url string = " + urlString);
     }
     
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        adapter = null;
-        searchAdapter = null;
-        
+    public void onCreateAdapters() {
         adapter = new EsercenteRistoJSONListAdapter(
                 getActivity(),
                 R.layout.esercente_risto_row,
