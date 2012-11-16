@@ -27,7 +27,7 @@ public class JSONListAdapter<T extends HasID> extends ArrayAdapter<T> {
         jsonString = Utils.stripEsercente(jsonString);
         jsonString = Utils.stripFinalFalse(jsonString);
         
-        Log.d("JSON ADAPTER", "JSONSTRING = " + Utils.stripEsercente(jsonString));
+        Log.d("JSONListAdapter", "JSONSTRING = " + Utils.stripEsercente(jsonString));
         /*
          * new AsyncTask<String, Void, T[]>() {
          * @Override protected T[] doInBackground(String... params) {
@@ -46,6 +46,8 @@ public class JSONListAdapter<T extends HasID> extends ArrayAdapter<T> {
             objects = gson.fromJson(jsonString, clazz);
         } catch (JsonSyntaxException e) {
             // In teoria se siamo qui, significa che è arrivato un array vuoto,
+            Log.d("JSONListAdapter", "Ho rilevato un array vuoto");
+            e.printStackTrace();
             objects = gson.fromJson("[]", clazz);
         }
         for (T object : objects) {
