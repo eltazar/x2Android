@@ -25,27 +25,27 @@ import java.util.HashMap;
 
 public class EsercentiListFragment extends SherlockListFragment implements
         HTTPAccess.ResponseListener, OnScrollListener {
-    private static final String        DEBUG_TAG        = "EsercentiListFragment";
-    private static final int           STATE_NORMAL     = 1;
-    private static final int           STATE_SEARCH     = 2;
-    private static final String        TAG_NORMAL       = "normal";
-    private static final String        TAG_SEARCH       = "search";
-    private static final String        TAG_SEARCH_MORE  = "searchmore";
-    private int                        state            = 0;
-    private String                     category         = "";
-    private String                     sorting          = "";
+    private static final String                    DEBUG_TAG        = "EsercentiListFragment";
+    private static final int                       STATE_NORMAL     = 1;
+    private static final int                       STATE_SEARCH     = 2;
+    private static final String                    TAG_NORMAL       = "normal";
+    private static final String                    TAG_SEARCH       = "search";
+    private static final String                    TAG_SEARCH_MORE  = "searchmore";
+    private int                                    state            = 0;
+    protected String                               category         = "";
+    protected String                               sorting          = "";
     // Gestione dei download:
-    private HTTPAccess                 httpAccess       = null;
-    protected String                   urlString        = null;
-    protected HashMap<String, String>  postMap          = null;
+    private HTTPAccess                             httpAccess       = null;
+    protected String                               urlString        = null;
+    protected HashMap<String, String>              postMap          = null;
     // private int downloading = 0;
-    private boolean                    noMoreData       = false;
-    private boolean                    searchNoMoreData = false;
-    private View                       footerView       = null;
+    private boolean                                noMoreData       = false;
+    private boolean                                searchNoMoreData = false;
+    private View                                   footerView       = null;
     // Gestione dello stato della lista:
-    protected EsercenteJSONListAdapter adapter          = null;
-    protected EsercenteJSONListAdapter searchAdapter    = null;
-    private Parcelable                 listState        = null;
+    protected JSONListAdapter<? extends Esercente> adapter          = null;
+    protected JSONListAdapter<? extends Esercente> searchAdapter    = null;
+    private Parcelable                             listState        = null;
     
     // problema: perchè al primo avvio di una categoria stampa due volte il log
     // SORTING ? :|
@@ -294,6 +294,9 @@ public class EsercentiListFragment extends SherlockListFragment implements
         }
         
         public View getView(int position, View convertView, ViewGroup parent) {
+            
+            Log.d("+++++++++++++", " GET VIEW DI ESE LIST");
+            
             View v = convertView;
             if (v == null) {
                 v = ((LayoutInflater) super.getContext().getSystemService(
