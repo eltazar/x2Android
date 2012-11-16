@@ -14,8 +14,8 @@ import com.google.gson.GsonBuilder;
  */
 public final class Utils {
     
-    public static String stripEsercente(CharSequence c) {
-        StringBuilder builder = new StringBuilder(c);
+    public static String stripEsercente(String c) {
+        StringBuilder builder = new StringBuilder(c.trim());
         
         if (builder.length() >= 13 && builder.substring(0, 13).equals("{\"Esercente\":")) {
             builder.delete(0, 13);
