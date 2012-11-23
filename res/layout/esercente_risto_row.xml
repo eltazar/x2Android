@@ -4,51 +4,66 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-   	<RelativeLayout
-   	    android:layout_width="match_parent"
-   	    android:layout_height="60dip" >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.06" >
 
-   	    <it.wm.CachedAsyncImageView
-   	        android:id="@+id/eseImage2"
-   	        android:layout_width="60dp"
-   	        android:layout_height="50dp"
-   	        android:layout_alignParentLeft="true"
-   	        android:layout_alignParentTop="true"
-   	        android:gravity="center_horizontal"
-   	        android:paddingLeft="5dp"
-   	        android:paddingTop="5dp" />
-   	    
-   	    <TextView
-   	        android:id="@+id/eseTitle2"
-   	        android:layout_width="wrap_content"
-   	        android:layout_height="wrap_content"
-   	        android:layout_alignParentTop="true"
-   	        android:layout_toRightOf="@+id/eseImage2"
-   	        android:layout_marginLeft="16dp"
-   	        android:text="EseTitle"
-   	        android:textStyle="bold" />
+        <it.wm.CachedAsyncImageView
+            android:id="@+id/eseImage"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp" >
+        </it.wm.CachedAsyncImageView>
 
-   	    <TextView
-   	        android:id="@+id/address2"
-   	        android:layout_width="wrap_content"
-   	        android:layout_height="wrap_content"
-   	        android:layout_below="@+id/eseTitle2"
-   	        android:layout_marginLeft="16dp"
-   	        android:layout_toRightOf="@+id/eseImage2"
-   	        android:maxLength="35"
-   	        android:text="Address" />
+        <TextView
+            android:id="@+id/eseTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:layout_toRightOf="@+id/eseImage"
+            android:text="EseTitle"
+            android:textStyle="bold" />
 
-   	    <TextView
-   	        android:id="@+id/distance2"
-   	        android:layout_width="wrap_content"
-   	        android:layout_height="wrap_content"
-   	        android:layout_alignParentBottom="true"
-   	        android:layout_alignParentRight="true"
-   	        android:layout_marginRight="18dp"
-   	        android:gravity="bottom"
-   	        android:text="distance" />
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/eseImage"
+            android:layout_marginTop="20dp"
+            android:gravity="bottom"
+            android:text="distance" />
 
-   	    
-   	</RelativeLayout>
+        <TextView
+            android:id="@+id/kindFood"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/eseTitle"
+            android:layout_below="@+id/eseTitle"
+            android:text="cucina" />
+
+        <TextView
+            android:id="@+id/address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/kindFood"
+            android:layout_below="@+id/kindFood"
+            android:maxLength="35"
+            android:text="Address" />
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/address"
+            android:layout_below="@+id/address"
+            android:text="prezzo" />
+
+    </RelativeLayout>
 
 </LinearLayout>

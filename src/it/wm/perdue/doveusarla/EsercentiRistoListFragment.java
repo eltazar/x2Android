@@ -83,11 +83,13 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
             
             EsercenteRistorazione esercente = getItem(position);
             if (esercente != null) {
-                TextView title = (TextView) v.findViewById(R.id.eseTitle2);
-                TextView address = (TextView) v.findViewById(R.id.address2);
-                TextView distance = (TextView) v.findViewById(R.id.distance2);
+                TextView title = (TextView) v.findViewById(R.id.eseTitle);
+                TextView address = (TextView) v.findViewById(R.id.address);
+                TextView distance = (TextView) v.findViewById(R.id.distance);
+                TextView foodKind = (TextView) v.findViewById(R.id.kindFood);
+                TextView price = (TextView) v.findViewById(R.id.price);
                 CachedAsyncImageView caImageView = (CachedAsyncImageView) v
-                        .findViewById(R.id.eseImage2);
+                        .findViewById(R.id.eseImage);
                 
                 String urlImageString = "http://www.cartaperdue.it/partner/v2.0/ImmagineEsercente.php?id="
                         + esercente.getID();
@@ -105,7 +107,13 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
                     address.setText(esercente.getIndirizzo());
                 }
                 if (distance != null) {
-                    distance.setText(String.format("%.3f km", esercente.getDistanza()));
+                    distance.setText(String.format("a %.3f km", esercente.getDistanza()));
+                }
+                if (foodKind != null) {
+                    foodKind.setText(String.format("Cucina: %s ", esercente.getSottoTipologia()));
+                }
+                if (price != null) {
+                    price.setText(String.format("%s Û: ", esercente.getFasciaPrezzo()));
                 }
             }
             return v;
