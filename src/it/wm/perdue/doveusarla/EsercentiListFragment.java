@@ -144,7 +144,8 @@ public class EsercentiListFragment extends SherlockListFragment implements
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        listState = getListView().onSaveInstanceState();
+        Log.d(DEBUG_TAG, "on destroy view");
+        // listState = getListView().onSaveInstanceState();
     }
     
     protected void setDataForQuery(String data) {
