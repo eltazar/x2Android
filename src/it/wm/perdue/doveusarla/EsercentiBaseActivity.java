@@ -27,6 +27,11 @@ import it.wm.perdue.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * Questa classe funge da contenitore per un fragment. Ha il compito di visualizzare i vari elementi dell'interfaccia
+ * come la search bar ecc...
+ * 
+ * */
 public class EsercentiBaseActivity extends SherlockFragmentActivity implements OnQueryTextListener {
     private static final String   DEBUG_TAG = "EsercentiBaseActivity";
     private String                category  = "";
