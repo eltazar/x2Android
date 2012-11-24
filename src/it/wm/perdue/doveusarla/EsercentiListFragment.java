@@ -36,6 +36,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
     private int                                    state            = 0;
     protected String                               category         = "";
     protected String                               sorting          = "";
+    private String                                 searchKey        = null;
     // Gestione dei download:
     private HTTPAccess                             httpAccess       = null;
     protected String                               urlString        = null;
@@ -169,12 +170,17 @@ public class EsercentiListFragment extends SherlockListFragment implements
             footerView.setVisibility(searchNoMoreData ? View.INVISIBLE : View.VISIBLE);
             
             data = data.replace(" ", "-");
+            searchKey = data;
             postMap.put("from", "0");
             postMap.put("request", "search");
             postMap.put("chiave", data);
             if (TAG_SEARCH == null)
                 throw new RuntimeException();
-            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, TAG_SEARCH);
+            httpAccess.startHTTPConnection(
+                    urlString,
+                    HTTPAccess.Method.POST,
+                    postMap,
+                    TAG_SEARCH + data);
         }
     }
     
@@ -225,9 +231,12 @@ public class EsercentiListFragment extends SherlockListFragment implements
             /*
              * Se invece riceviamo un risultato di ricerca, lo aggiungiamo solo
              * se siamo in modalità di ricerca, altrimenti è tempo perso: al
-             * prossimo rientro in search mode l'adapter verrà svuotato.
+             * prossimo rientro in search mode l'adapter verrà svuotato. Inoltre
+             * aggiungiamo i risultati solo se sono della ricerca corrente
+             * scartando quelli di ricerche vecchie. TODO: le connessioni delle
+             * ricerche vecchie andrebbero proprio fermate
              */
-            if (state != STATE_SEARCH) {
+            if (state != STATE_SEARCH || !tag.equals(TAG_SEARCH + searchKey)) {
                 return;
             }
             n = searchAdapter.addFromJSON(response);
