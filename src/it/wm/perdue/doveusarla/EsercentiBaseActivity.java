@@ -59,6 +59,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setOffscreenPageLimit(4);
         
         PageIndicator pageIndicator = (TitlePageIndicator) findViewById(R.id.indicator);
         pageIndicator.setViewPager(viewPager);
@@ -151,7 +152,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         public EsercentiPagerAdapter(FragmentManager fm, String category) {
             super(fm);
             this.category = category;
-            
+            Log.d(DEBUG_TAG, "category " + category);
             if (category.equals("Ristoranti") || category.equals("Pubs e Bar")) {
                 CONTENT.add("Prezzo");
                 mCount++;
@@ -198,6 +199,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         
         @Override
         public int getCount() {
+            Log.d(DEBUG_TAG, "getCount:" + mCount);
             return mCount;
         }
         
