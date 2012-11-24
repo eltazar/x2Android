@@ -10,9 +10,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import it.wm.CachedAsyncImageView;
+import it.wm.HTTPAccess;
 import it.wm.perdue.JSONListAdapter;
 import it.wm.perdue.R;
 import it.wm.perdue.businessLogic.EsercenteRistorazione;
+
+import java.util.HashMap;
 
 public class EsercentiRistoListFragment extends EsercentiListFragment {
     
@@ -52,6 +55,28 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
                 R.layout.esercente_risto_row,
                 EsercenteRistorazione[].class,
                 sorting);
+    }
+    
+    public void didChangeFilter(String f) {
+        
+        this.filter = f;
+        Log.d("BLA", " cambiato filtro dentro risto = " + this.filter);
+        
+        postMap = new HashMap<String, String>();
+        postMap.put("request", "fetch");
+        postMap.put("categ", category.toLowerCase());
+        postMap.put("prov", "Qui");
+        postMap.put("giorno", "Venerdi");
+        postMap.put("lat", "41.801007");
+        postMap.put("long", "12.454273");
+        postMap.put("ordina", sorting);
+        postMap.put("from", "" + 0);
+        postMap.put("filtro", this.filter);
+        adapter.clear();
+        setListAdapter(adapter);
+        // Log.d("BLA", "4) postMap is: " + postMap);
+        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
+                postMap, TAG_NORMAL);
     }
     
     private static class EsercenteRistoJSONListAdapter extends
@@ -102,13 +127,16 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
                     address.setText(esercente.getIndirizzo());
                 }
                 if (distance != null) {
-                    distance.setText(String.format("a %.3f km", esercente.getDistanza()));
+                    distance.setText(String.format("a %.3f km ", esercente.getDistanza()));
                 }
                 if (foodKind != null) {
                     foodKind.setText(String.format("Cucina: %s ", esercente.getSottoTipologia()));
                 }
                 if (price != null) {
-                    price.setText(String.format("%s Û: ", esercente.getFasciaPrezzo()));
+                    if (esercente.getFasciaPrezzo() == null)
+                        price.setText("-- Û");
+                    else
+                        price.setText(String.format("%s Û: ", esercente.getFasciaPrezzo()));
                 }
             }
             return v;

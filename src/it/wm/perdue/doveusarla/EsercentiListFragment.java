@@ -28,7 +28,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
     private static final String                    DEBUG_TAG        = "EsercentiListFragment";
     private static final int                       STATE_NORMAL     = 1;
     private static final int                       STATE_SEARCH     = 2;
-    private static final String                    TAG_NORMAL       = "normal";
+    protected static final String                  TAG_NORMAL       = "normal";
     private static final String                    TAG_SEARCH       = "search";
     private static final String                    TAG_SEARCH_MORE  = "searchmore";
     public static final String                     ARGS_CATEGORY    = "category";
@@ -36,9 +36,10 @@ public class EsercentiListFragment extends SherlockListFragment implements
     private int                                    state            = 0;
     protected String                               category         = "";
     protected String                               sorting          = "";
+    protected String                               filter           = "";
     private String                                 searchKey        = null;
     // Gestione dei download:
-    private HTTPAccess                             httpAccess       = null;
+    protected HTTPAccess                           httpAccess       = null;
     protected String                               urlString        = null;
     protected HashMap<String, String>              postMap          = null;
     // private int downloading = 0;
@@ -83,6 +84,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
         postMap.put("giorno", "Venerdi");
         postMap.put("lat", "41.801007");
         postMap.put("long", "12.454273");
+        postMap.put("filtro", filter);
         postMap.put("ordina", sorting);
         onCreateAdapters();
     }
@@ -290,7 +292,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
             Log.d(DEBUG_TAG, "Donwload from: " + adapter.getCount());
             postMap.put("from", "" + adapter.getCount());
             postMap.put("request", "fetch");
-            postMap.put("filtro", "");
+            postMap.put("filtro", filter);
             httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, tag);
             // downloading++;
             // Log.d(DEBUG_TAG, "onScroll: Donwloading " + downloading + "[" +
