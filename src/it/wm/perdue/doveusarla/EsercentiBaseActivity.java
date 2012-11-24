@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -21,6 +22,7 @@ import com.viewpagerindicator.IconPagerAdapter;
 import com.viewpagerindicator.PageIndicator;
 import com.viewpagerindicator.TitlePageIndicator;
 
+import it.wm.perdue.FilterSpinnerAdapter;
 import it.wm.perdue.MainActivity;
 import it.wm.perdue.R;
 
@@ -32,10 +34,20 @@ import java.util.List;
  * come la search bar ecc...
  * 
  * */
-public class EsercentiBaseActivity extends SherlockFragmentActivity implements OnQueryTextListener {
+public class EsercentiBaseActivity extends SherlockFragmentActivity implements OnQueryTextListener,
+        OnNavigationListener {
     private static final String   DEBUG_TAG = "EsercentiBaseActivity";
     private String                category  = "";
     private EsercentiPagerAdapter pagerAdapter;
+    private String[]              actions   = new String[] {
+            "Tutti",
+            "Pranzo",
+            "Cena"
+                                            };
+    private Integer[]             icons     = {
+            R.drawable.filter,
+            R.drawable.sun, R.drawable.moon
+                                            };
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,6 +76,22 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         PageIndicator pageIndicator = (TitlePageIndicator) findViewById(R.id.indicator);
         pageIndicator.setViewPager(viewPager);
         
+        // dropDownList per il filtro pranzo-cena
+        if (category.equals("Ristoranti") || category.equals("Pubs e Bar")) {
+            
+            /** Create an array adapter to populate dropdownlist */
+            FilterSpinnerAdapter adapter = new FilterSpinnerAdapter(getBaseContext(),
+                    android.R.layout.simple_spinner_dropdown_item, actions, icons);
+            
+            /** Enabling dropdown list navigation for the action bar */
+            bar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+            
+            /**
+             * Setting dropdown items and item navigation listener for the
+             * actionbar
+             */
+            bar.setListNavigationCallbacks(adapter, this);
+        }
     }
     
     /* *** BEGIN: OptionsMenu Methods **************** */
@@ -136,6 +164,21 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
     
     /* *** END: OnQueryTextListener Methods **************** */
     
+    /* *** START:: OnNavigationListener **************** */
+    @Override
+    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+        
+        for (int i = 0; i < pagerAdapter.getCount(); i++) {
+            EsercentiRistoListFragment f = (EsercentiRistoListFragment)
+                    pagerAdapter.getItem(i);
+            f.didChangeFilter(actions[itemPosition]);
+        }
+        
+        return false;
+    }
+    
+    /* *** END:: OnNavigationListener **************** */
+    
     private static class EsercentiPagerAdapter extends FragmentPagerAdapter implements
             IconPagerAdapter {
         protected ArrayList<String> CONTENT      = new ArrayList<String>() {
@@ -199,7 +242,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         
         @Override
         public int getCount() {
-            Log.d(DEBUG_TAG, "getCount:" + mCount);
+            // Log.d(DEBUG_TAG, "getCount:" + mCount);
             return mCount;
         }
         
