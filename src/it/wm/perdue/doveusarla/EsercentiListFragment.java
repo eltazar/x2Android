@@ -121,6 +121,12 @@ public class EsercentiListFragment extends SherlockListFragment implements
             // postMap.get("ordina")
             // + "]");
         }
+        
+        // custom dialog
+        // Dialog dialog = new Dialog(getActivity());
+        // dialog.setContentView(R.layout.dove_quando_dialog);
+        // dialog.setTitle("Title...");
+        // dialog.show();
     }
     
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -302,6 +308,17 @@ public class EsercentiListFragment extends SherlockListFragment implements
     }
     
     /* *** END: AbsListView.OnScrollListener ****************** */
+    
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        
+        Esercente ese = adapter.getItem(position);
+        Log.d(DEBUG_TAG, "cliccato item = " + ese.getLongitude());
+        
+        DoveQuandoDialog builder = new DoveQuandoDialog(getActivity());
+        builder.show(getFragmentManager(), "whereWhen");
+        ;
+        
+    }
     
     private static class EsercenteJSONListAdapter extends JSONListAdapter<Esercente> {
         private String sorting = null;

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    android:layout_marginBottom="20dp" >
+
+    <TextView
+        android:id="@+id/wwTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/wwTitle" >
+
+        <ListView
+            android:id="@+id/where"
+            android:layout_width="156dp"
+            android:layout_height="fill_parent" >
+        </ListView>
+
+        <ListView
+            android:id="@+id/when"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_toRightOf="@id/where" >
+        </ListView>
+    </LinearLayout>
+
+</RelativeLayout>
