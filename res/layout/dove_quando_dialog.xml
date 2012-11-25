@@ -8,7 +8,7 @@
         android:id="@+id/wwTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Large Text"
+        android:text="Dove e quando"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <LinearLayout
@@ -19,14 +19,16 @@
         <ListView
             android:id="@+id/where"
             android:layout_width="156dp"
-            android:layout_height="fill_parent" >
+            android:layout_height="fill_parent"
+            android:choiceMode="singleChoice" >
         </ListView>
 
         <ListView
             android:id="@+id/when"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_toRightOf="@id/where" >
+            android:layout_toRightOf="@id/where" 
+            android:choiceMode="singleChoice">
         </ListView>
     </LinearLayout>
 
