@@ -64,6 +64,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
         fragment.setArguments(args);
         Log.d(DEBUG_TAG, "NEW INSTANCE --> SORTING = " + fragment.sorting + " category = "
                 + fragment.category);
+        
         return fragment;
     }
     
@@ -82,7 +83,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
         postMap.put("request", "fetch");
         postMap.put("categ", category.toLowerCase());
         postMap.put("prov", "Qui");
-        postMap.put("giorno", "Venerdi");
+        postMap.put("giorno", "Lunedi");
         postMap.put("lat", "41.801007");
         postMap.put("long", "12.454273");
         postMap.put("filtro", filter);
@@ -315,7 +316,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
         Esercente ese = adapter.getItem(position);
         Log.d(DEBUG_TAG, "cliccato item = " + ese.getLongitude());
         
-        DoveQuandoDialog dialog = new DoveQuandoDialog(getActivity());
+        DoveQuandoDialog dialog = new DoveQuandoDialog();
         dialog.show(getActivity().getSupportFragmentManager(), "whereWhen");
         ;
         
