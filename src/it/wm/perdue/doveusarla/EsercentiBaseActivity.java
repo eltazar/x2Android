@@ -129,7 +129,6 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
             case R.id.ww:
                 DoveQuandoDialog dialog = new DoveQuandoDialog();
                 dialog.show(getSupportFragmentManager(), "whereWhen");
-                ;
                 return true;
                 
         }
