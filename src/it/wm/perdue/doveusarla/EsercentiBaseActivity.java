@@ -45,7 +45,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
     private static final String   DEBUG_TAG  = "EsercentiBaseActivity";
     private String                category   = "";
     private EsercentiPagerAdapter pagerAdapter;
-    private String[]              actions    = new String[] {
+    private String[]              mealHourFilter    = new String[] {
             "Tutti",
             "Pranzo",
             "Cena"
@@ -89,7 +89,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
             
             /** Create an array adapter to populate dropdownlist */
             FilterSpinnerAdapter adapter = new FilterSpinnerAdapter(getBaseContext(),
-                    android.R.layout.simple_spinner_dropdown_item, actions, icons);
+                    android.R.layout.simple_spinner_dropdown_item, mealHourFilter, icons);
             
             /** Enabling dropdown list navigation for the action bar */
             bar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -190,7 +190,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         for (int i = 0; i < pagerAdapter.getCount(); i++) {
             EsercentiRistoListFragment f = (EsercentiRistoListFragment)
                     pagerAdapter.getItem(i);
-            f.didChangeFilter(actions[itemPosition]);
+            f.didChangeFilter(mealHourFilter[itemPosition]);
         }
         
         return false;
