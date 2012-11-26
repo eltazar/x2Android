@@ -17,7 +17,6 @@ import com.actionbarsherlock.app.SherlockListFragment;
 
 import it.wm.CachedAsyncImageView;
 import it.wm.HTTPAccess;
-import it.wm.perdue.DoveQuandoDialog;
 import it.wm.perdue.JSONListAdapter;
 import it.wm.perdue.R;
 import it.wm.perdue.businessLogic.Esercente;
@@ -315,10 +314,6 @@ public class EsercentiListFragment extends SherlockListFragment implements
         
         Esercente ese = adapter.getItem(position);
         Log.d(DEBUG_TAG, "cliccato item = " + ese.getLongitude());
-        
-        DoveQuandoDialog dialog = new DoveQuandoDialog();
-        dialog.show(getActivity().getSupportFragmentManager(), "whereWhen");
-        ;
         
     }
     

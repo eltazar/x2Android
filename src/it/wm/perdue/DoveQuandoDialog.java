@@ -1,6 +1,7 @@
 
 package it.wm.perdue;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,21 +10,46 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+
 public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemClickListener {
     
-    private String[] values = new String[] {
-            "a", "b", "c",
-            "d", "e", "r", "g", "b", "c",
-            "d", "e", "r", "g"
-                            };
-    private String[] bho    = new String[] {
-            "1", "2", "3",
-            "4", "5", "6", "7"
-                            };
+    public interface ChangeDoveQuandoDialogListener {
+        void onSaveDoveQuandoDialog(HashMap<String, String> wwMap);
+    }
+    
+    private ArrayList<String>              cities = new ArrayList<String>(Arrays.asList(
+                                                          "Qui vicino", "Bergamo", "Bologna",
+                                                          "Brescia",
+                                                          "Catania", "Como", "Cosenza", "Cremona",
+                                                          "Ferrara", "Firenze", "Forl“",
+                                                          "Frosinone", "Genova", "Grosseto",
+                                                          "L'Aquila",
+                                                          "Latina", "Lecce", "Lecco", "Lodi",
+                                                          "Mantova", "Matera", "Milano", "Modena",
+                                                          "Monza",
+                                                          "Napoli", "Parma", "Pavia",
+                                                          "Perugia", "Piacenza", "Ravenna",
+                                                          "Reggio Emilia", "Rieti", "Rimini",
+                                                          "Roma", "Siena",
+                                                          "Sondrio",
+                                                          "Terni", "Trapani", "Varese", "Viterbo"));
+    private String[]                       days   = new String[] {
+            "Oggi", "Luned“", "Marted“", "Mercoled“",
+            "Gioved“", "Venerd“", "Sabato", "Domenica"
+                                                  };
+    
+    private ChangeDoveQuandoDialogListener mListener;
+    private HashMap<String, String>        wwMap  = null;
+    private String                         where  = "";
+    private String                         when   = "";
     
     // @Override
     // public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -77,19 +103,46 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
         ListView listDove = (ListView) view.findViewById(R.id.where);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_single_choice, android.R.id.text1,
-                values
+                cities
                 );
         listDove.setAdapter(adapter);
         listDove.setOnItemClickListener(this);
         
         ListView listQuando = (ListView) view.findViewById(R.id.when);
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_single_choice, android.R.id.text1, bho
+                android.R.layout.simple_list_item_single_choice, android.R.id.text1, days
                 );
         listQuando.setAdapter(adapter2);
         listQuando.setOnItemClickListener(this);
         setStyle(STYLE_NORMAL, android.R.style.Theme_Dialog);
+        
+        Button saveBtn = (Button) view.findViewById(R.id.saveWW);
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onSaveDoveQuandoDialog(wwMap);
+                dismiss();
+            }
+        });
+        
+        wwMap = new HashMap<String, String>();
+        
         return view;
+    }
+    
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        // Verify that the host activity implements the callback interface
+        try {
+            // Instantiate the NoticeDialogListener so we can send events to the
+            // host
+            mListener = (ChangeDoveQuandoDialogListener) activity;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, throw exception
+            throw new ClassCastException(activity.toString()
+                    + " must implement NoticeDialogListener");
+        }
     }
     
     @Override
@@ -101,17 +154,25 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
          * a CheckedTextView, you can use that directly without having to look
          * for it.
          */
+        
         switch (arg0.getId()) {
             case R.id.where:
-                Log.d("XX", "LISTA WHERE -> oggetto : " + values[arg2]);
+                
+                wwMap.put("where", cities.get(arg2));
+                where = cities.get(arg2);
+                Log.d("XX", "LISTA WHERE -> oggetto : " + where);
                 break;
             case R.id.when:
-                Log.d("XX", "LISTA WHEN -> oggetto : " + bho[arg2]);
+                Log.d("XX", "LISTA WHEN -> oggetto : " + days[arg2]);
+                wwMap.put("when", days[arg2]);
+                when = days[arg2];
                 break;
             default:
                 // inserire Qui -> oggi
                 break;
         }
+        wwMap.put("label", "" + where + "-" + when);
         
     }
+    
 }
