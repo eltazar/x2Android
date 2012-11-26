@@ -65,7 +65,7 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
         
         postMap = new HashMap<String, String>();
         postMap.put("request", "fetch");
-        postMap.put("categ", category.toLowerCase());
+        postMap.put("categ", category.toLowerCase().replace(" ", ""));
         postMap.put("prov", Utils.getPreferenceString(getActivity(), "where", "Qui"));
         postMap.put("giorno", Utils.getWeekDay(getActivity()));
         postMap.put("lat", "41.801007");
