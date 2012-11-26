@@ -4,6 +4,8 @@
 
 package it.wm.perdue;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -13,6 +15,8 @@ import com.google.gson.GsonBuilder;
  * @author Gabriele "Whisky" Visconti
  */
 public final class Utils {
+    
+    private final static String APP_PREFERENCES = "AppPref";
     
     public static String stripEsercente(String c) {
         StringBuilder builder = new StringBuilder(c.trim());
@@ -55,5 +59,21 @@ public final class Utils {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("yyyy-MM-dd kk:mm:ss");
         return gsonBuilder.create();
+    }
+    
+    public static String getPreferenceString(Context context, String key, String defaultValue) {
+        SharedPreferences settings = context.getSharedPreferences(APP_PREFERENCES,
+                0);
+        return settings.getString(key, defaultValue);
+    }
+    
+    public static void setPreferenceString(Context context, String key, String value) {
+        SharedPreferences settings = context.getSharedPreferences(
+                APP_PREFERENCES,
+                0);
+        
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(key, value);
+        editor.commit();
     }
 }
