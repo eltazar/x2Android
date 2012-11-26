@@ -13,6 +13,7 @@ import it.wm.CachedAsyncImageView;
 import it.wm.HTTPAccess;
 import it.wm.perdue.JSONListAdapter;
 import it.wm.perdue.R;
+import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.EsercenteRistorazione;
 
 import java.util.HashMap;
@@ -65,8 +66,8 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
         postMap = new HashMap<String, String>();
         postMap.put("request", "fetch");
         postMap.put("categ", category.toLowerCase());
-        postMap.put("prov", "Qui");
-        postMap.put("giorno", "Venerdi");
+        postMap.put("prov", Utils.getPreferenceString(getActivity(), "where", "Qui"));
+        postMap.put("giorno", Utils.getWeekDay(getActivity()));
         postMap.put("lat", "41.801007");
         postMap.put("long", "12.454273");
         postMap.put("ordina", sorting);
