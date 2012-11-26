@@ -22,11 +22,14 @@ import com.viewpagerindicator.IconPagerAdapter;
 import com.viewpagerindicator.PageIndicator;
 import com.viewpagerindicator.TitlePageIndicator;
 
+import it.wm.perdue.DoveQuandoDialog;
+import it.wm.perdue.DoveQuandoDialog.ChangeDoveQuandoDialogListener;
 import it.wm.perdue.FilterSpinnerAdapter;
 import it.wm.perdue.MainActivity;
 import it.wm.perdue.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /*
@@ -35,7 +38,7 @@ import java.util.List;
  * 
  * */
 public class EsercentiBaseActivity extends SherlockFragmentActivity implements OnQueryTextListener,
-        OnNavigationListener {
+        OnNavigationListener, ChangeDoveQuandoDialogListener {
     private static final String   DEBUG_TAG = "EsercentiBaseActivity";
     private String                category  = "";
     private EsercentiPagerAdapter pagerAdapter;
@@ -48,6 +51,8 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
             R.drawable.filter,
             R.drawable.sun, R.drawable.moon
                                             };
+    
+    private Menu                  menu      = null;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,6 +104,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.esercenti_menu, menu);
+        this.menu = menu;
         // mSearchView.setOnCloseListener(this);
         setupSearchView(menu);
         return true;
@@ -112,6 +118,12 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
                 intent.putExtra(Intent.EXTRA_TEXT, MainActivity.DOVE_USARLA_TAB_TAG);
                 NavUtils.navigateUpTo(this, intent);
                 return true;
+            case R.id.ww:
+                DoveQuandoDialog dialog = new DoveQuandoDialog();
+                dialog.show(getSupportFragmentManager(), "whereWhen");
+                ;
+                return true;
+                
         }
         return super.onOptionsItemSelected(item);
     }
@@ -178,6 +190,19 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
     }
     
     /* *** END:: OnNavigationListener **************** */
+    
+    /* *** START:: ChangeDoveQuandoDialogListener **************** */
+    
+    @Override
+    public void onSaveDoveQuandoDialog(HashMap<String, String> wwMap) {
+        // TODO Auto-generated method stub
+        Log.d("XXXX", wwMap.toString());
+        MenuItem wwMenuItem = menu.findItem(R.id.ww);
+        wwMenuItem.setTitle(wwMap.get("label"));
+        
+    }
+    
+    /* *** END:: ChangeDoveQuandoDialogListener **************** */
     
     private static class EsercentiPagerAdapter extends FragmentPagerAdapter implements
             IconPagerAdapter {
