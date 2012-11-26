@@ -76,4 +76,71 @@ public final class Utils {
         editor.putString(key, value);
         editor.commit();
     }
+    
+    public static String getWeekDay(Context context) {
+        
+        String dayFromSharedPreferences = getPreferenceString(context, "when", "Qui");
+        
+        if (dayFromSharedPreferences.equals("Luned“")) {
+            return "Lunedi";
+        }
+        if (dayFromSharedPreferences.equals("Marted“")) {
+            return "Martedi";
+        }
+        if (dayFromSharedPreferences.equals("Mercoled“")) {
+            return "Mercoledi";
+        }
+        if (dayFromSharedPreferences.equals("Gioved“")) {
+            return "Giovedi";
+        }
+        if (dayFromSharedPreferences.equals("Venerd“")) {
+            return "Venerdi";
+        }
+        if (dayFromSharedPreferences.equals("Sabato")) {
+            return "Sabato";
+        }
+        if (dayFromSharedPreferences.equals("Domenica")) {
+            return "Domenica";
+        }
+        if (dayFromSharedPreferences.equals("Oggi")) {
+            // NSDate *data = [NSDate date];
+            //
+            // int weekDay = [[[NSCalendar currentCalendar]
+            // components:NSWeekdayCalendarUnit fromDate:data] weekday];
+            //
+            // switch (weekDay) {
+            // case 1:
+            // return @"Domenica";
+            // break;
+            //
+            // case 2:
+            // return @"Lunedi";
+            // break;
+            //
+            // case 3:
+            // return @"Martedi";
+            // break;
+            //
+            // case 4:
+            // return @"Mercoledi";
+            // break;
+            //
+            // case 5:
+            // return @"Giovedi";
+            // break;
+            //
+            // case 6:
+            // return @"Venerdi";
+            // break;
+            //
+            // case 7:
+            // return @"Sabato";
+            // break;
+            //
+            // default:
+            // break;
+            // }
+        }
+        return "";
+    }
 }

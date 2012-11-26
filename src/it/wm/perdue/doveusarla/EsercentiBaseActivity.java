@@ -190,7 +190,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         for (int i = 0; i < pagerAdapter.getCount(); i++) {
             EsercentiRistoListFragment f = (EsercentiRistoListFragment)
                     pagerAdapter.getItem(i);
-            f.didChangeFilter(mealHourFilter[itemPosition]);
+            f.onChangeFilter(mealHourFilter[itemPosition]);
         }
         
         return false;
@@ -209,12 +209,13 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         wwMenuItem.setTitle(Utils.getPreferenceString(getApplicationContext(), WHERE, "Qui")
                 + "-"
                 + Utils.getPreferenceString(getApplicationContext(), WHEN, "Oggi"));
-        Log.d("XX",
-                "LISTA WHERE -> oggetto : "
-                        + Utils.getPreferenceString(getApplicationContext(), WHERE, "Qui")
-                        + " When ->"
-                        + Utils.getPreferenceString(getApplicationContext(), WHEN, "Oggi"));
         
+        // rilancio query
+        for (int i = 0; i < pagerAdapter.getCount(); i++) {
+            EsercentiListFragment f = (EsercentiListFragment)
+                    pagerAdapter.getItem(i);
+            f.onChangeWhereWhenFilter();
+        }
     }
     
     /* *** END:: ChangeDoveQuandoDialogListener **************** */

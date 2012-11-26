@@ -19,6 +19,7 @@ import it.wm.CachedAsyncImageView;
 import it.wm.HTTPAccess;
 import it.wm.perdue.JSONListAdapter;
 import it.wm.perdue.R;
+import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.Esercente;
 
 import java.util.HashMap;
@@ -81,8 +82,8 @@ public class EsercentiListFragment extends SherlockListFragment implements
         postMap = new HashMap<String, String>();
         postMap.put("request", "fetch");
         postMap.put("categ", category.toLowerCase());
-        postMap.put("prov", "Qui");
-        postMap.put("giorno", "Lunedi");
+        postMap.put("prov", Utils.getPreferenceString(getActivity(), "where", "Qui"));
+        postMap.put("giorno", Utils.getWeekDay(getActivity()));
         postMap.put("lat", "41.801007");
         postMap.put("long", "12.454273");
         postMap.put("filtro", filter);
@@ -315,6 +316,24 @@ public class EsercentiListFragment extends SherlockListFragment implements
         Esercente ese = adapter.getItem(position);
         Log.d(DEBUG_TAG, "cliccato item = " + ese.getLongitude());
         
+    }
+    
+    public void onChangeWhereWhenFilter() {
+        postMap = new HashMap<String, String>();
+        postMap.put("request", "fetch");
+        postMap.put("categ", category.toLowerCase());
+        postMap.put("prov", Utils.getPreferenceString(getActivity(), "where", "Qui"));
+        postMap.put("giorno", Utils.getWeekDay(getActivity()));
+        postMap.put("lat", "41.801007");
+        postMap.put("long", "12.454273");
+        postMap.put("ordina", sorting);
+        postMap.put("from", "" + 0);
+        postMap.put("filtro", this.filter);
+        adapter.clear();
+        setListAdapter(adapter);
+        // Log.d("BLA", "4) postMap is: " + postMap);
+        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
+                postMap, TAG_NORMAL);
     }
     
     private static class EsercenteJSONListAdapter extends JSONListAdapter<Esercente> {
