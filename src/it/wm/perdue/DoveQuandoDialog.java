@@ -1,6 +1,7 @@
 
 package it.wm.perdue;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
@@ -31,6 +33,7 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
     private static final String            WHERE  = "where";
     private static final String            WHEN   = "when";
     
+    @TargetApi(11)
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         cities = getResources().getStringArray(R.array.cities);
@@ -43,23 +46,46 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
         builder.setView(view);
         
         ArrayAdapter<String> adapter = null;
-        ListView listDove = (ListView) view.findViewById(R.id.where);
-        adapter = new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_list_item_single_choice,
-                android.R.id.text1,
-                cities);
-        listDove.setAdapter(adapter);
-        listDove.setOnItemClickListener(this);
-        
-        ListView listQuando = (ListView) view.findViewById(R.id.when);
-        adapter = new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_list_item_single_choice,
-                android.R.id.text1,
-                days);
-        listQuando.setAdapter(adapter);
-        listQuando.setOnItemClickListener(this);
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+            ListView listWhere = (ListView) view.findViewById(R.id.where);
+            adapter = new ArrayAdapter<String>(
+                    getActivity(),
+                    android.R.layout.simple_list_item_single_choice,
+                    android.R.id.text1,
+                    cities);
+            listWhere.setAdapter(adapter);
+            listWhere.setOnItemClickListener(this);
+            
+            ListView listQuando = (ListView) view.findViewById(R.id.when);
+            adapter = new ArrayAdapter<String>(
+                    getActivity(),
+                    android.R.layout.simple_list_item_single_choice,
+                    android.R.id.text1,
+                    days);
+            listQuando.setAdapter(adapter);
+            listQuando.setOnItemClickListener(this);
+        } else {
+            final NumberPicker pickerWhere = (NumberPicker) view.findViewById(R.id.where);
+            pickerWhere.setMinValue(0);
+            pickerWhere.setMaxValue(cities.length - 1);
+            pickerWhere.setDisplayedValues(cities);
+            pickerWhere.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                @Override
+                public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                    DoveQuandoDialog.this.onValueChange(pickerWhere, newVal);
+                }
+            });
+            final NumberPicker pickerWhen = (NumberPicker) view.findViewById(R.id.when);
+            pickerWhen.setMinValue(0);
+            pickerWhen.setMaxValue(days.length - 1);
+            pickerWhen.setDisplayedValues(days);
+            pickerWhen.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                @Override
+                public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                    DoveQuandoDialog.this.onValueChange(pickerWhen, newVal);
+                }
+            });
+        }
         
         builder.setTitle("Dove e quando")
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -95,24 +121,20 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
     }
     
     @Override
-    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-        /*
-         * arg2 is the position in your list. It looks like you are doing some
-         * extra (unnecessary) processing. arg1 is your row view, and since the
-         * android.R.layout.simple_list_item_single_choice layout contains only
-         * a CheckedTextView, you can use that directly without having to look
-         * for it.
-         */
-        
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        onValueChange(parent, position);
+    }
+    
+    private void onValueChange(View view, int position) {
         // salvo in variabili locali le scelte effettuate
-        switch (arg0.getId()) {
+        switch (view.getId()) {
             case R.id.where:
-                where = cities[arg2];
+                where = cities[position];
                 Log.d("XX", "LISTA WHERE -> oggetto : " + where);
                 break;
             case R.id.when:
-                Log.d("XX", "LISTA WHEN -> oggetto : " + days[arg2]);
-                when = days[arg2];
+                Log.d("XX", "LISTA WHEN -> oggetto : " + days[position]);
+                when = days[position];
                 break;
             default:
                 // inserire Qui -> oggi
