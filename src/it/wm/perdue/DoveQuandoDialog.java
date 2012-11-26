@@ -17,12 +17,11 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemClickListener {
     
     public interface ChangeDoveQuandoDialogListener {
-        void onSaveDoveQuandoDialog(HashMap<String, String> wwMap);
+        void onSaveDoveQuandoDialog();
     }
     
     private ArrayList<String>              cities = new ArrayList<String>(Arrays.asList(
@@ -47,9 +46,10 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
                                                   };
     
     private ChangeDoveQuandoDialogListener mListener;
-    private HashMap<String, String>        wwMap  = null;
     private String                         where  = "";
     private String                         when   = "";
+    private static final String            WHERE  = "where";
+    private static final String            WHEN   = "when";
     
     // @Override
     // public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -120,12 +120,16 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onSaveDoveQuandoDialog(wwMap);
+                // salvo le impostazioni selezionate se la selezione non  vuota
+                Log.d("XX", " ### WHERE ->  : " + where + " WHEN -> " + when);
+                if (!where.equals(""))
+                    Utils.setPreferenceString(getActivity(), WHERE, where);
+                if (!when.equals(""))
+                    Utils.setPreferenceString(getActivity(), WHEN, when);
+                mListener.onSaveDoveQuandoDialog();
                 dismiss();
             }
         });
-        
-        wwMap = new HashMap<String, String>();
         
         return view;
     }
@@ -155,23 +159,25 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
          * for it.
          */
         
+        // salvo in variabili locali le scelte effettuate
         switch (arg0.getId()) {
             case R.id.where:
                 
-                wwMap.put("where", cities.get(arg2));
+                // wwMap.put("where", cities.get(arg2));
                 where = cities.get(arg2);
                 Log.d("XX", "LISTA WHERE -> oggetto : " + where);
                 break;
             case R.id.when:
                 Log.d("XX", "LISTA WHEN -> oggetto : " + days[arg2]);
-                wwMap.put("when", days[arg2]);
+                // wwMap.put("when", days[arg2]);
                 when = days[arg2];
                 break;
             default:
                 // inserire Qui -> oggi
                 break;
         }
-        wwMap.put("label", "" + where + "-" + when);
+        // inserisco in una mappa
+        // wwMap.put("label", "" + where + "-" + when);
         
     }
     
