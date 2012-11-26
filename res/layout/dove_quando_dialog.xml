@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="wrap_content" android:layout_height="wrap_content">
-
-    
-
-<LinearLayout 
-
-android:layout_width="wrap_content" android:layout_height="wrap_content"
-    android:layout_gravity="center" android:orientation="horizontal"
-    >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
 
     <ListView
         android:id="@+id/where"
-        android:layout_width="156dp"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_weight="1"
         android:choiceMode="singleChoice" >
     </ListView>
 
@@ -22,18 +17,9 @@ android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:id="@+id/when"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_toRightOf="@id/where"
+        android:layout_weight="1"
         android:choiceMode="singleChoice" >
     </ListView>
 
 </LinearLayout>
 
-<Button
-    android:id="@+id/saveWW"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:layout_centerHorizontal="true"
-    android:text="Button" />
-
-</RelativeLayout>

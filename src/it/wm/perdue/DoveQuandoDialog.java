@@ -2,15 +2,16 @@
 package it.wm.perdue;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
@@ -30,91 +31,52 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
     private static final String            WHERE  = "where";
     private static final String            WHEN   = "when";
     
-    // @Override
-    // public Dialog onCreateDialog(Bundle savedInstanceState) {
-    //
-    // AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-    //
-    // //
-    // LayoutInflater inflater = getActivity().getLayoutInflater();
-    // View view = inflater.inflate(R.layout.dove_quando_dialog, null);
-    //
-    // builder.setView(view);
-    //
-    // // //getResources().getStringArray(R.array.citta)
-    // ListView listDove = (ListView) view.findViewById(R.id.where);
-    // ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-    // android.R.layout.simple_list_item_single_choice, android.R.id.text1,
-    // values
-    // );
-    // listDove.setAdapter(adapter);
-    // listDove.setOnItemClickListener(this);
-    //
-    // ListView listQuando = (ListView) view.findViewById(R.id.when);
-    // ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(),
-    // android.R.layout.simple_list_item_single_choice, android.R.id.text1, bho
-    // );
-    // listQuando.setAdapter(adapter2);
-    // listQuando.setOnItemClickListener(this);
-    //
-    // // Use the Builder class for convenient dialog construction
-    // builder.setMessage("Dove e quando")
-    // .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-    // public void onClick(DialogInterface dialog, int id) {
-    // // FIRE ZE MISSILES!
-    // }
-    // })
-    // .setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
-    // public void onClick(DialogInterface dialog, int id) {
-    // // User cancelled the dialog
-    // }
-    // });
-    //
-    // // Create the AlertDialog object and return it
-    // return builder.create();
-    // }
-    
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         cities = getResources().getStringArray(R.array.cities);
         days = getResources().getStringArray(R.array.days);
         
-        getDialog().setTitle("Dove e quando");
-        setStyle(STYLE_NORMAL, android.R.style.Theme_Dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         
-        View view = inflater.inflate(R.layout.dove_quando_dialog, container, false);
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.dove_quando_dialog, null);
+        builder.setView(view);
         
+        ArrayAdapter<String> adapter = null;
         ListView listDove = (ListView) view.findViewById(R.id.where);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_single_choice, android.R.id.text1,
-                cities
-                );
+        adapter = new ArrayAdapter<String>(
+                getActivity(),
+                android.R.layout.simple_list_item_single_choice,
+                android.R.id.text1,
+                cities);
         listDove.setAdapter(adapter);
         listDove.setOnItemClickListener(this);
         
         ListView listQuando = (ListView) view.findViewById(R.id.when);
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_single_choice, android.R.id.text1, days
-                );
-        listQuando.setAdapter(adapter2);
+        adapter = new ArrayAdapter<String>(
+                getActivity(),
+                android.R.layout.simple_list_item_single_choice,
+                android.R.id.text1,
+                days);
+        listQuando.setAdapter(adapter);
         listQuando.setOnItemClickListener(this);
         
-        Button saveBtn = (Button) view.findViewById(R.id.saveWW);
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // salvo le impostazioni selezionate se la selezione non  vuota
-                Log.d("XX", " ### WHERE ->  : " + where + " WHEN -> " + when);
-                if (!where.equals(""))
-                    Utils.setPreferenceString(getActivity(), WHERE, where);
-                if (!when.equals(""))
-                    Utils.setPreferenceString(getActivity(), WHEN, when);
-                mListener.onSaveDoveQuandoDialog();
-                dismiss();
-            }
-        });
-        
-        return view;
+        builder.setTitle("Dove e quando")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // salvo le impostazioni selezionate se la selezione non
+                        //  vuota
+                        Log.d("XX", " ### WHERE ->  : " + where + " WHEN -> " + when);
+                        if (!where.equals(""))
+                            Utils.setPreferenceString(getActivity(), WHERE, where);
+                        if (!when.equals(""))
+                            Utils.setPreferenceString(getActivity(), WHEN, when);
+                        mListener.onSaveDoveQuandoDialog();
+                        dismiss();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null);
+        return builder.create();
     }
     
     @Override
