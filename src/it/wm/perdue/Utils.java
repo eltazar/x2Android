@@ -11,6 +11,8 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.Calendar;
+
 /**
  * @author Gabriele "Whisky" Visconti
  */
@@ -103,43 +105,34 @@ public final class Utils {
             return "Domenica";
         }
         if (dayFromSharedPreferences.equals("Oggi")) {
-            // NSDate *data = [NSDate date];
-            //
-            // int weekDay = [[[NSCalendar currentCalendar]
-            // components:NSWeekdayCalendarUnit fromDate:data] weekday];
-            //
-            // switch (weekDay) {
-            // case 1:
-            // return @"Domenica";
-            // break;
-            //
-            // case 2:
-            // return @"Lunedi";
-            // break;
-            //
-            // case 3:
-            // return @"Martedi";
-            // break;
-            //
-            // case 4:
-            // return @"Mercoledi";
-            // break;
-            //
-            // case 5:
-            // return @"Giovedi";
-            // break;
-            //
-            // case 6:
-            // return @"Venerdi";
-            // break;
-            //
-            // case 7:
-            // return @"Sabato";
-            // break;
-            //
-            // default:
-            // break;
-            // }
+            
+            Calendar calendar = Calendar.getInstance();
+            int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
+            
+            switch (weekDay) {
+                case 1:
+                    return "Domenica";
+                case 2:
+                    return "Lunedi";
+                    
+                case 3:
+                    return "Martedi";
+                    
+                case 4:
+                    return "Mercoledi";
+                    
+                case 5:
+                    return "Giovedi";
+                    
+                case 6:
+                    return "Venerdi";
+                    
+                case 7:
+                    return "Sabato";
+                    
+                default:
+                    break;
+            }
         }
         return "";
     }
