@@ -57,7 +57,7 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
                 sorting);
     }
     
-    public void didChangeFilter(String f) {
+    public void onChangeFilter(String f) {
         
         this.filter = f;
         Log.d("BLA", " cambiato filtro dentro risto = " + this.filter);
