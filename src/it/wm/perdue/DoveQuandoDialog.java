@@ -15,35 +15,14 @@ import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemClickListener {
     
     public interface ChangeDoveQuandoDialogListener {
         void onSaveDoveQuandoDialog();
     }
     
-    private ArrayList<String>              cities = new ArrayList<String>(Arrays.asList(
-                                                          "Qui vicino", "Bergamo", "Bologna",
-                                                          "Brescia",
-                                                          "Catania", "Como", "Cosenza", "Cremona",
-                                                          "Ferrara", "Firenze", "Forl“",
-                                                          "Frosinone", "Genova", "Grosseto",
-                                                          "L'Aquila",
-                                                          "Latina", "Lecce", "Lecco", "Lodi",
-                                                          "Mantova", "Matera", "Milano", "Modena",
-                                                          "Monza",
-                                                          "Napoli", "Parma", "Pavia",
-                                                          "Perugia", "Piacenza", "Ravenna",
-                                                          "Reggio Emilia", "Rieti", "Rimini",
-                                                          "Roma", "Siena",
-                                                          "Sondrio",
-                                                          "Terni", "Trapani", "Varese", "Viterbo"));
-    private String[]                       days   = new String[] {
-            "Oggi", "Luned“", "Marted“", "Mercoled“",
-            "Gioved“", "Venerd“", "Sabato", "Domenica"
-                                                  };
+    private String[]                       cities = null;
+    private String[]                       days   = null;
     
     private ChangeDoveQuandoDialogListener mListener;
     private String                         where  = "";
@@ -97,9 +76,14 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
     
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dove_quando_dialog, container, false);
+        cities = getResources().getStringArray(R.array.cities);
+        days = getResources().getStringArray(R.array.days);
+        
         getDialog().setTitle("Dove e quando");
-        // //getResources().getStringArray(R.array.citta)
+        setStyle(STYLE_NORMAL, android.R.style.Theme_Dialog);
+        
+        View view = inflater.inflate(R.layout.dove_quando_dialog, container, false);
+        
         ListView listDove = (ListView) view.findViewById(R.id.where);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_single_choice, android.R.id.text1,
@@ -114,7 +98,6 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
                 );
         listQuando.setAdapter(adapter2);
         listQuando.setOnItemClickListener(this);
-        setStyle(STYLE_NORMAL, android.R.style.Theme_Dialog);
         
         Button saveBtn = (Button) view.findViewById(R.id.saveWW);
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -162,23 +145,16 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
         // salvo in variabili locali le scelte effettuate
         switch (arg0.getId()) {
             case R.id.where:
-                
-                // wwMap.put("where", cities.get(arg2));
-                where = cities.get(arg2);
+                where = cities[arg2];
                 Log.d("XX", "LISTA WHERE -> oggetto : " + where);
                 break;
             case R.id.when:
                 Log.d("XX", "LISTA WHEN -> oggetto : " + days[arg2]);
-                // wwMap.put("when", days[arg2]);
                 when = days[arg2];
                 break;
             default:
                 // inserire Qui -> oggi
                 break;
         }
-        // inserisco in una mappa
-        // wwMap.put("label", "" + where + "-" + when);
-        
     }
-    
 }
