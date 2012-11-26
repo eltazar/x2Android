@@ -27,6 +27,7 @@ import it.wm.perdue.DoveQuandoDialog.ChangeDoveQuandoDialogListener;
 import it.wm.perdue.FilterSpinnerAdapter;
 import it.wm.perdue.MainActivity;
 import it.wm.perdue.R;
+import it.wm.perdue.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,20 +40,22 @@ import java.util.List;
  * */
 public class EsercentiBaseActivity extends SherlockFragmentActivity implements OnQueryTextListener,
         OnNavigationListener, ChangeDoveQuandoDialogListener {
-    private static final String   DEBUG_TAG = "EsercentiBaseActivity";
-    private String                category  = "";
+    
+    private final static String   WHERE_WHEN = "WhereWhen";
+    private static final String   DEBUG_TAG  = "EsercentiBaseActivity";
+    private String                category   = "";
     private EsercentiPagerAdapter pagerAdapter;
-    private String[]              actions   = new String[] {
+    private String[]              actions    = new String[] {
             "Tutti",
             "Pranzo",
             "Cena"
-                                            };
-    private Integer[]             icons     = {
+                                             };
+    private Integer[]             icons      = {
             R.drawable.filter,
             R.drawable.sun, R.drawable.moon
-                                            };
+                                             };
     
-    private Menu                  menu      = null;
+    private Menu                  menu       = null;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,6 +109,10 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         getSupportMenuInflater().inflate(R.menu.esercenti_menu, menu);
         this.menu = menu;
         // mSearchView.setOnCloseListener(this);
+        
+        menu.findItem(R.id.ww).setTitle(Utils.getPreferenceString(getApplicationContext(),
+                WHERE_WHEN, "Dove - Quando"));
+        
         setupSearchView(menu);
         return true;
     }
@@ -197,8 +204,13 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
     public void onSaveDoveQuandoDialog(HashMap<String, String> wwMap) {
         // TODO Auto-generated method stub
         Log.d("XXXX", wwMap.toString());
-        MenuItem wwMenuItem = menu.findItem(R.id.ww);
-        wwMenuItem.setTitle(wwMap.get("label"));
+        
+        if (!wwMap.isEmpty()) {
+            
+            MenuItem wwMenuItem = menu.findItem(R.id.ww);
+            Utils.setPreferenceString(getApplicationContext(), WHERE_WHEN, wwMap.get("label"));
+            wwMenuItem.setTitle(wwMap.get("label"));
+        }
         
     }
     
