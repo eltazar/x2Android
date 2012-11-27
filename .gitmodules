@@ -1,3 +1,6 @@
 [submodule "external/ActionBarSherlock"]
 	path = external/ActionBarSherlock
 	url = git://github.com/JakeWharton/ActionBarSherlock.git
+[submodule "external/ViewPagerIndicator"]
+	path = external/ViewPagerIndicator
+	url = git://github.com/JakeWharton/Android-ViewPagerIndicator.git
