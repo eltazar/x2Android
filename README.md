@@ -9,6 +9,7 @@ x2Android
 * File > Import > Existing Android Code into Workspace
  * il progetto da importare si trova in ./external/ActionBarSherlock/library, 
  * **NON** copiare nel workspace
+* (Opzionale, ma consigliato) Rinominare il progetto in Eclipse
 * Andare nelle proprietà del progetto appena importato:
  * scheda "Java Compiler": Assicurarsi che Compiler Compliance Level sia impostato a 1.6 e che Use Default compliance Settings sia spuntato
  * scheda "Android": Assicurarsi che il progect build target sia all'api level 16
