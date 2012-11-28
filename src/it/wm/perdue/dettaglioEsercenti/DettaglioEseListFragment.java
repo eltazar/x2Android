@@ -186,18 +186,31 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                 
                 if (sections.get(position).equals("info")) {
                     textView = (TextView) v.findViewById(R.id.infoRow);
-                    textView.setText(Html.fromHtml("<b> Giorno di chiusura</b>" + "<br />" +
-                            esercente.getGiornoChiusura() + "<br />" +
-                            "<b> Giorno di validitˆ </b>" + "<br />" + esercente.getGiorniString()
-                            + "<br />" + "<b> Condizioni</b>" + "<br />" + esercente.getNoteVarie()));
+                    textView.setText(Html.fromHtml((
+                            esercente.getGiornoChiusura() != null ? "<b> Giorno di chiusura</b>"
+                                    + "<br />" +
+                                    esercente.getGiornoChiusura() + "<br />" : "")
+                            +
+                            (esercente.getGiorniString() != null ?
+                                    "<b> Giorni validitˆ </b>" + "<br />"
+                                            + esercente.getGiorniString() + "<br />" : ""
+                            )
+                            + (esercente.getNoteVarie() != null ? "<b> Condizioni</b>" + "<br />"
+                                    + esercente.getNoteVarie() : "")));
                     
                 }
                 else if (sections.get(position).equals("map")) {
                     textView = (TextView) v.findViewById(R.id.mapInfo);
-                    textView.setText(Html.fromHtml("<b>Cittˆ</b>" + "<br />" +
-                            esercente.getCitta() + "<br />" +
-                            "<b> Zona </b>" + "<br />" + esercente.getZona()
-                            + "<br />" + "<b> Indirizzo</b>" + "<br />" + esercente.getIndirizzo()));
+                    textView.setText(Html.fromHtml(
+                            (esercente.getCitta() != null ? "<b>Cittˆ</b>" + "<br />" +
+                                    esercente.getCitta() + "<br />" : "")
+                                    +
+                                    (esercente.getZona() != null ? "<b> Zona </b>" + "<br />"
+                                            + esercente.getZona()
+                                            + "<br />" : "")
+                                    +
+                                    (esercente.getIndirizzo() != null ? "<b> Indirizzo</b>"
+                                            + "<br />" + esercente.getIndirizzo() : "")));
                 }
                 else if (sections.get(position).equals("tel")) {
                     contactTextView = (TextView) v.findViewById(R.id.contactResource);
