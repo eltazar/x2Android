@@ -11,6 +11,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockMapActivity;
 import com.actionbarsherlock.view.Menu;
@@ -28,6 +29,7 @@ import java.util.HashMap;
  */
 public class EsercentiMapActivity extends SherlockMapActivity implements LocationListener,
         HTTPAccess.ResponseListener {
+    private static final String      DEBUG_TAG       = "EsercentiMapActivity";
     private String                   category        = null;
     private MapView                  mapView         = null;
     private LocationManager          locationManager = null;
@@ -41,7 +43,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
         mapView = new MapView(this, getResources().getString(R.string.map_api_key));
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 1, this);
         mapView.setClickable(true);
-        mapView.getController().setZoom(12);
+        mapView.getController().setZoom(18);// (12);
         itemizedOverlay = new EsercentiItemizedOverlay(
                 this,
                 getResources().getDrawable(android.R.drawable.presence_online),
@@ -52,16 +54,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
         mapView.getOverlays().add(itemizedOverlay);
         
         setContentView(mapView);
-        dh = new DownloadHandler();
-        dh.httpAccess = new HTTPAccess();
-        dh.httpAccess.setResponseListener(this);
-        dh.urlString = "http://www.cartaperdue.it/partner/v2.0/EsercentiNonRistorazione.php";
-        dh.postMap = new HashMap<String, String>();
-        dh.postMap.put("request", "fetch");
-        dh.postMap.put("categ", "teatri");
-        dh.postMap.put("lat", "41.801007");
-        dh.postMap.put("long", "12.454273");
-        dh.postMap.put("ordina", "distanza");
+        dh = new DownloadHandler(this);
     }
     
     @Override
@@ -91,19 +84,24 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
         return super.onOptionsItemSelected(item);
     }
     
-    /* *** BEGIN: LocationListener Methods **************** */
+    /* *** BEGIN: LocationListener Methods ********************* */
     
     @Override
     public void onLocationChanged(Location location) {
         locationManager.removeUpdates(this);
-        SimpleGeoPoint sGeoPoint = new SimpleGeoPoint(
-                location.getLatitude(),
-                location.getLongitude());
-        mapView.getController().animateTo(sGeoPoint.toGeoPoint());
-        dh.postMap.put("lat", "" + location.getLatitude());
-        dh.postMap.put("long", "" + location.getLongitude());
-        dh.postMap.put("from", "0");
-        dh.startDowloading(sGeoPoint);
+        final SimpleGeoPoint sGeoPoint = new SimpleGeoPoint(
+                41.891544, 12.497532);
+        // location.getLatitude(),
+        // location.getLongitude());
+        mapView.getController().animateTo(
+                sGeoPoint.toGeoPoint(),
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        dh.startDowloading(sGeoPoint, getRange());
+                    }
+                });
+        
     }
     
     @Override
@@ -118,7 +116,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
     public void onStatusChanged(String provider, int status, Bundle extras) {
     }
     
-    /* *** END: LocationListener Methods **************** */
+    /* *** END: LocationListener Methods *********************** */
     
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
     
@@ -133,20 +131,50 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
         
     }
     
-    /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
+    /* *** END: HTTPAccess.ResponseListener ******************** */
+    
+    private double getRange() {
+        SimpleGeoPoint topLeft;
+        SimpleGeoPoint bottomRight;
+        SimpleGeoPoint center = new SimpleGeoPoint(mapView.getMapCenter());
+        double latSpan = mapView.getLatitudeSpan() / 1E6;
+        double longSpan = mapView.getLongitudeSpan() / 1E6;
+        topLeft = new SimpleGeoPoint(
+                center.getLatitude() - latSpan / 2,
+                center.getLongitude() - longSpan / 2);
+        bottomRight = new SimpleGeoPoint(
+                center.getLatitude() + latSpan / 2,
+                center.getLongitude() + longSpan / 2);
+        Log.d(DEBUG_TAG, "Il range : " + topLeft.calculateDistance(bottomRight));
+        double distance = topLeft.calculateDistance(bottomRight);
+        return (distance > 0 && distance < 1) ? 1 : distance;
+    }
     
     private static class DownloadHandler {
-        public String                  urlString;
-        public HashMap<String, String> postMap;
-        public HTTPAccess              httpAccess;
-        public int                     from;
-        private SimpleGeoPoint         queryPoint;
+        private String                  urlString;
+        private HashMap<String, String> postMap;
+        private HTTPAccess              httpAccess;
+        private int                     from;
+        private SimpleGeoPoint          queryPoint;
+        private double                  range;
         
-        public void startDowloading(SimpleGeoPoint point) {
-            queryPoint = point;
-            from = 0;
+        public DownloadHandler(HTTPAccess.ResponseListener listener) {
+            httpAccess = new HTTPAccess();
+            httpAccess.setResponseListener(listener);
+            urlString = "http://www.cartaperdue.it/partner/v2.0/EsercentiNonRistorazione.php";
+            postMap = new HashMap<String, String>();
+            postMap.put("request", "fetch");
+            postMap.put("categ", "teatri");
+            postMap.put("ordina", "distanza");
+        }
+        
+        public void startDowloading(SimpleGeoPoint point, double range) {
+            this.queryPoint = point;
+            this.range = range;
+            this.from = 0;
             postMap.put("lat", "" + queryPoint.getLatitude());
             postMap.put("long", "" + queryPoint.getLongitude());
+            postMap.put("raggio", "" + range);
             postMap.put("from", "" + from);
             startHTTPConnection();
         }
@@ -161,7 +189,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
         }
         
         public String getTag() {
-            return queryPoint.toString() + from;
+            return queryPoint.toString() + from + range;
         }
         
         private void startHTTPConnection() {
