@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.google.android.maps.GeoPoint;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -138,9 +137,4 @@ public final class Utils {
         return "";
     }
     
-    public static GeoPoint geoPoint(double latitude, double longitude) {
-        return new GeoPoint(
-                Math.round((float) (latitude * 1E6)),
-                Math.round((float) (longitude * 1E6)));
-    }
 }

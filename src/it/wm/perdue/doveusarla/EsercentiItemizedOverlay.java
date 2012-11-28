@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.readystatesoftware.mapviewballoons.BalloonItemizedOverlay;
 
+import it.wm.SimpleGeoPoint;
 import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.Esercente;
 
@@ -48,7 +49,8 @@ public class EsercentiItemizedOverlay extends BalloonItemizedOverlay<OverlayItem
     }
     
     public void addItem(Esercente esercente) {
-        GeoPoint geoPoint = Utils.geoPoint(esercente.getLatitude(), esercente.getLongitude());
+        GeoPoint geoPoint = new SimpleGeoPoint(esercente.getLatitude(), esercente.getLongitude())
+                .toGeoPoint();
         OverlayItem item = new EsercenteOverlayItem(
                 geoPoint,
                 esercente.getInsegna(),
@@ -66,7 +68,7 @@ public class EsercentiItemizedOverlay extends BalloonItemizedOverlay<OverlayItem
         return true;
     }
     
-    public void addFromJSON(String json) {
+    public int addFromJSON(String json) {
         json = Utils.stripEsercente(json);
         json = Utils.stripFinalFalse(json);
         
@@ -90,8 +92,8 @@ public class EsercentiItemizedOverlay extends BalloonItemizedOverlay<OverlayItem
                 Log.d(DEBUG_TAG, "Zompo");
             }
         }
-        // return objects.length;
         Log.d(DEBUG_TAG, "Esercenti nel json: " + objects.length);
+        return objects.length;
     }
     
     protected static class EsercenteOverlayItem extends OverlayItem {

@@ -16,11 +16,10 @@ import com.actionbarsherlock.app.SherlockMapActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.android.maps.MapView;
-import com.readystatesoftware.maps.TapControlledMapView;
 
 import it.wm.HTTPAccess;
+import it.wm.SimpleGeoPoint;
 import it.wm.perdue.R;
-import it.wm.perdue.Utils;
 
 import java.util.HashMap;
 
@@ -97,13 +96,14 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
     @Override
     public void onLocationChanged(Location location) {
         locationManager.removeUpdates(this);
-        mapView.getController().animateTo(
-                Utils.geoPoint(location.getLatitude(), location.getLongitude())
-                );
+        SimpleGeoPoint sGeoPoint = new SimpleGeoPoint(
+                location.getLatitude(),
+                location.getLongitude());
+        mapView.getController().animateTo(sGeoPoint.toGeoPoint());
         dh.postMap.put("lat", "" + location.getLatitude());
         dh.postMap.put("long", "" + location.getLongitude());
         dh.postMap.put("from", "0");
-        dh.downloadMore();
+        dh.startDowloading(sGeoPoint);
     }
     
     @Override
@@ -124,7 +124,8 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
     
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
-        itemizedOverlay.addFromJSON(response);
+        if (itemizedOverlay.addFromJSON(response) > 0)
+            dh.downloadMore();
     }
     
     @Override
@@ -135,14 +136,40 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
     
     private static class DownloadHandler {
-        public String                  tag;
         public String                  urlString;
         public HashMap<String, String> postMap;
         public HTTPAccess              httpAccess;
-        public int                     n;
+        public int                     from;
+        private SimpleGeoPoint         queryPoint;
+        
+        public void startDowloading(SimpleGeoPoint point) {
+            queryPoint = point;
+            from = 0;
+            postMap.put("lat", "" + queryPoint.getLatitude());
+            postMap.put("long", "" + queryPoint.getLongitude());
+            postMap.put("from", "" + from);
+            startHTTPConnection();
+        }
         
         public void downloadMore() {
-            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, tag);
+            postMap.put("from", "" + (from += 20));
+            startHTTPConnection();
+        }
+        
+        private void stopDownloading() {
+            // TODO: implementare in HTTPAccess
+        }
+        
+        public String getTag() {
+            return queryPoint.toString() + from;
+        }
+        
+        private void startHTTPConnection() {
+            httpAccess.startHTTPConnection(
+                    urlString,
+                    HTTPAccess.Method.POST,
+                    postMap,
+                    getTag());
         }
     }
 }
