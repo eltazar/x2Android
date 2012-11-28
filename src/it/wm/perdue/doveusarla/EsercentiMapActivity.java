@@ -4,13 +4,11 @@
 
 package it.wm.perdue.doveusarla;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 
@@ -18,6 +16,7 @@ import com.actionbarsherlock.app.SherlockMapActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.android.maps.MapView;
+import com.readystatesoftware.maps.TapControlledMapView;
 
 import it.wm.HTTPAccess;
 import it.wm.perdue.R;
@@ -34,17 +33,14 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
     private MapView                  mapView         = null;
     private LocationManager          locationManager = null;
     private EsercentiItemizedOverlay itemizedOverlay = null;
-    private HTTPAccess               httpAccess      = null;
-    private String                   urlString       = null;
-    private HashMap<String, String>  postMap         = null;
+    private DownloadHandler          dh              = null;
     
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
         mapView = new MapView(this, getResources().getString(R.string.map_api_key));
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 1, this);
         mapView.setClickable(true);
         mapView.getController().setZoom(12);
         itemizedOverlay = new EsercentiItemizedOverlay(
@@ -57,15 +53,16 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
         mapView.getOverlays().add(itemizedOverlay);
         
         setContentView(mapView);
-        httpAccess = new HTTPAccess();
-        httpAccess.setResponseListener(this);
-        urlString = "http://www.cartaperdue.it/partner/v2.0/EsercentiNonRistorazione.php";
-        postMap = new HashMap<String, String>();
-        postMap.put("request", "fetch");
-        postMap.put("categ", "teatri");
-        postMap.put("lat", "41.801007");
-        postMap.put("long", "12.454273");
-        postMap.put("ordina", "distanza");
+        dh = new DownloadHandler();
+        dh.httpAccess = new HTTPAccess();
+        dh.httpAccess.setResponseListener(this);
+        dh.urlString = "http://www.cartaperdue.it/partner/v2.0/EsercentiNonRistorazione.php";
+        dh.postMap = new HashMap<String, String>();
+        dh.postMap.put("request", "fetch");
+        dh.postMap.put("categ", "teatri");
+        dh.postMap.put("lat", "41.801007");
+        dh.postMap.put("long", "12.454273");
+        dh.postMap.put("ordina", "distanza");
     }
     
     @Override
@@ -99,13 +96,14 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
     
     @Override
     public void onLocationChanged(Location location) {
+        locationManager.removeUpdates(this);
         mapView.getController().animateTo(
                 Utils.geoPoint(location.getLatitude(), location.getLongitude())
                 );
-        postMap.put("lat", "" + location.getLatitude());
-        postMap.put("long", "" + location.getLongitude());
-        postMap.put("from", "0");
-        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
+        dh.postMap.put("lat", "" + location.getLatitude());
+        dh.postMap.put("long", "" + location.getLongitude());
+        dh.postMap.put("from", "0");
+        dh.downloadMore();
     }
     
     @Override
@@ -136,4 +134,15 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
     
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
     
+    private static class DownloadHandler {
+        public String                  tag;
+        public String                  urlString;
+        public HashMap<String, String> postMap;
+        public HTTPAccess              httpAccess;
+        public int                     n;
+        
+        public void downloadMore() {
+            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, tag);
+        }
+    }
 }
