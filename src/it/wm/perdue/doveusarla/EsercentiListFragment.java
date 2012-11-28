@@ -316,7 +316,8 @@ public class EsercentiListFragment extends SherlockListFragment implements
     
     public void onListItemClick(ListView l, View v, int position, long id) {
         
-        Esercente ese = adapter.getItem(position);
+        Esercente ese = (Esercente) l.getAdapter().getItem(position);
+        
         Log.d("XXX", "cliccato item = " + ese.getID());
         Intent intent = new Intent(getActivity(), DettaglioEsercenteBaseActivity.class);
         intent.putExtra(ESE_ID, "" + ese.getID());
