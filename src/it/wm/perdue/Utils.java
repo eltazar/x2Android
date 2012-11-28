@@ -8,8 +8,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.google.android.maps.GeoPoint;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+
+import it.wm.perdue.businessLogic.Esercente;
 
 import java.util.Calendar;
 
@@ -41,6 +45,17 @@ public final class Utils {
         if (builder.length() >= 20 && builder.substring(0, 20).equals("{\"Esercente:Search\":")) {
             Log.d("UTILS", "SUBSTRING search = " + builder.substring(0, 20));
             builder.delete(0, 20);
+            builder.deleteCharAt(builder.length() - 1);
+        }
+        
+        return builder.toString();
+    }
+    
+    public static String stripSingleEsercente(String c) {
+        StringBuilder builder = new StringBuilder(c.trim());
+        if (builder.length() >= 14 && builder.substring(0, 14).equals("{\"Esercente\":[")) {
+            builder.delete(0, 14);
+            builder.deleteCharAt(builder.length() - 1);
             builder.deleteCharAt(builder.length() - 1);
         }
         
@@ -137,4 +152,29 @@ public final class Utils {
         return "";
     }
     
+    public static GeoPoint geoPoint(double latitude, double longitude) {
+        return new GeoPoint(
+                Math.round((float) (latitude * 1E6)),
+                Math.round((float) (longitude * 1E6)));
+    }
+    
+    public static Esercente getEsercenteFromJSON(String jsonString) {
+        
+        Log.d("XXX", "UTILS PRIMA = " + jsonString);
+        jsonString = Utils.stripSingleEsercente(jsonString);
+        Log.d("XXX", "UTILS DOPO = " + jsonString);
+        
+        Gson gson = Utils.getGson();
+        Esercente esercente = null;
+        try {
+            esercente = gson.fromJson(jsonString, Esercente.class);
+        } catch (JsonSyntaxException e) {
+            // In teoria se siamo qui, significa che è arrivato un array vuoto,
+            Log.d("XXX", "Utils: errore parsing json");
+            e.printStackTrace();
+            esercente = gson.fromJson("[]", Esercente.class);
+        }
+        
+        return esercente;
+    }
 }
