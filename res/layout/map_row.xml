@@ -4,5 +4,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
+    <!-- <com.google.android.maps.MapView
+        android:id="@+id/mapsView" android:layout_width="fill_parent"
+        android:layout_height="fill_parent" android:clickable="true"
+        android:apiKey="myapikey" />-->
+
+    <TextView
+        android:id="@+id/mapInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="" />
 
 </LinearLayout>
