@@ -1,8 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/contactImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_launcher" />
+
+        <TextView
+            android:id="@+id/contactKind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/contactImage"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:text="Telefono" />
+
+        <TextView
+            android:id="@+id/contactResource"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/contactKind"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/contactImage"
+            android:text="123333333333" />
+
+    </RelativeLayout>
