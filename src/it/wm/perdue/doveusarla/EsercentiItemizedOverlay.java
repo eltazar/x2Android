@@ -33,6 +33,7 @@ public class EsercentiItemizedOverlay extends BalloonItemizedOverlay<OverlayItem
     public EsercentiItemizedOverlay(Context context, Drawable marker, MapView mapView) {
         super(boundCenterBottom(marker), mapView);
         this.context = context;
+        populate();
     }
     
     @Override
