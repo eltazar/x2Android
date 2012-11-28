@@ -28,7 +28,8 @@ import java.util.HashMap;
 /**
  * @author Gabriele "Whisky" Visconti
  */
-public class EsercentiMapActivity extends SherlockMapActivity implements LocationListener {
+public class EsercentiMapActivity extends SherlockMapActivity implements LocationListener,
+        HTTPAccess.ResponseListener {
     private String                   category        = null;
     private MapView                  mapView         = null;
     private LocationManager          locationManager = null;
@@ -43,16 +44,21 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
         super.onCreate(savedInstance);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
-        itemizedOverlay = new EsercentiItemizedOverlay(
-                getResources().getDrawable(android.R.drawable.presence_online));
         mapView = new MapView(this, getResources().getString(R.string.map_api_key));
         mapView.setClickable(true);
         mapView.getController().setZoom(12);
+        itemizedOverlay = new EsercentiItemizedOverlay(
+                this,
+                getResources().getDrawable(android.R.drawable.presence_online),
+                mapView);
+        itemizedOverlay.setShowClose(false);
+        itemizedOverlay.setShowDisclosure(true);
+        itemizedOverlay.setBalloonBottomOffset(10);
         mapView.getOverlays().add(itemizedOverlay);
         
         setContentView(mapView);
         httpAccess = new HTTPAccess();
-        httpAccess.setResponseListener(itemizedOverlay);
+        httpAccess.setResponseListener(this);
         urlString = "http://www.cartaperdue.it/partner/v2.0/EsercentiNonRistorazione.php";
         postMap = new HashMap<String, String>();
         postMap.put("request", "fetch");
@@ -115,4 +121,19 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
     }
     
     /* *** END: LocationListener Methods **************** */
+    
+    /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
+    
+    @Override
+    public void onHTTPResponseReceived(String tag, String response) {
+        itemizedOverlay.addFromJSON(response);
+    }
+    
+    @Override
+    public void onHTTPerror(String tag) {
+        
+    }
+    
+    /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
+    
 }
