@@ -50,6 +50,14 @@ public class Esercente implements HasID {
         return giorni;
     }
     
+    public String getGiorniString() {
+        String giorniString = "".concat(giorni[0]);
+        for (int i = 0; i < giorni.length; i++)
+            if (i != 0)
+                giorniString = giorniString.concat(" - " + giorni[i]);
+        return giorniString;
+    }
+    
     public int getID() {
         return id;
     }
