@@ -2,6 +2,7 @@
 package it.wm.perdue.doveusarla;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -21,6 +22,7 @@ import it.wm.perdue.JSONListAdapter;
 import it.wm.perdue.R;
 import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.Esercente;
+import it.wm.perdue.dettaglioEsercenti.DettaglioEsercenteBaseActivity;
 
 import java.util.HashMap;
 
@@ -29,6 +31,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
     private static final String                    DEBUG_TAG        = "EsercentiListFragment";
     private static final int                       STATE_NORMAL     = 1;
     private static final int                       STATE_SEARCH     = 2;
+    protected static final String                  ESE_ID           = "eseId";
     protected static final String                  TAG_NORMAL       = "normal";
     private static final String                    TAG_SEARCH       = "search";
     private static final String                    TAG_SEARCH_MORE  = "searchmore";
@@ -314,8 +317,11 @@ public class EsercentiListFragment extends SherlockListFragment implements
     public void onListItemClick(ListView l, View v, int position, long id) {
         
         Esercente ese = adapter.getItem(position);
-        Log.d(DEBUG_TAG, "cliccato item = " + ese.getLongitude());
-        
+        Log.d("XXX", "cliccato item = " + ese.getID());
+        Intent intent = new Intent(getActivity(), DettaglioEsercenteBaseActivity.class);
+        intent.putExtra(ESE_ID, "" + ese.getID());
+        intent.putExtra("ESE_TITLE", ese.getInsegna());
+        startActivity(intent);
     }
     
     public void onChangeWhereWhenFilter() {
@@ -368,7 +374,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
                         + esercente.getID();
                 
                 if (caImageView != null) {
-                    Log.d("DEBUG_TAG", "esercente id  = " + esercente.getID());
+                    Log.d(DEBUG_TAG, "esercente id  = " + esercente.getID());
                     // caImageView.loadImageFromURL(urlImageString);
                 }
                 
