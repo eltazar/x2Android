@@ -6,4 +6,6 @@
     <string name="main_activity_title">PerDue</string>
 	<string name="image">Thumbnail</string>
 	<string name="loading">Caricamento&#8230;</string>
+	<string name="map_api_key">0MUOOylmBmamGNJzuw1ZVkBSp-zopF0XaAvX42g</string>
+	<string name="json"></string>
 </resources>
