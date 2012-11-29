@@ -8,6 +8,9 @@
         android:id="@+id/infoRow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="infoCell" />
+        android:text="infoCell" 
+        android:paddingTop="5dp"
+        android:paddingLeft="5dp"
+        android:paddingBottom="5dp"/>
 
 </LinearLayout>

@@ -3,16 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-    <!-- <com.google.android.maps.MapView
+
+    <!--
+        <com.google.android.maps.MapView
         android:id="@+id/mapsView" android:layout_width="fill_parent"
-        android:layout_height="fill_parent" android:clickable="true"
-        android:apiKey="myapikey" />-->
+        android:layout_height="100dip" android:clickable="true"
+        android:apiKey="0MUOOylmBmamGNJzuw1ZVkBSp-zopF0XaAvX42g" />
+    -->
+
+    <ImageView
+        android:id="@+id/mapImage"
+        android:layout_width="fill_parent"
+        android:layout_height="130dip"
+        android:paddingTop="5dp" />
 
     <TextView
         android:id="@+id/mapInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="" />
+        android:paddingTop="5dp"
+        android:paddingLeft="5dp"
+        android:paddingBottom="5dp" />
 
 </LinearLayout>
