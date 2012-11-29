@@ -2,6 +2,9 @@
 package it.wm.perdue.dettaglioEsercenti;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Html;
@@ -10,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,6 +25,9 @@ import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.Esercente;
 import it.wm.perdue.businessLogic.HasID;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -134,11 +141,13 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         
         private Esercente         esercente = null;
         private ArrayList<String> sections  = null;
+        private Context           context   = null;
         
         public DettaglioEsercenteAdapter(Context context, int resource, Esercente esercente) {
             super(context, resource);
             // TODO: creare datamodel da esercente
             this.esercente = esercente;
+            this.context = context;
             Log.d("XXX", "DETTAGLIO ESERCENTE ADAPTER --> " + this.esercente.getID());
             sections = new ArrayList<String>();
             checkFields();
@@ -151,6 +160,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             TextView textView = null;
             TextView contactTextView = null;
             TextView kindContactTextView = null;
+            ImageView mapImage = null;
             
             if (v == null) {
                 
@@ -211,6 +221,20 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                                     +
                                     (esercente.getIndirizzo() != null ? "<b> Indirizzo</b>"
                                             + "<br />" + esercente.getIndirizzo() : "")));
+                    
+                    mapImage = (ImageView) v.findViewById(R.id.mapImage);
+                    
+                    String urlString =
+                            "http://maps.googleapis.com/maps/api/staticmap?" +
+                                    "zoom=16&size=600x240&markers=size:big|color:red|" +
+                                    esercente.getLatitude() +
+                                    "," +
+                                    esercente.getLongitude() +
+                                    "&sensor=false";
+                    
+                    mapImage.setTag(urlString);
+                    
+                    new DownloaderImageTask().execute(mapImage);
                 }
                 else if (sections.get(position).equals("tel")) {
                     contactTextView = (TextView) v.findViewById(R.id.contactResource);
@@ -243,7 +267,6 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         @Override
         public int getCount() {
             Log.d("XXX", "COUNT = " + sections.size());
-            // return hashMap.get("count");
             return sections.size();
         }
         
@@ -270,6 +293,40 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             
             if (esercente.getTelefono() != null) {
                 sections.add("tel");
+            }
+            
+        }
+        
+        public class DownloaderImageTask extends AsyncTask<ImageView, Void, Bitmap> {
+            
+            private ImageView imageView = null;
+            
+            protected Bitmap doInBackground(ImageView... imageViews) {
+                
+                this.imageView = imageViews[0];
+                
+                return downloadImage((String) imageView.getTag());
+            }
+            
+            @Override
+            protected void onPostExecute(Bitmap result) {
+                result = Utils.getDropShadow3(result);
+                imageView.setImageBitmap(result);
+            }
+            
+            private Bitmap downloadImage(String url) {
+                URL myUrl = null;
+                InputStream inputStream = null;
+                try {
+                    myUrl = new URL(url);
+                    inputStream = (InputStream) myUrl.getContent();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                return bitmap;
             }
             
         }
