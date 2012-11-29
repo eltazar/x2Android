@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -231,10 +232,10 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                                     "," +
                                     esercente.getLongitude() +
                                     "&sensor=false";
-                    
+                    ProgressBar pB = (ProgressBar) v.findViewById(R.id.mapImageProgress);
                     mapImage.setTag(urlString);
                     
-                    new DownloaderImageTask().execute(mapImage);
+                    new DownloaderImageTask().execute(mapImage, pB);
                 }
                 else if (sections.get(position).equals("tel")) {
                     contactTextView = (TextView) v.findViewById(R.id.contactResource);
@@ -297,13 +298,15 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             
         }
         
-        public class DownloaderImageTask extends AsyncTask<ImageView, Void, Bitmap> {
+        public class DownloaderImageTask extends AsyncTask<Object, ProgressBar, Bitmap> {
             
-            private ImageView imageView = null;
+            private ImageView   imageView = null;
+            private ProgressBar pB        = null;
             
-            protected Bitmap doInBackground(ImageView... imageViews) {
+            protected Bitmap doInBackground(Object... imageViews) {
                 
-                this.imageView = imageViews[0];
+                this.imageView = (ImageView) imageViews[0];
+                this.pB = (ProgressBar) imageViews[1];
                 
                 return downloadImage((String) imageView.getTag());
             }
@@ -312,6 +315,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             protected void onPostExecute(Bitmap result) {
                 result = Utils.getDropShadow3(result);
                 imageView.setImageBitmap(result);
+                pB.setVisibility(View.INVISIBLE);
             }
             
             private Bitmap downloadImage(String url) {
