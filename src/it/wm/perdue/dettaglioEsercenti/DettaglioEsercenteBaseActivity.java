@@ -22,6 +22,7 @@ public class DettaglioEsercenteBaseActivity extends SherlockFragmentActivity {
     private static final String ESE_ID     = "eseId";
     private String              eseId      = "";
     private String              eseInsegna = "";
+    private boolean             isRisto    = false;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,8 @@ public class DettaglioEsercenteBaseActivity extends SherlockFragmentActivity {
         if (extras != null) {
             eseId = extras.getString(ESE_ID);
             eseInsegna = extras.getString("ESE_TITLE");
+            isRisto = extras.getBoolean("isRisto");
+            
         }
         
         ActionBar bar = getSupportActionBar();
@@ -42,7 +45,14 @@ public class DettaglioEsercenteBaseActivity extends SherlockFragmentActivity {
         
         bar.setTitle(eseInsegna);
         
-        Fragment f = DettaglioEseListFragment.newInstance(eseId);
+        Fragment f = null;
+        
+        if (isRisto) {
+            f = DettaglioEseRistoListFragment.newInstance(eseId);
+        }
+        else {
+            f = DettaglioEseListFragment.newInstance(eseId);
+        }
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction =
                 fragmentManager.beginTransaction();
