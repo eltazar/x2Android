@@ -30,24 +30,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class DettaglioEseListFragment extends SherlockListFragment implements
         HTTPAccess.ResponseListener {
-    private static final String       DEBUG_TAG  = "DettaglioEseListFragment";
-    protected static final String     TAG_NORMAL = "normal";
-    protected static final String     ESE_ID     = "eseId";
+    private static final String                              DEBUG_TAG  = "DettaglioEseListFragment";
+    protected static final String                            TAG_NORMAL = "normal";
+    protected static final String                            ESE_ID     = "eseId";
     
     // Gestione dei download:
-    protected HTTPAccess              httpAccess = null;
-    protected String                  urlString  = null;
-    protected HashMap<String, String> postMap    = null;
+    protected HTTPAccess                                     httpAccess = null;
+    protected String                                         urlString  = null;
     
     // Gestione dello stato della lista:
-    protected ArrayAdapter<Esercente> adapter    = null;
-    private Parcelable                listState  = null;
+    protected DettaglioEsercenteAdapter<? extends Esercente> adapter    = null;
+    private Parcelable                                       listState  = null;
     
-    private String                    eseId      = null;
+    protected String                                         eseId      = null;
     
     public static DettaglioEseListFragment newInstance(String eseId) {
         DettaglioEseListFragment fragment = new DettaglioEseListFragment();
@@ -69,8 +67,6 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         httpAccess.setResponseListener(this);
         urlString = "http://www.cartaperdue.it/partner/v2.0/DettaglioEsercenteCompleto.php?id="
                 + eseId;
-        
-        onCreateAdapters();
     }
     
     @Override
@@ -83,12 +79,6 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         
         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET,
                 null, TAG_NORMAL);
-    }
-    
-    protected void onCreateAdapters() {
-        // adapter = new DettaglioEsercenteJSONListAdapter(
-        // getActivity(),
-        // R.layout.esercente_row);
     }
     
     @Override
@@ -105,6 +95,13 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         
     }
     
+    protected void onCreateAdapters(Esercente esercente) {
+        adapter = new DettaglioEsercenteAdapter<Esercente>(
+                getActivity(),
+                R.layout.esercente_row, esercente);
+        setListAdapter(adapter);
+    }
+    
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
@@ -117,16 +114,15 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             // Se riceviamo un risultato non di ricerca, lo aggiungiamo sempre e
             // comunque:
             esercente = Utils.getEsercenteFromJSON(response);
-            adapter = new DettaglioEsercenteAdapter<Esercente>(
-                    getActivity(),
-                    R.layout.esercente_row, esercente);
-            setListAdapter(adapter);
+            onCreateAdapters(esercente);
         }
         
     }
     
     @Override
     public void onHTTPerror(String tag) {
+        // TODO: aggiungere tasto TAP TO REFRESH
+        
         Log.d(DEBUG_TAG, "Errore nel download");
         // downloading--;
         // Log.d(DEBUG_TAG, "Donwloading " + downloading);
@@ -138,15 +134,15 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         
     }
     
-    private static class DettaglioEsercenteAdapter<T extends HasID> extends ArrayAdapter<Esercente> {
+    protected static class DettaglioEsercenteAdapter<T extends HasID> extends
+            ArrayAdapter<Esercente> {
         
-        private Esercente         esercente = null;
-        private ArrayList<String> sections  = null;
-        private Context           context   = null;
+        protected Esercente         esercente = null;
+        protected ArrayList<String> sections  = null;
+        private Context             context   = null;
         
         public DettaglioEsercenteAdapter(Context context, int resource, Esercente esercente) {
             super(context, resource);
-            // TODO: creare datamodel da esercente
             this.esercente = esercente;
             this.context = context;
             Log.d("XXX", "DETTAGLIO ESERCENTE ADAPTER --> " + this.esercente.getID());
@@ -197,15 +193,23 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                 
                 if (sections.get(position).equals("info")) {
                     textView = (TextView) v.findViewById(R.id.infoRow);
+                    
+                    String giorniString = null;
+                    
+                    try {
+                        giorniString = (esercente.getGiorniString() != null ?
+                                "<b> Giorni validitˆ </b>" + "<br />"
+                                        + esercente.getGiorniString() + "<br />" : "");
+                    } catch (NullPointerException e) {
+                        Log.d(DEBUG_TAG, "eccezione in getView: " + e.getLocalizedMessage());
+                    }
+                    
                     textView.setText(Html.fromHtml((
                             esercente.getGiornoChiusura() != null ? "<b> Giorno di chiusura</b>"
                                     + "<br />" +
                                     esercente.getGiornoChiusura() + "<br />" : "")
                             +
-                            (esercente.getGiorniString() != null ?
-                                    "<b> Giorni validitˆ </b>" + "<br />"
-                                            + esercente.getGiorniString() + "<br />" : ""
-                            )
+                            (giorniString != null ? giorniString : "")
                             + (esercente.getNoteVarie() != null ? "<b> Condizioni</b>" + "<br />"
                                     + esercente.getNoteVarie() : "")));
                     
@@ -227,7 +231,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                     
                     String urlString =
                             "http://maps.googleapis.com/maps/api/staticmap?" +
-                                    "zoom=16&size=600x240&markers=size:big|color:red|" +
+                                    "zoom=16&size=512x240&markers=size:big|color:red|" +
                                     esercente.getLatitude() +
                                     "," +
                                     esercente.getLongitude() +
@@ -271,7 +275,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             return sections.size();
         }
         
-        private void checkFields() {
+        protected void checkFields() {
             
             if (esercente.getGiorni() != null || esercente.getGiornoChiusura() != null ||
                     esercente.getNoteVarie() != null) {
@@ -298,7 +302,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             
         }
         
-        public class DownloaderImageTask extends AsyncTask<Object, ProgressBar, Bitmap> {
+        private class DownloaderImageTask extends AsyncTask<Object, ProgressBar, Bitmap> {
             
             private ImageView   imageView = null;
             private ProgressBar pB        = null;
@@ -313,23 +317,30 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             
             @Override
             protected void onPostExecute(Bitmap result) {
-                result = Utils.getDropShadow3(result);
-                imageView.setImageBitmap(result);
-                pB.setVisibility(View.INVISIBLE);
+                if (result != null) {
+                    result = Utils.getDropShadow3(result);
+                    imageView.setImageBitmap(result);
+                    pB.setVisibility(View.INVISIBLE);
+                }
+                else {
+                    // TODO: mostrare pulsante TAP TO REFRESH
+                }
             }
             
             private Bitmap downloadImage(String url) {
                 URL myUrl = null;
                 InputStream inputStream = null;
+                Bitmap bitmap = null;
                 try {
                     myUrl = new URL(url);
                     inputStream = (InputStream) myUrl.getContent();
+                    bitmap = BitmapFactory.decodeStream(inputStream);
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
+                    bitmap = null;
                 }
                 
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                 return bitmap;
             }
             
