@@ -166,9 +166,7 @@ public final class Utils {
     
     public static Esercente getEsercenteFromJSON(String jsonString) {
         
-        Log.d("XXX", "UTILS PRIMA = " + jsonString);
         jsonString = Utils.stripSingleEsercente(jsonString);
-        Log.d("XXX", "UTILS DOPO = " + jsonString);
         
         Gson gson = Utils.getGson();
         Esercente esercente = null;
