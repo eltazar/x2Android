@@ -322,6 +322,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
         Intent intent = new Intent(getActivity(), DettaglioEsercenteBaseActivity.class);
         intent.putExtra(ESE_ID, "" + ese.getID());
         intent.putExtra("ESE_TITLE", ese.getInsegna());
+        intent.putExtra("isRisto", false);
         startActivity(intent);
     }
     

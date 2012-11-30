@@ -2,11 +2,13 @@
 package it.wm.perdue.doveusarla;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import it.wm.CachedAsyncImageView;
@@ -15,6 +17,7 @@ import it.wm.perdue.JSONListAdapter;
 import it.wm.perdue.R;
 import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.EsercenteRistorazione;
+import it.wm.perdue.dettaglioEsercenti.DettaglioEsercenteBaseActivity;
 
 import java.util.HashMap;
 
@@ -78,6 +81,19 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
         // Log.d("BLA", "4) postMap is: " + postMap);
         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
                 postMap, TAG_NORMAL);
+    }
+    
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        
+        EsercenteRistorazione ese = (EsercenteRistorazione) l.getAdapter().getItem(position);
+        
+        Log.d("XXX", "cliccato item = " + ese.getID());
+        Intent intent = new Intent(getActivity(), DettaglioEsercenteBaseActivity.class);
+        intent.putExtra(ESE_ID, "" + ese.getID());
+        intent.putExtra("ESE_TITLE", ese.getInsegna());
+        intent.putExtra("isRisto", true);
+        
+        startActivity(intent);
     }
     
     private static class EsercenteRistoJSONListAdapter extends
