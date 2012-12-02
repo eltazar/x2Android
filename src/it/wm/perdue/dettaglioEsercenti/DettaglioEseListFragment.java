@@ -95,10 +95,17 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         
     }
     
+    public void onDestroyView() {
+        super.onDestroyView();
+        // setListAdapter(null);
+        httpAccess.setResponseListener(null);
+    }
+    
     protected void onCreateAdapters(Esercente esercente) {
         adapter = new DettaglioEsercenteAdapter<Esercente>(
                 getActivity(),
                 R.layout.esercente_row, esercente);
+        Log.d("XXX", " OHI OHI.... adapter is = " + adapter);
         setListAdapter(adapter);
     }
     
@@ -231,7 +238,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                     
                     String urlString =
                             "http://maps.googleapis.com/maps/api/staticmap?" +
-                                    "zoom=16&size=512x240&markers=size:big|color:red|" +
+                                    "zoom=16&size=1024x480&markers=size:big|color:red|" +
                                     esercente.getLatitude() +
                                     "," +
                                     esercente.getLongitude() +
@@ -288,16 +295,14 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             if (esercente.isUlterioriInfo()) {
                 sections.add("altre");
             }
-            
-            if (esercente.getUrl() != null) {
-                sections.add("url");
+            if (esercente.getTelefono() != null) {
+                sections.add("tel");
             }
             if (esercente.getEmail() != null) {
                 sections.add("mail");
             }
-            
-            if (esercente.getTelefono() != null) {
-                sections.add("tel");
+            if (esercente.getUrl() != null) {
+                sections.add("url");
             }
             
         }
