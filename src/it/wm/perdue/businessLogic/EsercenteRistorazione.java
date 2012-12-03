@@ -116,4 +116,53 @@ public class EsercenteRistorazione extends Esercente {
         return domSera;
     }
     
+    public String getPranzoString() {
+        
+        String pranzo = "Pranzo: ";
+        
+        if (this.isLunMattina())
+            pranzo.concat("Lun ");
+        if (this.isMarMattina())
+            pranzo.concat("Mar ");
+        if (this.isMerMattina())
+            pranzo.concat("Merc");
+        if (this.isGioMattina())
+            pranzo.concat("Gio");
+        if (this.isVenMattina())
+            pranzo.concat("Ven");
+        if (this.isSabMattina())
+            pranzo.concat("Sab");
+        if (this.isDomMattina())
+            pranzo.concat("Dom");
+        
+        if (pranzo.length() == 8)
+            pranzo = null;
+        
+        return pranzo;
+    }
+    
+    public String getCenaString() {
+        
+        String cena = "Cena: ";
+        
+        if (this.isLunMattina())
+            cena.concat("Lun ");
+        if (this.isMarMattina())
+            cena.concat("Mar ");
+        if (this.isMerMattina())
+            cena.concat("Merc");
+        if (this.isGioMattina())
+            cena.concat("Gio");
+        if (this.isVenMattina())
+            cena.concat("Ven");
+        if (this.isSabMattina())
+            cena.concat("Sab");
+        if (this.isDomMattina())
+            cena.concat("Dom");
+        
+        if (cena.length() == 6)
+            cena = null;
+        
+        return cena;
+    }
 }
