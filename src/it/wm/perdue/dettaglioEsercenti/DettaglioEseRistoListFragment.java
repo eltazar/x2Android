@@ -3,9 +3,12 @@ package it.wm.perdue.dettaglioEsercenti;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import it.wm.perdue.R;
 import it.wm.perdue.businessLogic.EsercenteRistorazione;
@@ -53,56 +56,46 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             
-            Log.d("XXX", "Getview figlia");
+            Log.d("xxx", "getView figlia n sections = " + sections.size() +
+                    " position = "
+                    + position + " section name = " + sections.get(position));
             
-            View v = super.getView(position, convertView, parent);
-            // int resource = 0;
-            // TextView textView = null;
-            // TextView contactTextView = null;
-            // TextView kindContactTextView = null;
-            // ImageView mapImage = null;
-            // Log.d("xxx", "getView figlia n sections = " + sections.size() +
-            // " position = "
-            // + position);
-            // for (int i = 0; i < sections.size(); i++)
-            // Log.d("XXX", "nome sezione  = " + sections.get(position));
-            // if (sections.get(position).equals("infoRisto")) {
-            // resource = R.layout.dettaglio_info_row;
-            // }
-            // v = ((LayoutInflater) super.getContext().getSystemService(
-            // Context.LAYOUT_INFLATER_SERVICE))
-            // .inflate(resource, null);
-            //
-            // if (esercente != null) {
-            //
-            // if (sections.get(position).equals("infoRisto")) {
-            // textView = (TextView) v.findViewById(R.id.infoRow);
-            //
-            // String giorniString = null;
-            //
-            // try {
-            // giorniString = (esercente.getGiorniString() != null ?
-            // "<b> Giorni validitˆ </b>" + "<br />"
-            // + esercente.getGiorniString() + "<br />" : "");
-            // } catch (NullPointerException e) {
-            // Log.d("XXX", "eccezione in getView: " + e.getLocalizedMessage());
-            // }
-            //
-            // textView.setText(Html.fromHtml((
-            // esercente.getGiornoChiusura() != null ?
-            // "<b> Giorno di chiusura</b>"
-            // + "<br />" +
-            // esercente.getGiornoChiusura() + "<br />" : "")
-            // +
-            // (giorniString != null ? giorniString : "")
-            // + (esercente.getNoteVarie() != null ? "<b> Condizioni</b>" +
-            // "<br />"
-            // + esercente.getNoteVarie() : "")));
-            //
-            // }
-            // }
-            
-            return v;
+            if (sections.get(position).equals("infoRisto")) {
+                
+                View v = convertView;
+                int resource = 0;
+                TextView textView = null;
+                
+                if (v == null) {
+                    resource = R.layout.dettaglio_info_row;
+                    
+                    v = ((LayoutInflater) super.getContext().getSystemService(
+                            Context.LAYOUT_INFLATER_SERVICE))
+                            .inflate(resource, null);
+                }
+                textView = (TextView) v.findViewById(R.id.infoRow);
+                
+                textView.setText(Html.fromHtml((
+                        esercente.getAmbiente() != null ?
+                                "<b> Ambiente</b>"
+                                        + "<br />" +
+                                        esercente.getAmbiente() + "<br />" : "") +
+                        (esercente.getSottoTipologia() != null ?
+                                "<b> Cucina </b>"
+                                        + "<br />" +
+                                        esercente.getSottoTipologia() + "<br />" : "")
+                        +
+                        (esercente.getSpecialita() != null ?
+                                "<b> Specialitˆ </b>"
+                                        + "<br />" +
+                                        esercente.getSpecialita() + "<br />" : "")
+                        + (esercente.getFasciaPrezzo() != null ? "<b> Prezzo medio</b>" +
+                                "<br />"
+                                + esercente.getFasciaPrezzo() + "Û" : "")));
+                
+                return v;
+            }
+            return super.getView(position, convertView, parent);
             
         }
         
@@ -119,8 +112,8 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                 sections.add(2, "infoRisto");
             }
             
-            for (int i = 0; i < sections.size(); i++)
-                Log.d("XXX", "nome sezione  = " + sections.get(i));
+            // for (int i = 0; i < sections.size(); i++)
+            // Log.d("XXX", "nome sezione  = " + sections.get(i));
             
         }
         
