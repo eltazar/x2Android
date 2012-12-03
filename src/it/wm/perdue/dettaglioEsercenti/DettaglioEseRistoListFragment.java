@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import it.wm.perdue.R;
@@ -60,42 +62,125 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                     " position = "
                     + position + " section name = " + sections.get(position));
             
-            if (sections.get(position).equals("infoRisto")) {
-                
-                View v = convertView;
-                int resource = 0;
-                TextView textView = null;
-                
-                if (v == null) {
-                    resource = R.layout.dettaglio_info_row;
-                    
-                    v = ((LayoutInflater) super.getContext().getSystemService(
-                            Context.LAYOUT_INFLATER_SERVICE))
-                            .inflate(resource, null);
-                }
-                textView = (TextView) v.findViewById(R.id.infoRow);
-                
-                textView.setText(Html.fromHtml((
-                        esercente.getAmbiente() != null ?
-                                "<b> Ambiente</b>"
-                                        + "<br />" +
-                                        esercente.getAmbiente() + "<br />" : "") +
-                        (esercente.getSottoTipologia() != null ?
-                                "<b> Cucina </b>"
-                                        + "<br />" +
-                                        esercente.getSottoTipologia() + "<br />" : "")
-                        +
-                        (esercente.getSpecialita() != null ?
-                                "<b> Specialitˆ </b>"
-                                        + "<br />" +
-                                        esercente.getSpecialita() + "<br />" : "")
-                        + (esercente.getFasciaPrezzo() != null ? "<b> Prezzo medio</b>" +
-                                "<br />"
-                                + esercente.getFasciaPrezzo() + "Û" : "")));
-                
-                return v;
+            View v = convertView;
+            int resource = 0;
+            TextView textView = null;
+            TextView contactTextView = null;
+            TextView kindContactTextView = null;
+            ImageView mapImage = null;
+            
+            Log.d("XXX", "get view madre position --> " + position);
+            
+            if (sections.get(position).equals("info")
+                    || sections.get(position).equals("infoRisto")) {
+                resource = R.layout.dettaglio_info_row;
             }
-            return super.getView(position, convertView, parent);
+            else if (sections.get(position).equals("map")) {
+                resource = R.layout.map_row;
+            }
+            else if (sections.get(position).equals("tel")
+                    || sections.get(position).equals("mail") ||
+                    sections.get(position).equals("url")) {
+                resource = R.layout.contact_row;
+            }
+            else if (sections.get(position).equals("altre")) {
+                resource = R.layout.contact_row;
+            }
+            Log.d("XXX", "resource = " + resource);
+            v = ((LayoutInflater) super.getContext().getSystemService(
+                    Context.LAYOUT_INFLATER_SERVICE))
+                    .inflate(resource, null);
+            contactTextView = (TextView) v.findViewById(R.id.contactResource);
+            kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
+            
+            if (esercente != null) {
+                
+                if (sections.get(position).equals("info")) {
+                    textView = (TextView) v.findViewById(R.id.infoRow);
+                    
+                    textView.setText(Html.fromHtml(("<b> Giorni validitˆ </b>" + "<br />" + "TEMP" +
+                            esercente.getGiornoChiusura() != null ? "<b> Giorno di chiusura</b>"
+                            + "<br />" +
+                            esercente.getGiornoChiusura() + "<br />" : "")
+                            + (esercente.getNoteVarie() != null ? "<b> Condizioni</b>" + "<br />"
+                                    + esercente.getNoteVarie() : "")));
+                    
+                }
+                else if (sections.get(position).equals("map")) {
+                    textView = (TextView) v.findViewById(R.id.mapInfo);
+                    textView.setText(Html.fromHtml(
+                            (esercente.getCitta() != null ? "<b>Cittˆ</b>" + "<br />" +
+                                    esercente.getCitta() + "<br />" : "")
+                                    +
+                                    (esercente.getZona() != null ? "<b> Zona </b>" + "<br />"
+                                            + esercente.getZona()
+                                            + "<br />" : "")
+                                    +
+                                    (esercente.getIndirizzo() != null ? "<b> Indirizzo</b>"
+                                            + "<br />" + esercente.getIndirizzo() : "")));
+                    
+                    mapImage = (ImageView) v.findViewById(R.id.mapImage);
+                    
+                    String urlString =
+                            "http://maps.googleapis.com/maps/api/staticmap?" +
+                                    "zoom=16&size=512x240&markers=size:big|color:red|" +
+                                    esercente.getLatitude() +
+                                    "," +
+                                    esercente.getLongitude() +
+                                    "&sensor=false";
+                    ProgressBar pB = (ProgressBar) v.findViewById(R.id.mapImageProgress);
+                    mapImage.setTag(urlString);
+                    
+                    new DownloaderImageTask().execute(mapImage, pB);
+                }
+                else if (sections.get(position).equals("infoRisto")) {
+                    
+                    textView = (TextView) v.findViewById(R.id.infoRow);
+                    textView.setText(Html.fromHtml((
+                            esercente.getAmbiente() != null ?
+                                    "<b> Ambiente</b>"
+                                            + "<br />" +
+                                            esercente.getAmbiente() + "<br />" : "") +
+                            (esercente.getSottoTipologia() != null ?
+                                    "<b> Cucina </b>"
+                                            + "<br />" +
+                                            esercente.getSottoTipologia() + "<br />" : "")
+                            +
+                            (esercente.getSpecialita() != null ?
+                                    "<b> Specialitˆ </b>"
+                                            + "<br />" +
+                                            esercente.getSpecialita() + "<br />" : "")
+                            + (esercente.getFasciaPrezzo() != null ? "<b> Prezzo medio</b>" +
+                                    "<br />"
+                                    + esercente.getFasciaPrezzo() + "Û" : "")));
+                }
+                else if (sections.get(position).equals("tel")) {
+                    Log.d("XXX", "1 contact = " + contactTextView + " kindContact = "
+                            + kindContactTextView);
+                    contactTextView.setText(esercente.getTelefono());
+                    kindContactTextView.setText("Telefono");
+                }
+                else if (sections.get(position).equals("mail")) {
+                    Log.d("XXX", "2 contact = " + contactTextView + " kindContact = "
+                            + kindContactTextView);
+                    contactTextView.setText(esercente.getEmail());
+                    kindContactTextView.setText("E-mail");
+                }
+                else if (sections.get(position).equals("url")) {
+                    Log.d("XXX", "3 contact = " + contactTextView + " kindContact = "
+                            + kindContactTextView);
+                    contactTextView.setText(esercente.getUrl());
+                    kindContactTextView.setText("Sito web");
+                }
+                else if (sections.get(position).equals("altre")) {
+                    Log.d("XXX", " 4 contact = " + contactTextView + " kindContact = "
+                            + kindContactTextView);
+                    contactTextView.setText(esercente.getTelefono());
+                    kindContactTextView.setText("PROVA ALTRO");
+                }
+            }
+            
+            return v;
             
         }
         
