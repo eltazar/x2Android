@@ -43,8 +43,8 @@ public class DettaglioJSONAdapter<T extends Esercente> extends
         Gson gson = Utils.getGson();
         try {
             this.esercente = gson.fromJson(jsonString, clazz);
-            checkFields();
             super.add(this.esercente);
+            checkFields();
             
         } catch (JsonSyntaxException e) {
             // In teoria se siamo qui, significa che è arrivato un array vuoto,
@@ -55,10 +55,7 @@ public class DettaglioJSONAdapter<T extends Esercente> extends
     }
     
     protected void checkFields() {
-        if (esercente.getGiorni() != null || esercente.getGiornoChiusura() != null ||
-                esercente.getNoteVarie() != null) {
-            sections.add("info");
-        }
+        
         if (esercente.getCitta() != null || esercente.getZona() != null
                 || esercente.getIndirizzo() != null) {
             sections.add("map");
@@ -78,6 +75,12 @@ public class DettaglioJSONAdapter<T extends Esercente> extends
         
         Log.d("XXX", "fine checkfield madre");
         
+    }
+    
+    @Override
+    public void clear() {
+        super.clear();
+        sections.clear();
     }
     
 }
