@@ -86,22 +86,28 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
             else if (sections.get(position).equals("altre")) {
                 resource = R.layout.contact_row;
             }
-            Log.d("XXX", "resource = " + resource);
+            
             v = ((LayoutInflater) super.getContext().getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE))
                     .inflate(resource, null);
-            contactTextView = (TextView) v.findViewById(R.id.contactResource);
-            kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
             
             if (esercente != null) {
                 
                 if (sections.get(position).equals("info")) {
                     textView = (TextView) v.findViewById(R.id.infoRow);
                     
-                    textView.setText(Html.fromHtml(("<b> Giorni validitˆ </b>" + "<br />" + "TEMP" +
-                            esercente.getGiornoChiusura() != null ? "<b> Giorno di chiusura</b>"
-                            + "<br />" +
-                            esercente.getGiornoChiusura() + "<br />" : "")
+                    textView.setText(Html.fromHtml((
+                            (esercente.getPranzoString() != null ? "<b>Giorni di validitˆ</b>"
+                                    + "<br />" +
+                                    esercente.getPranzoString() + "<br />" : "")
+                                    +
+                                    (esercente.getCenaString() != null ? esercente.getCenaString()
+                                            + "<br />" : "")
+                                    +
+                                    esercente.getGiornoChiusura() != null ? "<b> Giorno di chiusura</b>"
+                                    + "<br />" +
+                                    esercente.getGiornoChiusura() + "<br />"
+                                    : "")
                             + (esercente.getNoteVarie() != null ? "<b> Condizioni</b>" + "<br />"
                                     + esercente.getNoteVarie() : "")));
                     
@@ -157,24 +163,32 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                 else if (sections.get(position).equals("tel")) {
                     Log.d("XXX", "1 contact = " + contactTextView + " kindContact = "
                             + kindContactTextView);
+                    contactTextView = (TextView) v.findViewById(R.id.contactResource);
+                    kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
                     contactTextView.setText(esercente.getTelefono());
                     kindContactTextView.setText("Telefono");
                 }
                 else if (sections.get(position).equals("mail")) {
                     Log.d("XXX", "2 contact = " + contactTextView + " kindContact = "
                             + kindContactTextView);
+                    contactTextView = (TextView) v.findViewById(R.id.contactResource);
+                    kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
                     contactTextView.setText(esercente.getEmail());
                     kindContactTextView.setText("E-mail");
                 }
                 else if (sections.get(position).equals("url")) {
                     Log.d("XXX", "3 contact = " + contactTextView + " kindContact = "
                             + kindContactTextView);
+                    contactTextView = (TextView) v.findViewById(R.id.contactResource);
+                    kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
                     contactTextView.setText(esercente.getUrl());
                     kindContactTextView.setText("Sito web");
                 }
                 else if (sections.get(position).equals("altre")) {
                     Log.d("XXX", " 4 contact = " + contactTextView + " kindContact = "
                             + kindContactTextView);
+                    contactTextView = (TextView) v.findViewById(R.id.contactResource);
+                    kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
                     contactTextView.setText(esercente.getTelefono());
                     kindContactTextView.setText("PROVA ALTRO");
                 }
