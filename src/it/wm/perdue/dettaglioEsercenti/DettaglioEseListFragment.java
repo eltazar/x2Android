@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -24,28 +23,26 @@ import it.wm.HTTPAccess;
 import it.wm.perdue.R;
 import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.Esercente;
-import it.wm.perdue.businessLogic.HasID;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 
 public class DettaglioEseListFragment extends SherlockListFragment implements
         HTTPAccess.ResponseListener {
-    private static final String                              DEBUG_TAG  = "DettaglioEseListFragment";
-    protected static final String                            TAG_NORMAL = "normal";
-    protected static final String                            ESE_ID     = "eseId";
+    private static final String                         DEBUG_TAG  = "DettaglioEseListFragment";
+    protected static final String                       TAG_NORMAL = "normal";
+    protected static final String                       ESE_ID     = "eseId";
     
     // Gestione dei download:
-    protected HTTPAccess                                     httpAccess = null;
-    protected String                                         urlString  = null;
+    protected HTTPAccess                                httpAccess = null;
+    protected String                                    urlString  = null;
     
     // Gestione dello stato della lista:
-    protected DettaglioEsercenteAdapter<? extends Esercente> adapter    = null;
-    private Parcelable                                       listState  = null;
+    protected DettaglioJSONAdapter<? extends Esercente> adapter    = null;
+    private Parcelable                                  listState  = null;
     
-    protected String                                         eseId      = null;
+    protected String                                    eseId      = null;
     
     public static DettaglioEseListFragment newInstance(String eseId) {
         DettaglioEseListFragment fragment = new DettaglioEseListFragment();
@@ -67,15 +64,15 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         httpAccess.setResponseListener(this);
         urlString = "http://www.cartaperdue.it/partner/v2.0/DettaglioEsercenteCompleto.php?id="
                 + eseId;
+        
+        onCreateAdapters();
     }
     
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         
-        ListView lv = getListView();
-        LayoutInflater inflater = (LayoutInflater) getActivity()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        setListAdapter(adapter);
         
         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET,
                 null, TAG_NORMAL);
@@ -101,12 +98,10 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         httpAccess.setResponseListener(null);
     }
     
-    protected void onCreateAdapters(Esercente esercente) {
+    protected void onCreateAdapters() {
         adapter = new DettaglioEsercenteAdapter<Esercente>(
                 getActivity(),
-                R.layout.esercente_row, esercente);
-        Log.d("XXX", " OHI OHI.... adapter is = " + adapter);
-        setListAdapter(adapter);
+                R.layout.esercente_row, Esercente.class);
     }
     
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
@@ -114,14 +109,12 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
     public void onHTTPResponseReceived(String tag, String response) {
         // downloading--;
         
-        Log.d("XXX", "RISPOSTA = " + response);
-        Esercente esercente = null;
+        Log.d("XXX", "RISPOSTA = " + adapter);
         
         if (tag.equals(TAG_NORMAL)) {
             // Se riceviamo un risultato non di ricerca, lo aggiungiamo sempre e
             // comunque:
-            esercente = Utils.getEsercenteFromJSON(response);
-            onCreateAdapters(esercente);
+            adapter.addFromJSON(response);
         }
         
     }
@@ -141,20 +134,12 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         
     }
     
-    protected static class DettaglioEsercenteAdapter<T extends HasID> extends
-            ArrayAdapter<Esercente> {
+    protected static class DettaglioEsercenteAdapter<T extends Esercente> extends
+            DettaglioJSONAdapter<T> {
         
-        protected Esercente         esercente = null;
-        protected ArrayList<String> sections  = null;
-        private Context             context   = null;
-        
-        public DettaglioEsercenteAdapter(Context context, int resource, Esercente esercente) {
-            super(context, resource);
-            this.esercente = esercente;
-            this.context = context;
-            Log.d("XXX", "DETTAGLIO ESERCENTE ADAPTER --> " + this.esercente.getID());
-            sections = new ArrayList<String>();
-            checkFields();
+        public DettaglioEsercenteAdapter(Context context, int resource, Class<T> clazz) {
+            super(context, resource, clazz);
+            Log.d("XXX", "DETTAGLIO ESERCENTE ADAPTER --> ");
         }
         
         public View getView(int position, View convertView, ViewGroup parent) {
@@ -238,7 +223,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                     
                     String urlString =
                             "http://maps.googleapis.com/maps/api/staticmap?" +
-                                    "zoom=16&size=1024x480&markers=size:big|color:red|" +
+                                    "zoom=16&size=512x240&markers=size:big|color:red|" +
                                     esercente.getLatitude() +
                                     "," +
                                     esercente.getLongitude() +
@@ -274,37 +259,6 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                 }
             }
             return v;
-        }
-        
-        @Override
-        public int getCount() {
-            Log.d("XXX", "COUNT = " + sections.size());
-            return sections.size();
-        }
-        
-        protected void checkFields() {
-            
-            if (esercente.getGiorni() != null || esercente.getGiornoChiusura() != null ||
-                    esercente.getNoteVarie() != null) {
-                sections.add("info");
-            }
-            if (esercente.getCitta() != null || esercente.getZona() != null
-                    || esercente.getIndirizzo() != null) {
-                sections.add("map");
-            }
-            if (esercente.isUlterioriInfo()) {
-                sections.add("altre");
-            }
-            if (esercente.getTelefono() != null) {
-                sections.add("tel");
-            }
-            if (esercente.getEmail() != null) {
-                sections.add("mail");
-            }
-            if (esercente.getUrl() != null) {
-                sections.add("url");
-            }
-            
         }
         
         private class DownloaderImageTask extends AsyncTask<Object, ProgressBar, Bitmap> {
