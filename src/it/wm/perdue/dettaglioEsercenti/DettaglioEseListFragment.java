@@ -151,6 +151,8 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             TextView kindContactTextView = null;
             ImageView mapImage = null;
             
+            Log.d("XXX", "get view madre position --> " + position);
+            
             if (v == null) {
                 
                 if (sections.get(position).equals("info")) {
@@ -261,7 +263,16 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             return v;
         }
         
-        private class DownloaderImageTask extends AsyncTask<Object, ProgressBar, Bitmap> {
+        @Override
+        protected void checkFields() {
+            if (esercente.getGiorni() != null || esercente.getGiornoChiusura() != null ||
+                    esercente.getNoteVarie() != null) {
+                sections.add(0, "info");
+            }
+            super.checkFields();
+        }
+        
+        protected class DownloaderImageTask extends AsyncTask<Object, ProgressBar, Bitmap> {
             
             private ImageView   imageView = null;
             private ProgressBar pB        = null;
