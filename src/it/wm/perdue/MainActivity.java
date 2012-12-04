@@ -17,6 +17,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
+import it.wm.perdue.contatti.RichiediCartaFragment;
 import it.wm.perdue.doveusarla.DoveUsarlaFragment;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.List;
 public class MainActivity extends SherlockFragmentActivity implements TabListener {
     public static final String  DOVE_USARLA_TAB_TAG = "doveusarla";
     public static final String  NEWS_TAB_TAG        = "news";
+    public static final String  RICHIEDI_TAB_TAG    = "richiedi";
     private static final String DEBUG_TAG           = "MainActivity";
     List<TabDescriptor>         tabList             = null;
     ViewPager                   pager               = null;
@@ -36,6 +38,7 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
         tabList = new ArrayList<TabDescriptor>();
         tabList.add(new TabDescriptor(DOVE_USARLA_TAB_TAG, DoveUsarlaFragment.class, "Dove Usarla"));
         tabList.add(new TabDescriptor(NEWS_TAB_TAG, NewsListFragment.class, "News"));
+        tabList.add(new TabDescriptor(NEWS_TAB_TAG, RichiediCartaFragment.class, "Richiedi"));
         
         ActionBar bar = getSupportActionBar();
         bar.setDisplayOptions(ActionBar.DISPLAY_USE_LOGO
