@@ -18,6 +18,8 @@
             android:layout_alignBottom="@+id/contactImage"
             android:layout_alignParentRight="true"
             android:layout_marginRight="16dp"
+            android:textStyle="bold"
+            android:textColor="#A9A9A9"
             android:text="Telefono" />
 
         <TextView
