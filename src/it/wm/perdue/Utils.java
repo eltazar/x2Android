@@ -22,13 +22,34 @@ import com.google.gson.JsonSyntaxException;
 import it.wm.perdue.businessLogic.Esercente;
 
 import java.util.Calendar;
+import java.util.regex.Pattern;
 
 /**
  * @author Gabriele "Whisky" Visconti
  */
 public final class Utils {
     
-    private final static String APP_PREFERENCES = "AppPref";
+    private final static String APP_PREFERENCES       = "AppPref";
+    public final static Pattern EMAIL_ADDRESS_PATTERN = Pattern
+                                                              .compile(
+                                                              "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}"
+                                                                      +
+                                                                      "\\@"
+                                                                      +
+                                                                      "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}"
+                                                                      +
+                                                                      "("
+                                                                      +
+                                                                      "\\."
+                                                                      +
+                                                                      "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}"
+                                                                      +
+                                                                      ")+"
+                                                              );
+    
+    public static boolean checkEmail(String email) {
+        return EMAIL_ADDRESS_PATTERN.matcher(email).matches();
+    }
     
     public static String stripEsercente(String c) {
         StringBuilder builder = new StringBuilder(c.trim());
@@ -221,6 +242,29 @@ public final class Utils {
         c.drawBitmap(sbmp, 0, 0, null);
         
         return bmp;
+    }
+    
+    public static String replacePlusInPhone(String phone) {
+        
+        StringBuilder newPhone = new StringBuilder("");
+        boolean isPlus = false;
+        
+        if (phone.subSequence(0, 1).equals("+")) {
+            newPhone.append("%2B");
+            isPlus = true;
+        }
+        char[] chars = phone.toCharArray();
+        
+        // loop through chars array and print out values separated with a space
+        for (int i = 0; i < phone.length(); i++) {
+            if (isPlus && i == 0)
+                continue;
+            newPhone.append(chars[i]);
+        }
+        
+        // Log.d("XXX", "STRINGA SOSTITUITA -> " + newPhone);
+        return newPhone.toString();
+        
     }
     
 }

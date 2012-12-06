@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="carte_array">
-        <item>Carta PerDue</item>
+        <item>Scegli carta PerDue</item>
         <item>Carta Semestrale 20€</item>
         <item>Carta Annuale 36€</item>
         <item>Carta Biennale 55€</item>
