@@ -21,7 +21,8 @@
         
         <activity
             android:name=".MainActivity"
-            android:label="@string/main_activity_title" >
+            android:label="@string/main_activity_title" 
+            android:windowSoftInputMode="adjustPan">
        		<intent-filter>
                 <action   android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
