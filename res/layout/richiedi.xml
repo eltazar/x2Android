@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/richiediLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="30dip" >
+    android:padding="30dip"
+    android:focusable="true" 
+    android:focusableInTouchMode="true" >
 
     <Spinner
         android:id="@+id/spinnerCarta"
@@ -16,7 +19,10 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Nome"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName" >
+
+        <requestFocus />
+    </EditText>
 
     <EditText
         android:id="@+id/surname"
@@ -24,10 +30,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Cognome"
-        android:inputType="textPersonName" >
-
-        <requestFocus />
-    </EditText>
+        android:inputType="textPersonName"
+        android:paddingTop="3dp" />
 
     <EditText
         android:id="@+id/email"
@@ -35,7 +39,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="E-mail"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:paddingTop="3dp" />
 
     <EditText
         android:id="@+id/tel"
@@ -43,16 +48,18 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Numero di telefono"
-        android:inputType="phone" />
+        android:inputType="phone"
+        android:paddingTop="3dp" />
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:paddingTop="10dp"
+        android:text="@string/advise" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/sendBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Invia" />
