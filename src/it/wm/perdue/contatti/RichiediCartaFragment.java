@@ -2,6 +2,7 @@
 package it.wm.perdue.contatti;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.telephony.PhoneNumberUtils;
@@ -52,6 +53,8 @@ public class RichiediCartaFragment extends SherlockFragment implements
     private EditText            telEditText     = null;
     private Spinner             cardSpinner     = null;
     
+    private ProgressDialog      progressDialog;
+    
     // onAttach
     @Override
     public void onAttach(Activity activity) {
@@ -75,6 +78,9 @@ public class RichiediCartaFragment extends SherlockFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.richiedi, container, false);
+        
+        httpAccess = new HTTPAccess();
+        httpAccess.setResponseListener(this);
         
         cardSpinner = (Spinner) view.findViewById(R.id.spinnerCarta);
         // Create an ArrayAdapter using the string array and a default spinner
@@ -120,12 +126,21 @@ public class RichiediCartaFragment extends SherlockFragment implements
     public void onHTTPResponseReceived(String tag, String response) {
         // TODO Auto-generated method stub
         
+        Log.d("XXX", "RisPosta -> " + response);
+        progressDialog.cancel();
+        CharSequence text = "Richiesta inviata!";
+        Toast toast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
+        toast.show();
     }
     
     @Override
     public void onHTTPerror(String tag) {
         // TODO Auto-generated method stub
-        
+        Log.d("XXX", "ERRORE INVIO ->" + tag);
+        progressDialog.cancel();
+        CharSequence text = "C'è stato un problema, riprova!";
+        Toast toast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
+        toast.show();
     }
     
     @Override
@@ -251,6 +266,8 @@ public class RichiediCartaFragment extends SherlockFragment implements
         // httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
         // postMap, TAG_NORMAL);
         Log.d("XXX", "i dati da inviare al server sono: " + postMap);
+        
+        progressDialog = ProgressDialog.show(getActivity(), "", "Invio in corso...");
         
     }
     
