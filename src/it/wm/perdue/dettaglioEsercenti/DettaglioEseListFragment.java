@@ -2,6 +2,7 @@
 package it.wm.perdue.dettaglioEsercenti;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -132,6 +133,16 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
     
     public void onListItemClick(ListView l, View v, int position, long id) {
         
+        Bundle extras = new Bundle();
+        // extras.putSerializable("notizia", (Serializable)
+        // l.getItemAtPosition(position));
+        Intent intent = new Intent(getActivity(), AltreInfoActivity.class);
+        extras.putString("eseId", eseId);
+        extras.putString("title", getSherlockActivity().getSupportActionBar().getTitle()
+                .toString());
+        intent.putExtras(extras);
+        startActivity(intent);
+        
     }
     
     protected static class DettaglioEsercenteAdapter<T extends Esercente> extends
@@ -167,7 +178,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                     resource = R.layout.contact_row;
                 }
                 else if (sections.get(position).equals("altre")) {
-                    resource = R.layout.contact_row;
+                    resource = R.layout.action_row;
                 }
                 
                 v = ((LayoutInflater) super.getContext().getSystemService(
