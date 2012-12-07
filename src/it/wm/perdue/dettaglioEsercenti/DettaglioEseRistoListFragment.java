@@ -84,7 +84,7 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                 resource = R.layout.contact_row;
             }
             else if (sections.get(position).equals("altre")) {
-                resource = R.layout.contact_row;
+                resource = R.layout.action_row;
             }
             
             v = ((LayoutInflater) super.getContext().getSystemService(
@@ -185,12 +185,7 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                     kindContactTextView.setText("Sito web");
                 }
                 else if (sections.get(position).equals("altre")) {
-                    Log.d("XXX", " 4 contact = " + contactTextView + " kindContact = "
-                            + kindContactTextView);
-                    contactTextView = (TextView) v.findViewById(R.id.contactResource);
-                    kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
-                    contactTextView.setText(esercente.getTelefono());
-                    kindContactTextView.setText("PROVA ALTRO");
+                    Log.d("XXX", " riga altro");
                 }
             }
             
@@ -202,6 +197,7 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
         protected void checkFields() {
             
             super.checkFields();
+            
             Log.d("XXX", "*********** checkfield figlia");
             if (esercente.getAmbiente() != null
                     || esercente.getSottoTipologia() !=
