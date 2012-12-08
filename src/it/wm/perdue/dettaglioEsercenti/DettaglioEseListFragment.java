@@ -133,15 +133,19 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
     
     public void onListItemClick(ListView l, View v, int position, long id) {
         
-        Bundle extras = new Bundle();
-        // extras.putSerializable("notizia", (Serializable)
-        // l.getItemAtPosition(position));
-        Intent intent = new Intent(getActivity(), AltreInfoActivity.class);
-        extras.putString("eseId", eseId);
-        extras.putString("title", getSherlockActivity().getSupportActionBar().getTitle()
-                .toString());
-        intent.putExtras(extras);
-        startActivity(intent);
+        String cellKind = ((TextView) v.findViewById(R.id.cellKind)).getText().toString();
+        
+        if (cellKind != null && cellKind.equals("action")) {
+            Bundle extras = new Bundle();
+            // extras.putSerializable("notizia", (Serializable)
+            // l.getItemAtPosition(position));
+            Intent intent = new Intent(getActivity(), AltreInfoActivity.class);
+            extras.putString("eseId", eseId);
+            extras.putString("title", getSherlockActivity().getSupportActionBar().getTitle()
+                    .toString());
+            intent.putExtras(extras);
+            startActivity(intent);
+        }
         
     }
     
