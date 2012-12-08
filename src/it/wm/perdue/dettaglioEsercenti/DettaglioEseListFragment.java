@@ -265,10 +265,8 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                     kindContactTextView.setText("Sito web");
                 }
                 else if (sections.get(position).equals("altre")) {
-                    contactTextView = (TextView) v.findViewById(R.id.contactResource);
-                    kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
-                    contactTextView.setText(esercente.getTelefono());
-                    kindContactTextView.setText("PROVA ALTRO");
+                    TextView actionTextView = (TextView) v.findViewById(R.id.action);
+                    actionTextView.setText("Altre informazioni");
                 }
             }
             return v;
