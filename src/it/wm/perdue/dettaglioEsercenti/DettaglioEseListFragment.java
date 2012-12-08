@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockListFragment;
 
 import it.wm.CachedAsyncImageView;
+import it.wm.CachedAsyncImageView.Listener;
 import it.wm.HTTPAccess;
 import it.wm.perdue.R;
 import it.wm.perdue.businessLogic.Esercente;
@@ -67,6 +68,18 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        
+        ListView lv = getListView();
+        LayoutInflater inflater = (LayoutInflater) getActivity()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View detailImg = inflater
+                .inflate(R.layout.ese_dettaglio_header_image, null);
+        
+        String urlImageString = "http://www.cartaperdue.it/partner/v2.0/ImmagineEsercente.php?id="
+                + eseId;
+        ((CachedAsyncImageView) detailImg.findViewById(R.id.dettaglioImg))
+                .loadImageFromURL(urlImageString);
+        lv.addHeaderView(detailImg);
         
         setListAdapter(adapter);
         
