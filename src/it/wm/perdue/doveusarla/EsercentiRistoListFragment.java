@@ -151,9 +151,9 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
                 }
                 if (price != null) {
                     if (esercente.getFasciaPrezzo() == null)
-                        price.setText("-- â‚¬");
+                        price.setText("-- Û");
                     else
-                        price.setText(String.format("%s â‚¬: ", esercente.getFasciaPrezzo()));
+                        price.setText(String.format("%s Û: ", esercente.getFasciaPrezzo()));
                 }
             }
             return v;
