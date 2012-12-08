@@ -12,13 +12,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import it.wm.DrawableCache.DrawableCacheListener;
+
 /**
  * TODO: document your custom view class.
  */
-public class CachedAsyncImageView extends RelativeLayout /*
-                                                          * implements
-                                                          * DrawableCacheListener
-                                                          */{
+public class CachedAsyncImageView extends RelativeLayout implements DrawableCacheListener {
     
     private static final String              DEBUG_TAG   = "CachedAsyncImageView";
     private Listener                         listener    = null;
@@ -82,18 +81,18 @@ public class CachedAsyncImageView extends RelativeLayout /*
     @TargetApi(11)
     @Override
     /*
-     * Questo metodo risolve un "bug" (se così si può dire...) con le
-     * animazioni post-Honeycomb: se il dispositivo è ruotato durante
-     * l'animazione, nel layout ruotato l'imageView inspiegabilmente conserva
-     * l'animazione (l'animazione riprende da dove era rimasta). La cosa è
-     * piuttosto strana dato che l'istanza di imageView è diversa.... Cmq così
-     * facendo facciamo in modo che gli oggetti di animazione vengano rilasciati
-     * subito, insieme all'activity in cui stiamo lavorando. In pratica gli
-     * oggetti fade conservano una reference al listener, che a sua volta
-     * essendo una inner class conserva una reference al CachedAsyncImageView,
-     * che conserva una reference al context, cioè all'activity e a un mucchio
-     * di altre cose, lasciandole appese finché l'oggetto non si autodistrugge
-     * (?) cioè fino alla fine dell'animazione.
+     * Questo metodo risolve un "bug" (se così si può dire...) con le animazioni
+     * post-Honeycomb: se il dispositivo è ruotato durante l'animazione, nel
+     * layout ruotato l'imageView inspiegabilmente conserva l'animazione
+     * (l'animazione riprende da dove era rimasta). La cosa è piuttosto strana
+     * dato che l'istanza di imageView è diversa.... Cmq così facendo facciamo
+     * in modo che gli oggetti di animazione vengano rilasciati subito, insieme
+     * all'activity in cui stiamo lavorando. In pratica gli oggetti fade
+     * conservano una reference al listener, che a sua volta essendo una inner
+     * class conserva una reference al CachedAsyncImageView, che conserva una
+     * reference al context, cioè all'activity e a un mucchio di altre cose,
+     * lasciandole appese finché l'oggetto non si autodistrugge (?) cioè fino
+     * alla fine dell'animazione.
      */
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
@@ -111,28 +110,34 @@ public class CachedAsyncImageView extends RelativeLayout /*
     }
     
     public void loadImageFromURL(String url) {
+        loadImageFromURL(url, -1, -1);
+    }
+    
+    public void loadImageFromURL(String url, int reqWidth, int reqHeight) {
+        
         if (request != null) {
             request = null;
         }
         
         request = new DownloadRequest(url, DownloadRequest.GET, null);
         
-        // DrawableCache cache = DrawableCache.getInstance(this.getContext());
-        Drawable data = null;// cache.getCacheLine(request, this);
+        DrawableCache cache = DrawableCache.getInstance(this.getContext());
+        Drawable data = cache.getCacheLine(request, this);
         Log.d(DEBUG_TAG, "Loading image from: " + url.toString());
         
         if (data != null) {
             Log.d(DEBUG_TAG, "Cache hit!");
             
+            imageView.setAlpha(1.0f);
             imageView.setImageDrawable(data);
             progressBar.setVisibility(INVISIBLE);
             /*
-             * La sezione seguente risolve un "bug" (se così si può dire..)
-             * con le animazioni pre-Honeycomb: se il device è ruotato durante
-             * il fadeIn/fadeOut, l'immagine nel layout ruotato conserva
-             * l'ultima Alpha che ha avuto nell'animazione nel layout non
-             * ruotato, così facendo forziamo l'alpha a 1. Resterebbe da capire
-             * perché succede sta cosa, e se stiamo leakando oggetti :/
+             * La sezione seguente risolve un "bug" (se così si può dire..) con
+             * le animazioni pre-Honeycomb: se il device è ruotato durante il
+             * fadeIn/fadeOut, l'immagine nel layout ruotato conserva l'ultima
+             * Alpha che ha avuto nell'animazione nel layout non ruotato, così
+             * facendo forziamo l'alpha a 1. Resterebbe da capire perché succede
+             * sta cosa, e se stiamo leakando oggetti :/
              */
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
                 Log.d(DEBUG_TAG, "Fading in instantly");
@@ -145,6 +150,7 @@ public class CachedAsyncImageView extends RelativeLayout /*
                 listener.onImageLoadingCompleted(this);
             }
         } else {
+            imageView.setAlpha(0f);
             progressBar.setVisibility(VISIBLE);
         }
     }
