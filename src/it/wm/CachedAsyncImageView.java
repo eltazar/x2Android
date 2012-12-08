@@ -97,8 +97,7 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         Log.d(DEBUG_TAG, "Detached!");
-        // DrawableCache.getInstance(this.getContext()).removeListener(request,
-        // this);
+        DrawableCache.getInstance(this.getContext()).removeListener(request, this);
         if (fadeIn != null) {
             fadeIn.end();
             fadeIn.removeAllListeners();
@@ -128,8 +127,8 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
         if (data != null) {
             Log.d(DEBUG_TAG, "Cache hit!");
             
-            imageView.setAlpha(1.0f);
             imageView.setImageDrawable(data);
+            progressBar.setAlpha(1.0f);
             progressBar.setVisibility(INVISIBLE);
             /*
              * La sezione seguente risolve un "bug" (se così si può dire..) con
@@ -150,7 +149,7 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
                 listener.onImageLoadingCompleted(this);
             }
         } else {
-            imageView.setAlpha(0f);
+            imageView.setImageDrawable(null);
             progressBar.setVisibility(VISIBLE);
         }
     }
@@ -231,6 +230,8 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
     @TargetApi(11)
     private void crossFadeFromHoneycomb(long duration) {
         Log.d(DEBUG_TAG, "Animazioni HoneyComb");
+        progressBar.setAlpha(1.0f);
+        progressBar.setVisibility(VISIBLE);
         fadeIn = android.animation.ObjectAnimator.ofFloat(imageView, "alpha", 0.0f, 1.0f);
         fadeOut = android.animation.ObjectAnimator.ofFloat(progressBar, "alpha", 1.0f, 0.0f);
         fadeIn.setDuration(duration);
