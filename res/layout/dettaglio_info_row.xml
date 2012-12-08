@@ -12,5 +12,12 @@
         android:paddingTop="5dp"
         android:paddingLeft="5dp"
         android:paddingBottom="5dp"/>
+    
+            <TextView
+            android:id="@+id/cellKind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="info"
+            android:visibility="gone" />
 
 </LinearLayout>
