@@ -186,6 +186,8 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                 }
                 else if (sections.get(position).equals("altre")) {
                     Log.d("XXX", " riga altro");
+                    TextView actionTextView = (TextView) v.findViewById(R.id.action);
+                    actionTextView.setText("Altre informazioni");
                 }
             }
             
