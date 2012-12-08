@@ -85,14 +85,17 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
     
     public void onListItemClick(ListView l, View v, int position, long id) {
         
+        if (v.getId() == FOOTER_VIEW_ID) {
+            return;
+        }
+        
         EsercenteRistorazione ese = (EsercenteRistorazione) l.getAdapter().getItem(position);
         
-        Log.d("XXX", "cliccato item = " + ese.getID());
+        // Log.d("XXX", "cliccato item = " + ese.getID());
         Intent intent = new Intent(getActivity(), DettaglioEsercenteBaseActivity.class);
         intent.putExtra(ESE_ID, "" + ese.getID());
         intent.putExtra("ESE_TITLE", ese.getInsegna());
         intent.putExtra("isRisto", true);
-        
         startActivity(intent);
     }
     
