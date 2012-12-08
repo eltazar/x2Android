@@ -73,7 +73,7 @@ public class HTTPAccess implements DownloaderTask.DownloadListener {
         Log.d(DEBUG_TAG, "postMap is: " + postMap);
         tag = (tag == null ? urlString : tag);
         if (tagMap.put(params, tag) == null) {
-            // Eseguiamo la richiesta solo se non è già in corso
+            // Eseguiamo la richiesta solo se non √® gi√† in corso
             DownloaderTask task = new DownloaderTask();
             task.setListener(this);
             task.execute(params);

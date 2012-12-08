@@ -97,7 +97,7 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                     textView = (TextView) v.findViewById(R.id.infoRow);
                     
                     textView.setText(Html.fromHtml((
-                            (esercente.getPranzoString() != null ? "<b>Giorni di validità</b>"
+                            (esercente.getPranzoString() != null ? "<b>Giorni di validit√†</b>"
                                     + "<br />" +
                                     esercente.getPranzoString() + "<br />" : "")
                                     +
@@ -115,7 +115,7 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                 else if (sections.get(position).equals("map")) {
                     textView = (TextView) v.findViewById(R.id.mapInfo);
                     textView.setText(Html.fromHtml(
-                            (esercente.getCitta() != null ? "<b>Città</b>" + "<br />" +
+                            (esercente.getCitta() != null ? "<b>Citt√†</b>" + "<br />" +
                                     esercente.getCitta() + "<br />" : "")
                                     +
                                     (esercente.getZona() != null ? "<b> Zona </b>" + "<br />"
@@ -153,12 +153,12 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                                             esercente.getSottoTipologia() + "<br />" : "")
                             +
                             (esercente.getSpecialita() != null ?
-                                    "<b> Specialità </b>"
+                                    "<b> Specialit√† </b>"
                                             + "<br />" +
                                             esercente.getSpecialita() + "<br />" : "")
                             + (esercente.getFasciaPrezzo() != null ? "<b> Prezzo medio</b>" +
                                     "<br />"
-                                    + esercente.getFasciaPrezzo() + "€" : "")));
+                                    + esercente.getFasciaPrezzo() + "‚Ç¨" : "")));
                 }
                 else if (sections.get(position).equals("tel")) {
                     Log.d("XXX", "1 contact = " + contactTextView + " kindContact = "
@@ -210,7 +210,7 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
             }
             
             // for (int i = 0; i < sections.size(); i++)
-            // Log.d("XXX", "nome sezione è = " + sections.get(i));
+            // Log.d("XXX", "nome sezione √® = " + sections.get(i));
             
         }
         

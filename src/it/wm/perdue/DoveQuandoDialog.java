@@ -91,7 +91,7 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // salvo le impostazioni selezionate se la selezione non
-                        //  vuota
+                        // Ã¨ vuota
                         Log.d("XX", " ### WHERE ->  : " + where + " WHEN -> " + when);
                         if (!where.equals(""))
                             Utils.setPreferenceString(getActivity(), WHERE, where);
