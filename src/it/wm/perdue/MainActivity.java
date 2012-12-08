@@ -38,7 +38,7 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
         tabList = new ArrayList<TabDescriptor>();
         tabList.add(new TabDescriptor(DOVE_USARLA_TAB_TAG, DoveUsarlaFragment.class, "Dove Usarla"));
         tabList.add(new TabDescriptor(NEWS_TAB_TAG, NewsListFragment.class, "News"));
-        tabList.add(new TabDescriptor(NEWS_TAB_TAG, RichiediCartaFragment.class, "Richiedi"));
+        tabList.add(new TabDescriptor(RICHIEDI_TAB_TAG, RichiediCartaFragment.class, "Richiedi"));
         
         ActionBar bar = getSupportActionBar();
         bar.setDisplayOptions(ActionBar.DISPLAY_USE_LOGO
