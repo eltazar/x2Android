@@ -62,6 +62,7 @@ public class CommentiListFragment extends SherlockListFragment implements
         setListAdapter(adapter);
         lv.setOnScrollListener(this);
         setListShown(false);
+        lv.setDividerHeight(2);
         
         urlStringFormat = "http://www.cartaperdue.it/partner/commenti.php?id=%s&from=%d&to=10";
         
@@ -94,6 +95,7 @@ public class CommentiListFragment extends SherlockListFragment implements
     public void onDestroyView() {
         super.onDestroyView();
         listState = getListView().onSaveInstanceState();
+        httpAccess.setResponseListener(null);
     }
     
     @Override
