@@ -20,11 +20,10 @@ import org.apache.http.util.EncodingUtils;
 
 public class AltreInfoActivity extends SherlockActivity implements HTTPAccess.ResponseListener {
     
-    private static final String DEBUG_TAG  = "AltreInfoActivity";
-    private HTTPAccess          httpAccess = null;
-    private WebView             webView    = null;
-    private String              urlString  = null;
-    private String              eseId      = null;
+    private static final String DEBUG_TAG = "AltreInfoActivity";
+    private WebView             webView   = null;
+    private String              urlString = null;
+    private String              eseId     = null;
     
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,12 +83,6 @@ public class AltreInfoActivity extends SherlockActivity implements HTTPAccess.Re
         // [request setHTTPBody:postData];
         // [self.sitoWebView loadRequest:request];
         
-    }
-    
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        httpAccess.setResponseListener(null);
     }
     
     @Override
