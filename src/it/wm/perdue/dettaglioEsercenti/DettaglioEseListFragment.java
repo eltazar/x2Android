@@ -1,6 +1,7 @@
 
 package it.wm.perdue.dettaglioEsercenti;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
@@ -35,6 +37,8 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
     private Parcelable                                  listState  = null;
     
     protected String                                    eseId      = null;
+    
+    private ProgressDialog                              progressDialog;
     
     public static DettaglioEseListFragment newInstance(String eseId) {
         DettaglioEseListFragment fragment = new DettaglioEseListFragment();
@@ -68,6 +72,8 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         
         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET,
                 null, TAG_NORMAL);
+        
+        progressDialog = ProgressDialog.show(getActivity(), "", "Caricamento in corso...");
     }
     
     @Override
@@ -109,6 +115,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             adapter.addFromJSON(response);
         }
         
+        progressDialog.dismiss();
     }
     
     @Override
@@ -118,6 +125,10 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         Log.d(DEBUG_TAG, "Errore nel download");
         // downloading--;
         // Log.d(DEBUG_TAG, "Donwloading " + downloading);
+        progressDialog.dismiss();
+        CharSequence text = "C'Ã¨ stato un problema, riprova!";
+        Toast toast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
+        toast.show();
     }
     
     /* *** END: HTTPAccess.ResponseListener ******************* */
