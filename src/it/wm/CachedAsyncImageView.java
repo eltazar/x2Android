@@ -62,6 +62,7 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
         
         LayoutParams layoutParams = new LayoutParams(imageView.getLayoutParams());
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        
         imageView.setLayoutParams(layoutParams);
         layoutParams = new LayoutParams(progressBar.getLayoutParams());
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);

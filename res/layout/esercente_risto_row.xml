@@ -1,45 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <it.wm.CachedAsyncImageView
+        android:id="@+id/eseImage"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:gravity="center_vertical" >
+
+    </it.wm.CachedAsyncImageView>
+
+    <TextView
+        android:id="@+id/eseTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0.06" >
-
-        <it.wm.CachedAsyncImageView
-            android:id="@+id/eseImage"
-            android:layout_width="60dp"
-            android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:gravity="center_horizontal"
-            android:paddingLeft="5dp"
-            android:paddingTop="5dp" >
-        </it.wm.CachedAsyncImageView>
-
-        <TextView
-            android:id="@+id/eseTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_toRightOf="@+id/eseImage"
-            android:text="EseTitle"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/distance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/eseImage"
-            android:layout_marginTop="20dp"
-            android:gravity="bottom"
-            android:text="distance" />
-
-        <TextView
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="18dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/eseImage"
+        android:text="EseTitle"
+        android:textStyle="bold" />
+    
+    <TextView
             android:id="@+id/kindFood"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,23 +39,38 @@
             android:layout_below="@+id/eseTitle"
             android:text="cucina" />
 
-        <TextView
-            android:id="@+id/address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/kindFood"
-            android:layout_below="@+id/kindFood"
-            android:maxLength="35"
-            android:text="Address" />
+    <TextView
+        android:id="@+id/address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/eseTitle"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/kindFood"
+        android:layout_marginRight="18dp"
+        android:maxLength="35"
+        android:text="Address" />
 
-        <TextView
+    
+     <TextView
             android:id="@+id/price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/address"
             android:layout_below="@+id/address"
             android:text="prezzo" />
+     
+      <TextView
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/price"
+        android:layout_marginBottom="7dp"
+        android:layout_marginRight="18dp"
+        android:layout_marginTop="5dp"
+        android:gravity="bottom"
+        android:text="distance" />
 
-    </RelativeLayout>
+</RelativeLayout>
 
-</LinearLayout>
