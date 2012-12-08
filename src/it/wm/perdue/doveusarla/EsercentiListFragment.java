@@ -29,6 +29,7 @@ import java.util.HashMap;
 public class EsercentiListFragment extends SherlockListFragment implements
         HTTPAccess.ResponseListener, OnScrollListener {
     private static final String                    DEBUG_TAG        = "EsercentiListFragment";
+    protected static final int                     FOOTER_VIEW_ID   = 1999;
     private static final int                       STATE_NORMAL     = 1;
     private static final int                       STATE_SEARCH     = 2;
     protected static final String                  ESE_ID           = "eseId";
@@ -100,7 +101,9 @@ public class EsercentiListFragment extends SherlockListFragment implements
         LayoutInflater inflater = (LayoutInflater) getActivity()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         footerView = inflater.inflate(R.layout.endless_list_footer, null);
+        
         lv.addFooterView(footerView);
+        footerView.setId(FOOTER_VIEW_ID);
         setListAdapter(adapter);
         lv.setOnScrollListener(this);
         
@@ -321,9 +324,15 @@ public class EsercentiListFragment extends SherlockListFragment implements
     
     public void onListItemClick(ListView l, View v, int position, long id) {
         
-        Esercente ese = (Esercente) l.getAdapter().getItem(position);
+        Log.d("CCC", "view id = " + v.getId());
         
+        if (v.getId() == 1999) {
+            return;
+        }
+        
+        Esercente ese = (Esercente) l.getAdapter().getItem(position);
         Log.d("XXX", "cliccato item = " + ese.getID());
+        
         Intent intent = new Intent(getActivity(), DettaglioEsercenteBaseActivity.class);
         intent.putExtra(ESE_ID, "" + ese.getID());
         intent.putExtra("ESE_TITLE", ese.getInsegna());
