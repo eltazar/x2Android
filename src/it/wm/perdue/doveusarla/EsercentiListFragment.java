@@ -382,7 +382,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
                 
                 if (caImageView != null) {
                     Log.d(DEBUG_TAG, "esercente id  = " + esercente.getID());
-                    // caImageView.loadImageFromURL(urlImageString);
+                    caImageView.loadImageFromURL(urlImageString);
                 }
                 
                 if (title != null) {

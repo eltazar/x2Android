@@ -133,7 +133,7 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
                 
                 if (caImageView != null) {
                     Log.d("DEBUG_TAG", "esercente id  = " + esercente.getID());
-                    // caImageView.loadImageFromURL(urlImageString);
+                    caImageView.loadImageFromURL(urlImageString);
                 }
                 
                 if (title != null) {
