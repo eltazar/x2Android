@@ -38,7 +38,7 @@ public class DettaglioJSONAdapter<T extends Esercente> extends
     public void addFromJSON(String jsonString) {
         
         Log.d("XXX", "CLASSE MADRE RICEVUTO JSON");
-        jsonString = Utils.stripSingleEsercente(jsonString);
+        jsonString = Utils.formatJSON(jsonString);
         
         Gson gson = Utils.getGson();
         try {

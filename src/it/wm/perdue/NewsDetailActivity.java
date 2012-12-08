@@ -102,7 +102,7 @@ public class NewsDetailActivity extends SherlockActivity implements HTTPAccess.R
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
         // Log.d(DEBUG_TAG, "RICEVUTA RISPOSTA: " + response);
-        response = Utils.stripEsercente(response);
+        response = Utils.formatJSON(response);
         notizia = Utils.getGson().fromJson(response, Notizia[].class)[0];
         webView.loadDataWithBaseURL("html://", notizia.getTesto(), "text/html", "utf-8", null);
     }

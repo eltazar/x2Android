@@ -69,15 +69,14 @@ public class EsercentiItemizedOverlay extends BalloonItemizedOverlay<OverlayItem
     }
     
     public int addFromJSON(String json) {
-        json = Utils.stripEsercente(json);
-        json = Utils.stripFinalFalse(json);
+        json = Utils.formatJSON(json);
         
         Gson gson = Utils.getGson();
         Esercente[] objects = null;
         try {
             objects = gson.fromJson(json, Esercente[].class);
         } catch (JsonSyntaxException e) {
-            // In teoria se siamo qui, significa che  arrivato un array vuoto,
+            // In teoria se siamo qui, significa che ï¿½ arrivato un array vuoto,
             Log.d(DEBUG_TAG, "Ho rilevato un array vuoto");
             e.printStackTrace();
             objects = new Esercente[0];
