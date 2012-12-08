@@ -47,6 +47,9 @@ public class DettaglioEsercenteBaseActivity extends SherlockFragmentActivity {
         
         Fragment f = null;
         
+        if (savedInstanceState != null)
+            return;
+        
         if (isRisto) {
             f = DettaglioEseRistoListFragment.newInstance(eseId);
         }
