@@ -25,4 +25,13 @@
             android:textColor="#343434"
             android:textSize="15dip" />
 
+        <TextView
+            android:id="@+id/cellKind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:text="action"
+            android:visibility="gone" />
+
     </RelativeLayout>
