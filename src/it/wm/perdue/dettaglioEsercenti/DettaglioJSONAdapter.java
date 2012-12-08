@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 public class DettaglioJSONAdapter<T extends Esercente> extends
         ArrayAdapter<T> {
-    
     Class<T>          clazz     = null;
     ArrayList<String> sections  = null;
     Context           context   = null;
@@ -23,7 +22,6 @@ public class DettaglioJSONAdapter<T extends Esercente> extends
     
     public DettaglioJSONAdapter(Context context, int resource, Class<T> clazz) {
         super(context, resource);
-        Log.d("XXX", "CLASSE MADRE ADAPTER");
         this.clazz = clazz;
         this.context = context;
         sections = new ArrayList<String>();
@@ -36,9 +34,8 @@ public class DettaglioJSONAdapter<T extends Esercente> extends
     }
     
     public void addFromJSON(String jsonString) {
-        
-        Log.d("XXX", "CLASSE MADRE RICEVUTO JSON");
         jsonString = Utils.formatJSON(jsonString);
+        jsonString = jsonString.substring(1, jsonString.length() - 1);
         
         Gson gson = Utils.getGson();
         try {
@@ -47,10 +44,7 @@ public class DettaglioJSONAdapter<T extends Esercente> extends
             checkFields();
             
         } catch (JsonSyntaxException e) {
-            // In teoria se siamo qui, significa che è arrivato un array vuoto,
-            Log.d("XXX", "Utils: errore parsing json");
             e.printStackTrace();
-            // esercente = gson.fromJson("[]", clazz);
         }
     }
     
