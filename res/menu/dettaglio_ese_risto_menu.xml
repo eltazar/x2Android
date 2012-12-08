@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- icona map: http://www.softicons.com/free-icons/android-icons/codex-icons-by-ilia-draznin/maps-icon -->
+         <item android:id="@+id/ww"
+          android:title=""
+          android:showAsAction="ifRoom|collapseActionView" />
+         <item android:id="@+id/commenti"
+          android:title="Commenti"
+          android:showAsAction="ifRoom|collapseActionView" />
+    
+    <!--   <item
+    android:showAsAction="always"
+    android:title="Filtro" >
+    <menu>
+        <item
+            android:id="@+id/launch"
+            android:title="Pranzo" />
+        <item
+            android:id="@+id/dinner"
+            android:title="Cena" />
+        <item
+            android:id="@+id/all"
+            android:title="Tutti" />
+    </menu>
+</item>
+-->
+
+</menu>
