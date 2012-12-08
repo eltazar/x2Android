@@ -137,7 +137,7 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
                 }
                 
                 if (title != null) {
-                    Log.d(DEBUG_TAG, "Sorting è: " + sorting);
+                    Log.d(DEBUG_TAG, "Sorting √®: " + sorting);
                     title.setText(esercente.getInsegna());
                 }
                 if (address != null) {
@@ -151,9 +151,9 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
                 }
                 if (price != null) {
                     if (esercente.getFasciaPrezzo() == null)
-                        price.setText("-- €");
+                        price.setText("-- ‚Ç¨");
                     else
-                        price.setText(String.format("%s €: ", esercente.getFasciaPrezzo()));
+                        price.setText(String.format("%s ‚Ç¨: ", esercente.getFasciaPrezzo()));
                 }
             }
             return v;

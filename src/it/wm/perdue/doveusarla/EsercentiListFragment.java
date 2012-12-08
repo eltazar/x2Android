@@ -55,9 +55,9 @@ public class EsercentiListFragment extends SherlockListFragment implements
     protected JSONListAdapter<? extends Esercente> searchAdapter    = null;
     private Parcelable                             listState        = null;
     
-    // problema: perchè al primo avvio di una categoria stampa due volte il log
+    // problema: perchÔøΩ al primo avvio di una categoria stampa due volte il log
     // SORTING ? :|
-    // perchè
+    // perchÔøΩ
     
     public static EsercentiListFragment newInstance(String sort, String categ) {
         EsercentiListFragment fragment = new EsercentiListFragment();
@@ -243,8 +243,8 @@ public class EsercentiListFragment extends SherlockListFragment implements
         } else {
             /*
              * Se invece riceviamo un risultato di ricerca, lo aggiungiamo solo
-             * se siamo in modalità di ricerca, altrimenti è tempo perso: al
-             * prossimo rientro in search mode l'adapter verrà svuotato. Inoltre
+             * se siamo in modalit√† di ricerca, altrimenti √® tempo perso: al
+             * prossimo rientro in search mode l'adapter verr√† svuotato. Inoltre
              * aggiungiamo i risultati solo se sono della ricerca corrente
              * scartando quelli di ricerche vecchie. TODO: le connessioni delle
              * ricerche vecchie andrebbero proprio fermate
@@ -381,7 +381,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
                 }
                 
                 if (title != null) {
-                    Log.d(DEBUG_TAG, "Sorting è: " + sorting);
+                    Log.d(DEBUG_TAG, "Sorting √®: " + sorting);
                     title.setText(esercente.getInsegna());
                 }
                 if (address != null) {

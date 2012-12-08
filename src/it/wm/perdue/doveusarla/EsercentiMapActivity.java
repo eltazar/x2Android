@@ -145,7 +145,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
         bottomRight = new SimpleGeoPoint(
                 center.getLatitude() + latSpan / 2,
                 center.getLongitude() + longSpan / 2);
-        Log.d(DEBUG_TAG, "Il range : " + topLeft.calculateDistance(bottomRight));
+        Log.d(DEBUG_TAG, "Il range Ã¨: " + topLeft.calculateDistance(bottomRight));
         double distance = topLeft.calculateDistance(bottomRight);
         return (distance > 0 && distance < 1) ? 1 : distance;
     }

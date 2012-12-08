@@ -137,7 +137,7 @@ public final class Utils {
             return "Martedi";
         } else if (day.equals("Mercoledi")) {
             return "Mercoledi";
-        } else if (day.equals("Gioved“")) {
+        } else if (day.equals("Giovedi")) {
             return "Giovedi";
         } else if (day.equals("Venerdi")) {
             return "Venerdi";

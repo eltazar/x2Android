@@ -252,17 +252,17 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         @Override
         public Fragment getItem(int position) {
             
-            // il problema ora è che bisogna gestire con il fragment manager i
+            // il problema ora √® che bisogna gestire con il fragment manager i
             // vari
             // fragment?
             // inoltre bisognerebbe ritornare ad "esercentiBaseActivity" quale
-            // fragment è visualizzato,
-            // perchè quando si fa ad esempio la ricerca o si cambia filtro,
+            // fragment √® visualizzato,
+            // perch√© quando si fa ad esempio la ricerca o si cambia filtro,
             // bisogna
             // inviare al fragment i dati per le nuove query
             
             // Mario, vanno i dati per le nuove query vanno inviati a TUTTI i
-            // fragment, perché quando fai lo swipe le views devono apparire già
+            // fragment, perch√© quando fai lo swipe le views devono apparire gi√†
             // aggiornate
             
             // TODO: dirty, bisognrebbe usare il Fragment Manager

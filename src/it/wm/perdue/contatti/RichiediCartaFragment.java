@@ -138,7 +138,7 @@ public class RichiediCartaFragment extends SherlockFragment implements
         // TODO Auto-generated method stub
         Log.d("XXX", "ERRORE INVIO ->" + tag);
         progressDialog.cancel();
-        CharSequence text = "C'� stato un problema, riprova!";
+        CharSequence text = "C'è stato un problema, riprova!";
         Toast toast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
         toast.show();
     }
@@ -272,13 +272,13 @@ public class RichiediCartaFragment extends SherlockFragment implements
     }
     
     private String getCardString() {
-        if (card.subSequence(6, card.length()).equals("Semestrale 20�")) {
+        if (card.subSequence(6, card.length()).equals("Semestrale 20€")) {
             card = "Semestrale";
         }
-        else if (card.subSequence(6, card.length()).equals("Annuale 36�")) {
+        else if (card.subSequence(6, card.length()).equals("Annuale 36€")) {
             card = "Annuale";
         }
-        else if (card.subSequence(6, card.length()).equals("Biennale 55�")) {
+        else if (card.subSequence(6, card.length()).equals("Biennale 55€")) {
             card = "Biennale";
         }
         return card;

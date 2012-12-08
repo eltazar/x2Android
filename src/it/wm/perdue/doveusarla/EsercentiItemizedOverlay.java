@@ -76,7 +76,7 @@ public class EsercentiItemizedOverlay extends BalloonItemizedOverlay<OverlayItem
         try {
             objects = gson.fromJson(json, Esercente[].class);
         } catch (JsonSyntaxException e) {
-            // In teoria se siamo qui, significa che � arrivato un array vuoto,
+            // In teoria se siamo qui, significa che è arrivato un array vuoto,
             Log.d(DEBUG_TAG, "Ho rilevato un array vuoto");
             e.printStackTrace();
             objects = new Esercente[0];
