@@ -55,9 +55,8 @@ public class EsercentiListFragment extends SherlockListFragment implements
     protected JSONListAdapter<? extends Esercente> searchAdapter    = null;
     private Parcelable                             listState        = null;
     
-    // problema: perch� al primo avvio di una categoria stampa due volte il log
+    // problema: perché al primo avvio di una categoria stampa due volte il log
     // SORTING ? :|
-    // perch�
     
     public static EsercentiListFragment newInstance(String sort, String categ) {
         EsercentiListFragment fragment = new EsercentiListFragment();
