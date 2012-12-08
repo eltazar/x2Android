@@ -207,7 +207,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                     
                     try {
                         giorniString = (esercente.getGiorniString() != null ?
-                                "<b> Giorni validit√† </b>" + "<br />"
+                                "<b> Giorni validità </b>" + "<br />"
                                         + esercente.getGiorniString() + "<br />" : "");
                     } catch (NullPointerException e) {
                         Log.d(DEBUG_TAG, "eccezione in getView: " + e.getLocalizedMessage());
@@ -226,7 +226,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                 else if (sections.get(position).equals("map")) {
                     textView = (TextView) v.findViewById(R.id.mapInfo);
                     textView.setText(Html.fromHtml(
-                            (esercente.getCitta() != null ? "<b>Citt√†</b>" + "<br />" +
+                            (esercente.getCitta() != null ? "<b>Città</b>" + "<br />" +
                                     esercente.getCitta() + "<br />" : "")
                                     +
                                     (esercente.getZona() != null ? "<b> Zona </b>" + "<br />"
