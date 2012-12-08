@@ -78,7 +78,7 @@ public final class Utils {
         StringBuilder builder = new StringBuilder(c);
         int start = builder.length() - ",false]".length();
         int end = builder.length();
-        if (builder.substring(start, end).equals(",false]")) {
+        if (start >= 0 && builder.substring(start, end).equals(",false]")) {
             builder.replace(start, end, "]");
         }
         return builder.toString();
