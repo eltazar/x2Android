@@ -53,6 +53,12 @@ public class NewsDetailActivity extends SherlockActivity implements HTTPAccess.R
     }
     
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        httpAccess.setResponseListener(null);
+    }
+    
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         /** Inflating the current activity's menu with res/menu/items.xml */
         getSupportMenuInflater().inflate(R.menu.share_menu, menu);

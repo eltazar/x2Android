@@ -149,6 +149,12 @@ public class EsercentiListFragment extends SherlockListFragment implements
     }
     
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        httpAccess.setResponseListener(null);
+    }
+    
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         Log.d(DEBUG_TAG, "on destroy view");
@@ -243,10 +249,10 @@ public class EsercentiListFragment extends SherlockListFragment implements
             /*
              * Se invece riceviamo un risultato di ricerca, lo aggiungiamo solo
              * se siamo in modalità di ricerca, altrimenti è tempo perso: al
-             * prossimo rientro in search mode l'adapter verrà svuotato. Inoltre
-             * aggiungiamo i risultati solo se sono della ricerca corrente
-             * scartando quelli di ricerche vecchie. TODO: le connessioni delle
-             * ricerche vecchie andrebbero proprio fermate
+             * prossimo rientro in search mode l'adapter verrà svuotato.
+             * Inoltre aggiungiamo i risultati solo se sono della ricerca
+             * corrente scartando quelli di ricerche vecchie. TODO: le
+             * connessioni delle ricerche vecchie andrebbero proprio fermate
              */
             if (state != STATE_SEARCH || !tag.equals(TAG_SEARCH + searchKey)) {
                 return;

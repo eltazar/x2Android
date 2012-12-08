@@ -84,6 +84,12 @@ public class NewsListFragment extends SherlockListFragment implements HTTPAccess
     }
     
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        httpAccess.setResponseListener(null);
+    }
+    
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         listState = getListView().onSaveInstanceState();
