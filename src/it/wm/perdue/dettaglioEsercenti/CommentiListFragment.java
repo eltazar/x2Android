@@ -33,6 +33,8 @@ public class CommentiListFragment extends SherlockListFragment implements
     private View                footerView      = null;
     private String              eseId;
     
+    // private TextView lastTouchedRowTextView = null;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,18 +116,15 @@ public class CommentiListFragment extends SherlockListFragment implements
     
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        // TODO Auto-generated method stub
-        /*
-         * Toast.makeText( getActivity(),
-         * getListView().getItemAtPosition(position).toString(),
-         * Toast.LENGTH_SHORT).show();
-         */
-        // Bundle extras = new Bundle();
-        // extras.putSerializable("notizia", (Serializable)
-        // l.getItemAtPosition(position));
-        // Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-        // intent.putExtras(extras);
-        // startActivity(intent);
+        
+        // TODO: quando si scrolla la textView viene riciclata e quindi altre
+        // righe appaiono expanded anche se nn si è fatto click sopra
+        
+        TextView row = (TextView) v.findViewById(R.id.commentoDemo);
+        // lastTouchedRowTextView = row;
+        Log.d("CCC", " TEXT VIEW pointer = " + row);
+        
+        row.setMaxLines(30);
     }
     
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
@@ -168,6 +167,14 @@ public class CommentiListFragment extends SherlockListFragment implements
             downloading++;
             Log.d(DEBUG_TAG, "Donwloading " + downloading);
         }
+        
+        // try {
+        // lastTouchedRowTextView.setMaxLines(2);
+        // } catch (NullPointerException e) {
+        // Log.d("CCC",
+        // "puntatore nullo in onScrollView di CommentiListFragment");
+        // }
+        
     }
     
     /* *** END: AbsListView.OnScrollListener ****************** */
