@@ -51,8 +51,7 @@ public final class Utils {
         StringBuilder builder = new StringBuilder(c.toString().trim());
         
         if (builder.length() >= 14 && builder.substring(0, 14).equals("{\"Esercente\":[")) {
-            builder.delete(0, 14);
-            builder.deleteCharAt(builder.length() - 1);
+            builder.delete(0, 13);
             builder.deleteCharAt(builder.length() - 1);
         }
         if (builder.length() >= 13 && builder.substring(0, 13).equals("{\"Esercente\":")) {
