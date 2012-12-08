@@ -24,10 +24,9 @@ public class JSONListAdapter<T extends HasID> extends ArrayAdapter<T> {
     }
     
     public int addFromJSON(String jsonString) {
-        jsonString = Utils.stripEsercente(jsonString);
-        jsonString = Utils.stripFinalFalse(jsonString);
+        jsonString = Utils.formatJSON(jsonString);
         
-        Log.d("JSONListAdapter", "JSONSTRING = " + Utils.stripEsercente(jsonString));
+        Log.d("JSONListAdapter", "JSONSTRING = " + jsonString);
         /*
          * new AsyncTask<String, Void, T[]>() {
          * @Override protected T[] doInBackground(String... params) {
