@@ -83,6 +83,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".dettaglioEsercenti.DettaglioEsercenteBaseActivity" />
         </activity>
+                <activity
+            android:name=".dettaglioEsercenti.CommentiBaseActivity"
+            android:label="">
+       		<meta-data
+             android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
     </application>
 
 </manifest>

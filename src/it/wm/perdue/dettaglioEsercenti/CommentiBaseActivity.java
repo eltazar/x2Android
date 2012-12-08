@@ -17,8 +17,12 @@ import com.actionbarsherlock.view.MenuItem;
 import it.wm.perdue.MainActivity;
 import it.wm.perdue.R;
 
-public class DettaglioEsercenteBaseActivity extends SherlockFragmentActivity {
-    // http://www.cartaperdue.it/partner/v2.0/DettaglioEsercente.php?id=%d
+/*
+ * Questa classe funge da contenitore per un fragment. Ha il compito di visualizzare i vari elementi dell'interfaccia
+ * come la search bar ecc...
+ * 
+ * */
+public class CommentiBaseActivity extends SherlockFragmentActivity {
     
     private static final String DEBUG_TAG  = "DettaglioBaseActivity";
     private static final String ESE_ID     = "eseId";
@@ -36,8 +40,6 @@ public class DettaglioEsercenteBaseActivity extends SherlockFragmentActivity {
         if (extras != null) {
             eseId = extras.getString(ESE_ID);
             eseInsegna = extras.getString("ESE_TITLE");
-            isRisto = extras.getBoolean("isRisto");
-            
         }
         
         ActionBar bar = getSupportActionBar();
@@ -45,19 +47,21 @@ public class DettaglioEsercenteBaseActivity extends SherlockFragmentActivity {
                 | ActionBar.DISPLAY_SHOW_HOME
                 | ActionBar.DISPLAY_SHOW_TITLE);
         
-        bar.setTitle(eseInsegna);
-        
-        Fragment f = null;
+        // bar.setTitle(eseInsegna);
         
         if (savedInstanceState != null)
             return;
         
-        if (isRisto) {
-            f = DettaglioEseRistoListFragment.newInstance(eseId);
-        }
-        else {
-            f = DettaglioEseListFragment.newInstance(eseId);
-        }
+        // creo il fragment da mostrare e gli passo degli argomenti
+        
+        Bundle args = new Bundle();
+        args.putString(ESE_ID, eseId);
+        
+        extras = new Bundle();
+        
+        Fragment f = new CommentiListFragment();
+        f.setArguments(args);
+        
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction =
                 fragmentManager.beginTransaction();
@@ -72,36 +76,19 @@ public class DettaglioEsercenteBaseActivity extends SherlockFragmentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         
         // mSearchView.setOnCloseListener(this);
-        
-        if (isRisto) {
-            getSupportMenuInflater().inflate(R.menu.dettaglio_ese_risto_menu, menu);
-        }
-        else {
-            getSupportMenuInflater().inflate(R.menu.dettaglio_ese_menu, menu);
-        }
-        
         return true;
     }
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = null;
-        
         switch (item.getItemId()) {
             case android.R.id.home:
-                intent = NavUtils.getParentActivityIntent(this);
+                Intent intent = NavUtils.getParentActivityIntent(this);
                 intent.putExtra(Intent.EXTRA_TEXT, MainActivity.DOVE_USARLA_TAB_TAG);
                 NavUtils.navigateUpTo(this, intent);
                 return true;
             case R.id.commenti:
-                Log.d("BBB", "cliccato pulsante commenti, eseID = " + eseId);
-                Bundle extras = new Bundle();
-                // extras.putSerializable("notizia", (Serializable)
-                // l.getItemAtPosition(position));
-                intent = new Intent(this, CommentiBaseActivity.class);
-                extras.putString(ESE_ID, eseId);
-                intent.putExtras(extras);
-                startActivity(intent);
+                Log.d("AAA", "cliccato pulsante commenti");
                 return true;
         }
         return super.onOptionsItemSelected(item);
