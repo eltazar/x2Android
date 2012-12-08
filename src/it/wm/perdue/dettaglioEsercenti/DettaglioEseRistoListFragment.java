@@ -8,10 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import it.wm.CachedAsyncImageView;
 import it.wm.perdue.R;
 import it.wm.perdue.businessLogic.EsercenteRistorazione;
 
@@ -67,7 +66,6 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
             TextView textView = null;
             TextView contactTextView = null;
             TextView kindContactTextView = null;
-            ImageView mapImage = null;
             
             Log.d("XXX", "get view madre position --> " + position);
             
@@ -113,6 +111,8 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                     
                 }
                 else if (sections.get(position).equals("map")) {
+                    CachedAsyncImageView mapImage = null;
+                    
                     textView = (TextView) v.findViewById(R.id.mapInfo);
                     textView.setText(Html.fromHtml(
                             (esercente.getCitta() != null ? "<b>Cittˆ</b>" + "<br />" +
@@ -125,7 +125,7 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                                     (esercente.getIndirizzo() != null ? "<b> Indirizzo</b>"
                                             + "<br />" + esercente.getIndirizzo() : "")));
                     
-                    mapImage = (ImageView) v.findViewById(R.id.mapImage);
+                    mapImage = (CachedAsyncImageView) v.findViewById(R.id.mapImage);
                     
                     String urlString =
                             "http://maps.googleapis.com/maps/api/staticmap?" +
@@ -134,10 +134,9 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                                     "," +
                                     esercente.getLongitude() +
                                     "&sensor=false";
-                    ProgressBar pB = (ProgressBar) v.findViewById(R.id.mapImageProgress);
                     mapImage.setTag(urlString);
+                    mapImage.loadImageFromURL(urlString);
                     
-                    new DownloaderImageTask().execute(mapImage, pB);
                 }
                 else if (sections.get(position).equals("infoRisto")) {
                     

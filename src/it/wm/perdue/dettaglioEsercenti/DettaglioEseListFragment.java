@@ -3,9 +3,6 @@ package it.wm.perdue.dettaglioEsercenti;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Html;
@@ -13,21 +10,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
+import it.wm.CachedAsyncImageView;
 import it.wm.HTTPAccess;
 import it.wm.perdue.R;
-import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.Esercente;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 
 public class DettaglioEseListFragment extends SherlockListFragment implements
         HTTPAccess.ResponseListener {
@@ -164,7 +155,6 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             TextView textView = null;
             TextView contactTextView = null;
             TextView kindContactTextView = null;
-            ImageView mapImage = null;
             
             Log.d("XXX", "get view madre position --> " + position);
             
@@ -224,6 +214,8 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                     
                 }
                 else if (sections.get(position).equals("map")) {
+                    CachedAsyncImageView mapImage = null;
+                    
                     textView = (TextView) v.findViewById(R.id.mapInfo);
                     textView.setText(Html.fromHtml(
                             (esercente.getCitta() != null ? "<b>Cittˆ</b>" + "<br />" +
@@ -236,7 +228,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                                     (esercente.getIndirizzo() != null ? "<b> Indirizzo</b>"
                                             + "<br />" + esercente.getIndirizzo() : "")));
                     
-                    mapImage = (ImageView) v.findViewById(R.id.mapImage);
+                    mapImage = (CachedAsyncImageView) v.findViewById(R.id.mapImage);
                     
                     String urlString =
                             "http://maps.googleapis.com/maps/api/staticmap?" +
@@ -245,10 +237,9 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                                     "," +
                                     esercente.getLongitude() +
                                     "&sensor=false";
-                    ProgressBar pB = (ProgressBar) v.findViewById(R.id.mapImageProgress);
                     mapImage.setTag(urlString);
+                    mapImage.loadImageFromURL(urlString);
                     
-                    new DownloaderImageTask().execute(mapImage, pB);
                 }
                 else if (sections.get(position).equals("tel")) {
                     contactTextView = (TextView) v.findViewById(R.id.contactResource);
@@ -283,50 +274,6 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                 sections.add(0, "info");
             }
             super.checkFields();
-        }
-        
-        protected class DownloaderImageTask extends AsyncTask<Object, ProgressBar, Bitmap> {
-            
-            private ImageView   imageView = null;
-            private ProgressBar pB        = null;
-            
-            protected Bitmap doInBackground(Object... imageViews) {
-                
-                this.imageView = (ImageView) imageViews[0];
-                this.pB = (ProgressBar) imageViews[1];
-                
-                return downloadImage((String) imageView.getTag());
-            }
-            
-            @Override
-            protected void onPostExecute(Bitmap result) {
-                if (result != null) {
-                    result = Utils.getDropShadow3(result);
-                    imageView.setImageBitmap(result);
-                    pB.setVisibility(View.INVISIBLE);
-                }
-                else {
-                    // TODO: mostrare pulsante TAP TO REFRESH
-                }
-            }
-            
-            private Bitmap downloadImage(String url) {
-                URL myUrl = null;
-                InputStream inputStream = null;
-                Bitmap bitmap = null;
-                try {
-                    myUrl = new URL(url);
-                    inputStream = (InputStream) myUrl.getContent();
-                    bitmap = BitmapFactory.decodeStream(inputStream);
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                    bitmap = null;
-                }
-                
-                return bitmap;
-            }
-            
         }
     }
 }

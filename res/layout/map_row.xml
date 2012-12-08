@@ -14,8 +14,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-
-    <ImageView
+        
+    <it.wm.CachedAsyncImageView
         android:id="@+id/mapImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,13 +23,6 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:layout_centerInParent="true" />
-
-    <ProgressBar
-        android:id="@+id/mapImageProgress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
 
     <Button
         android:id="@+id/refreshButton"
