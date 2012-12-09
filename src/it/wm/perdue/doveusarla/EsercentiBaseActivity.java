@@ -207,7 +207,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         MenuItem wwMenuItem = menu.findItem(R.id.ww);
         // wwMenuItem.setTitle(wwMap.get("label"));
         
-        String dove = Utils.getPreferenceString(getApplicationContext(), WHERE, "Qui");
+        String dove = Utils.getPreferenceString(getApplicationContext(), WHERE, "Qui vicino");
         if (dove.equals("Qui"))
             dove = "Qui vicino";
         
