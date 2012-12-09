@@ -117,7 +117,7 @@ public class EsercenteRistorazione extends Esercente {
     }
     
     public String getPranzoString() {
-        String pranzo = " <font color=\"red\">Pranzo: </font>";
+        String pranzo = "<font color=\"red\">Pranzo: </font>";
         
         if (this.isLunMattina())
             pranzo = pranzo.concat("Lun ");
@@ -134,7 +134,7 @@ public class EsercenteRistorazione extends Esercente {
         if (this.isDomMattina())
             pranzo = pranzo.concat("Dom ");
         
-        if (pranzo.length() == 8)
+        if (pranzo.length() == 33)
             pranzo = null;
         
         return pranzo;
@@ -142,7 +142,7 @@ public class EsercenteRistorazione extends Esercente {
     
     public String getCenaString() {
         
-        String cena = " <font color=\"red\">Cena: </font>";
+        String cena = "<font color=\"red\">Cena: </font>";
         
         if (this.isLunMattina())
             cena = cena.concat("Lun ");
@@ -159,7 +159,7 @@ public class EsercenteRistorazione extends Esercente {
         if (this.isDomMattina())
             cena = cena.concat("Dom ");
         
-        if (cena.length() == 6)
+        if (cena.length() == 31)
             cena = null;
         
         return cena;
