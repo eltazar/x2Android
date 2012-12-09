@@ -131,15 +131,15 @@ public final class Utils {
         
         String day = getPreferenceString(context, "when", "Qui");
         
-        if (day.equals("Lunedi")) {
+        if (day.equals("Lunedì")) {
             return "Lunedi";
-        } else if (day.equals("Martedi")) {
+        } else if (day.equals("Martedì")) {
             return "Martedi";
-        } else if (day.equals("Mercoledi")) {
+        } else if (day.equals("Mercoledì")) {
             return "Mercoledi";
-        } else if (day.equals("Giovedi")) {
+        } else if (day.equals("Giovedì")) {
             return "Giovedi";
-        } else if (day.equals("Venerdi")) {
+        } else if (day.equals("Venerdì")) {
             return "Venerdi";
         } else if (day.equals("Sabato")) {
             return "Sabato";
