@@ -43,6 +43,7 @@ public class ContattiActivity extends SherlockListActivity {
         
         WebView webView = (WebView) findViewById(R.id.perdueWebView);
         webView.loadUrl("http://www.cartaperdue.it/partner/PD.html");
+        webView.getSettings().setTextZoom(22);
         
     }
     
