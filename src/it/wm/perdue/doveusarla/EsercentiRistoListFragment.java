@@ -71,8 +71,8 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
         postMap.put("categ", category.toLowerCase().replace(" ", ""));
         postMap.put("prov", Utils.getPreferenceString(getActivity(), "where", "Qui"));
         postMap.put("giorno", Utils.getWeekDay(getActivity()));
-        postMap.put("lat", "41.801007");
-        postMap.put("long", "12.454273");
+        postMap.put("lat", "" + latitude);
+        postMap.put("long", "" + longitude);
         postMap.put("ordina", sorting);
         postMap.put("from", "" + 0);
         postMap.put("filtro", this.filter);

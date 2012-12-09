@@ -56,6 +56,9 @@ public class EsercentiListFragment extends SherlockListFragment implements
     protected JSONListAdapter<? extends Esercente> searchAdapter    = null;
     private Parcelable                             listState        = null;
     
+    protected double                               latitude         = 0.0;
+    protected double                               longitude        = 0.0;
+    
     // problema: perché al primo avvio di una categoria stampa due volte il log
     // SORTING ? :|
     
@@ -87,8 +90,13 @@ public class EsercentiListFragment extends SherlockListFragment implements
         postMap.put("categ", category.toLowerCase());
         postMap.put("prov", Utils.getPreferenceString(getActivity(), "where", "Qui"));
         postMap.put("giorno", Utils.getWeekDay(getActivity()));
-        postMap.put("lat", "41.801007");
-        postMap.put("long", "12.454273");
+        
+        Log.d("LocationModule",
+                " FRAGMENT LAT = " + latitude + " LONG = "
+                        + longitude);
+        
+        postMap.put("lat", "" + latitude);
+        postMap.put("long", "" + longitude);
         postMap.put("filtro", filter);
         postMap.put("ordina", sorting);
         onCreateAdapters();
@@ -341,21 +349,37 @@ public class EsercentiListFragment extends SherlockListFragment implements
     }
     
     public void onChangeWhereWhenFilter() {
-        postMap = new HashMap<String, String>();
-        postMap.put("request", "fetch");
-        postMap.put("categ", category.toLowerCase());
-        postMap.put("prov", Utils.getPreferenceString(getActivity(), "where", "Qui"));
-        postMap.put("giorno", Utils.getWeekDay(getActivity()));
-        postMap.put("lat", "41.801007");
-        postMap.put("long", "12.454273");
-        postMap.put("ordina", sorting);
-        postMap.put("from", "" + 0);
-        postMap.put("filtro", this.filter);
-        adapter.clear();
-        setListAdapter(adapter);
-        // Log.d("BLA", "4) postMap is: " + postMap);
-        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
-                postMap, TAG_NORMAL);
+        try {
+            postMap = new HashMap<String, String>();
+            postMap.put("request", "fetch");
+            postMap.put("categ", category.toLowerCase());
+            
+            postMap.put("prov", Utils.getPreferenceString(getActivity(), "where",
+                    "Qui"));
+            postMap.put("giorno", Utils.getWeekDay(getActivity()));
+            
+            postMap.put("lat", "" + latitude);
+            postMap.put("long", "" + longitude);
+            postMap.put("ordina", sorting);
+            postMap.put("from", "" + 0);
+            postMap.put("filtro", this.filter);
+            adapter.clear();
+            setListAdapter(adapter);
+            Log.d("AAA", " on change where when postMap is: " + postMap);
+            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
+                    postMap, TAG_NORMAL);
+        } catch (NullPointerException e) {
+            // TODO Auto-generated catch block
+            Log.d("AA", "CAZZO");
+        }
+    }
+    
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+    
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
     
     private static class EsercenteJSONListAdapter extends JSONListAdapter<Esercente> {

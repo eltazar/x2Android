@@ -2,6 +2,10 @@
 package it.wm.perdue.doveusarla;
 
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -40,22 +44,53 @@ import java.util.List;
 public class EsercentiBaseActivity extends SherlockFragmentActivity implements OnQueryTextListener,
         OnNavigationListener, ChangeDoveQuandoDialogListener {
     
-    private static final String   DEBUG_TAG      = "EsercentiBaseActivity";
-    private String                category       = "";
+    private static final String   DEBUG_TAG        = "EsercentiBaseActivity";
+    private String                category         = "";
     private EsercentiPagerAdapter pagerAdapter;
-    private String[]              mealHourFilter = new String[] {
+    private String[]              mealHourFilter   = new String[] {
             "Tutti",
             "Pranzo",
             "Cena"
-                                                 };
-    private Integer[]             icons          = {
+                                                   };
+    private Integer[]             icons            = {
             R.drawable.filter,
             R.drawable.sun, R.drawable.moon
-                                                 };
+                                                   };
     
-    private Menu                  menu           = null;
-    private static final String   WHERE          = "where";
-    private static final String   WHEN           = "when";
+    private Menu                  menu             = null;
+    private static final String   WHERE            = "where";
+    private static final String   WHEN             = "when";
+    
+    private String                providerId       = LocationManager.GPS_PROVIDER;
+    private LocationListener      locationListener = new LocationListener() {
+                                                       @Override
+                                                       public void onStatusChanged(
+                                                               String provider, int status,
+                                                               Bundle extras) {
+                                                           if (status == LocationProvider.AVAILABLE) {
+                                                               
+                                                           } else {
+                                                               
+                                                           }
+                                                       }
+                                                       
+                                                       @Override
+                                                       public void onProviderEnabled(
+                                                               String provider) {
+                                                           
+                                                       }
+                                                       
+                                                       @Override
+                                                       public void onProviderDisabled(
+                                                               String provider) {
+                                                       }
+                                                       
+                                                       @Override
+                                                       public void onLocationChanged(
+                                                               Location location) {
+                                                           updateLocationData(location);
+                                                       }
+                                                   };
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,7 +135,80 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
              */
             bar.setListNavigationCallbacks(adapter, this);
         }
+        
     }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocationManager locationManager = (LocationManager) getSystemService(
+                LOCATION_SERVICE
+                );
+        LocationProvider provider = locationManager.getProvider(providerId);
+        if (provider == null) {
+        } else {
+            boolean gpsEnabled = locationManager.isProviderEnabled(providerId);
+            if (gpsEnabled) {
+            } else {
+            }
+            Location location = locationManager.getLastKnownLocation(
+                    LocationManager.GPS_PROVIDER
+                    );
+            if (location != null) {
+                Log.d("AA", "ON RESUME");
+                
+                // appena creo/riesumo l'activity vedo se ho dati gps pronti e
+                // aggiorno i fragment
+                // così la query sarà con quei valori gps
+                for (int i = 0; i < pagerAdapter.getCount(); i++) {
+                    EsercentiListFragment f = (EsercentiListFragment)
+                            pagerAdapter.getItem(i);
+                    f.setLatitude(location.getLatitude());
+                    f.setLongitude(location.getLongitude());
+                }
+            }
+            locationManager.requestLocationUpdates(providerId, 5, 5000, locationListener);
+        }
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocationManager locationManager = (LocationManager) getSystemService(
+                LOCATION_SERVICE
+                );
+        locationManager.removeUpdates(locationListener);
+    }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        locationListener = null;
+    }
+    
+    /* *** BEGIN: Aggiornamento coordinate gps **************** */
+    
+    private void updateLocationData(Location location) {
+        
+        // ricevuti nuovi dati gps aggiorno le coordinate del fragment e lancio
+        // la query
+        
+        Log.d("AA", "UPDATE LOCATION DATA");
+        
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        Log.d("VVV", " base activity LAT = " + latitude + " LONG =" + longitude);
+        for (int i = 0; i < pagerAdapter.getCount(); i++) {
+            EsercentiListFragment f = (EsercentiListFragment)
+                    pagerAdapter.getItem(i);
+            
+            f.setLatitude(latitude);
+            f.setLongitude(longitude);
+            f.onChangeWhereWhenFilter();
+        }
+    }
+    
+    /* *** END: Aggiornamento coordinate gps **************** */
     
     /* *** BEGIN: OptionsMenu Methods **************** */
     
