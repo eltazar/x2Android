@@ -111,7 +111,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         // mSearchView.setOnCloseListener(this);
         
         menu.findItem(R.id.ww).setTitle(Utils.getPreferenceString(getApplicationContext(),
-                WHERE, "Qui") + "-" + Utils.getPreferenceString(getApplicationContext(),
+                WHERE, "Qui vicino") + "-" + Utils.getPreferenceString(getApplicationContext(),
                 WHEN, "Oggi"));
         
         setupSearchView(menu);
@@ -206,7 +206,12 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         
         MenuItem wwMenuItem = menu.findItem(R.id.ww);
         // wwMenuItem.setTitle(wwMap.get("label"));
-        wwMenuItem.setTitle(Utils.getPreferenceString(getApplicationContext(), WHERE, "Qui")
+        
+        String dove = Utils.getPreferenceString(getApplicationContext(), WHERE, "Qui");
+        if (dove.equals("Qui"))
+            dove = "Qui vicino";
+        
+        wwMenuItem.setTitle(dove
                 + "-"
                 + Utils.getPreferenceString(getApplicationContext(), WHEN, "Oggi"));
         
