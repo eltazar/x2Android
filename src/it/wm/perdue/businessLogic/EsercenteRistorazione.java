@@ -117,23 +117,22 @@ public class EsercenteRistorazione extends Esercente {
     }
     
     public String getPranzoString() {
-        
-        String pranzo = "Pranzo: ";
+        String pranzo = " <font color=\"red\">Pranzo: </font>";
         
         if (this.isLunMattina())
-            pranzo.concat("Lun ");
+            pranzo = pranzo.concat("Lun ");
         if (this.isMarMattina())
-            pranzo.concat("Mar ");
+            pranzo = pranzo.concat("Mar ");
         if (this.isMerMattina())
-            pranzo.concat("Merc");
+            pranzo = pranzo.concat("Merc ");
         if (this.isGioMattina())
-            pranzo.concat("Gio");
+            pranzo = pranzo.concat("Gio ");
         if (this.isVenMattina())
-            pranzo.concat("Ven");
+            pranzo = pranzo.concat("Ven ");
         if (this.isSabMattina())
-            pranzo.concat("Sab");
+            pranzo = pranzo.concat("Sab ");
         if (this.isDomMattina())
-            pranzo.concat("Dom");
+            pranzo = pranzo.concat("Dom ");
         
         if (pranzo.length() == 8)
             pranzo = null;
@@ -143,22 +142,22 @@ public class EsercenteRistorazione extends Esercente {
     
     public String getCenaString() {
         
-        String cena = "Cena: ";
+        String cena = " <font color=\"red\">Cena: </font>";
         
         if (this.isLunMattina())
-            cena.concat("Lun ");
+            cena = cena.concat("Lun ");
         if (this.isMarMattina())
-            cena.concat("Mar ");
+            cena = cena.concat("Mar ");
         if (this.isMerMattina())
-            cena.concat("Merc");
+            cena = cena.concat("Merc ");
         if (this.isGioMattina())
-            cena.concat("Gio");
+            cena = cena.concat("Gio ");
         if (this.isVenMattina())
-            cena.concat("Ven");
+            cena = cena.concat("Ven ");
         if (this.isSabMattina())
-            cena.concat("Sab");
+            cena = cena.concat("Sab ");
         if (this.isDomMattina())
-            cena.concat("Dom");
+            cena = cena.concat("Dom ");
         
         if (cena.length() == 6)
             cena = null;
