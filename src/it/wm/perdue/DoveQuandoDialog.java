@@ -92,11 +92,15 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
                     public void onClick(DialogInterface dialog, int id) {
                         // salvo le impostazioni selezionate se la selezione non
                         // è vuota
-                        Log.d("XX", " ### WHERE ->  : " + where + " WHEN -> " + when);
+                        Log.d("uu", " ### WHERE ->  : " + where + " WHEN -> " + when);
                         if (!where.equals(""))
                             Utils.setPreferenceString(getActivity(), WHERE, where);
+                        else
+                            Utils.setPreferenceString(getActivity(), WHERE, "Qui");
                         if (!when.equals(""))
                             Utils.setPreferenceString(getActivity(), WHEN, when);
+                        else
+                            Utils.setPreferenceString(getActivity(), WHEN, "Oggi");
                         mListener.onSaveDoveQuandoDialog();
                         dismiss();
                     }
