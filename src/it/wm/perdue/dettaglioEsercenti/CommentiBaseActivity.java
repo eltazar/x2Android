@@ -47,7 +47,7 @@ public class CommentiBaseActivity extends SherlockFragmentActivity {
                 | ActionBar.DISPLAY_SHOW_HOME
                 | ActionBar.DISPLAY_SHOW_TITLE);
         
-        // bar.setTitle(eseInsegna);
+        bar.setTitle("Commenti");
         
         if (savedInstanceState != null)
             return;

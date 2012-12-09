@@ -12,6 +12,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
@@ -44,7 +45,6 @@ public class CommentiListFragment extends SherlockListFragment implements
                 Commento[].class);
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
-        
     }
     
     @Override
@@ -118,7 +118,7 @@ public class CommentiListFragment extends SherlockListFragment implements
     public void onListItemClick(ListView l, View v, int position, long id) {
         
         // TODO: quando si scrolla la textView viene riciclata e quindi altre
-        // righe appaiono expanded anche se nn si è fatto click sopra
+        // righe appaiono expanded anche se nn si ÔøΩ fatto click sopra
         
         TextView row = (TextView) v.findViewById(R.id.commentoDemo);
         // lastTouchedRowTextView = row;
@@ -138,6 +138,13 @@ public class CommentiListFragment extends SherlockListFragment implements
         setListShown(true);
         downloading--;
         Log.d(DEBUG_TAG, "Donwloading " + downloading);
+        
+        if (adapter.isEmpty()) {
+            CharSequence text = "Spiacenti, nessun commento disponibile";
+            Toast toast = Toast.makeText(getActivity(), text,
+                    Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
     
     @Override
