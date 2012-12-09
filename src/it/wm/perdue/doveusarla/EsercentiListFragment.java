@@ -334,7 +334,7 @@ public class EsercentiListFragment extends SherlockListFragment implements
         
         Log.d("CCC", "view id = " + v.getId());
         
-        if (v.getId() == 1999) {
+        if (v.getId() == FOOTER_VIEW_ID) {
             return;
         }
         
