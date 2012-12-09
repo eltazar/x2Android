@@ -11,7 +11,8 @@
         android:text="infoCell" 
         android:paddingTop="5dp"
         android:paddingLeft="5dp"
-        android:paddingBottom="5dp"/>
+        android:paddingBottom="5dp"
+        android:lineSpacingMultiplier="1.1"/>
     
             <TextView
             android:id="@+id/cellKind"

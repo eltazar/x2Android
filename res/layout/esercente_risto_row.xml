@@ -50,14 +50,15 @@
         android:maxLength="35"
         android:text="Address" />
 
-    
      <TextView
-            android:id="@+id/price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/address"
-            android:layout_below="@+id/address"
-            android:text="prezzo" />
+         android:id="@+id/price"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignLeft="@id/address"
+         android:layout_below="@+id/address"
+         android:text="prezzo"
+         android:textStyle="bold" 
+         android:textColor="#7F7F7F"/>
      
       <TextView
         android:id="@+id/distance"
