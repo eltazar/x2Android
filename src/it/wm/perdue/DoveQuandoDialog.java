@@ -75,6 +75,7 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
                     DoveQuandoDialog.this.onValueChange(pickerWhere, newVal);
                 }
             });
+            pickerWhere.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
             final NumberPicker pickerWhen = (NumberPicker) view.findViewById(R.id.when);
             pickerWhen.setMinValue(0);
             pickerWhen.setMaxValue(days.length - 1);
@@ -85,6 +86,7 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
                     DoveQuandoDialog.this.onValueChange(pickerWhen, newVal);
                 }
             });
+            pickerWhen.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
         }
         
         builder.setTitle("Dove e quando")
