@@ -212,8 +212,18 @@ public class CommentiListFragment extends SherlockListFragment implements
                 
                 author.setText("Inviato da "
                         + (comm.getAutore().length() == 0 ? "Anonimo" : comm.getAutore()) + " il "
-                        + (comm.getData()));
+                        + comm.getData());
                 demoComment.setText(comm.getTesto());
+                
+                if (comm.getAutore().length() == 0) {
+                    author.setText("Inviato da Anonimo il " + comm.getData());
+                }
+                else {
+                    author.setText("Inviato da " + comm.getAutore().replace("&amp;", "&") + " il "
+                            + comm.getData());
+                }
+                demoComment.setText(comm.getTesto());
+                
             }
             
             /*
