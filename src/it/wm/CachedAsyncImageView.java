@@ -129,7 +129,11 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
             Log.d(DEBUG_TAG, "Cache hit!");
             
             imageView.setImageDrawable(data);
-            progressBar.setAlpha(1.0f);
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+            }
+            else {
+                progressBar.setAlpha(1.0f);
+            }
             progressBar.setVisibility(INVISIBLE);
             /*
              * La sezione seguente risolve un "bug" (se così si può dire..) con
