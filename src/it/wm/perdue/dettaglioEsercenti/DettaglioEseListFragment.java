@@ -2,6 +2,7 @@
 package it.wm.perdue.dettaglioEsercenti;
 
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,9 +19,9 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockListFragment;
 
 import it.wm.CachedAsyncImageView;
-import it.wm.CachedAsyncImageView.Listener;
 import it.wm.HTTPAccess;
 import it.wm.perdue.R;
+import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.Esercente;
 
 public class DettaglioEseListFragment extends SherlockListFragment implements
@@ -120,14 +121,13 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
     public void onHTTPResponseReceived(String tag, String response) {
         // downloading--;
         
-        Log.d("XXX", "RISPOSTA = " + adapter);
+        Log.d("XXX", "RISPOSTA = " + response);
         
         if (tag.equals(TAG_NORMAL)) {
             // Se riceviamo un risultato non di ricerca, lo aggiungiamo sempre e
             // comunque:
             adapter.addFromJSON(response);
         }
-        
         progressDialog.dismiss();
     }
     
@@ -139,13 +139,16 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         // downloading--;
         // Log.d(DEBUG_TAG, "Donwloading " + downloading);
         progressDialog.dismiss();
-        CharSequence text = "C'Ã¨ stato un problema, riprova!";
+        CharSequence text = "C'è stato un problema, riprova!";
         Toast toast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
         toast.show();
     }
     
     /* *** END: HTTPAccess.ResponseListener ******************* */
     
+    // TODO: sistemare sto schifo che sto facendo per la fretta. soprattutto
+    // sistemare come capire chi è la cella cliccata
+    // dato che il nostro model non è mai lo stesso
     public void onListItemClick(ListView l, View v, int position, long id) {
         
         String cellKind = ((TextView) v.findViewById(R.id.cellKind)).getText().toString();
@@ -161,7 +164,44 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             intent.putExtras(extras);
             startActivity(intent);
         }
-        
+        else if (cellKind != null && cellKind.equals("mail")) {
+            Log.d("AAA", " CELLA MAIL-->" + ((TextView) v.findViewById(R.id.contactResource))
+                    .getText().toString());
+            
+            try {
+                Utils.writeEmail(((TextView) v.findViewById(R.id.contactResource))
+                        .getText().toString(), getActivity());
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(getActivity(), "Spiacenti, non ci sono client di posta installati.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if (cellKind != null && cellKind.equals("tel")) {
+            
+            Log.d("AAA", " CELLA TEL-->" + ((TextView) v.findViewById(R.id.contactResource))
+                    .getText().toString());
+            
+            try {
+                Utils.callNumber(((TextView) v.findViewById(R.id.contactResource))
+                        .getText().toString(), getActivity());
+            } catch (ActivityNotFoundException e) {
+                Log.e("helloandroid dialing example", "Call failed", e);
+                Toast.makeText(getActivity(),
+                        "Spiacenti, non è possibile chiamare il numero selezionato.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if (cellKind != null && cellKind.equals("web")) {
+            Log.d("AAA", " CELLA web -> " + ((TextView) v.findViewById(R.id.contactResource))
+                    .getText().toString());
+            try {
+                Utils.openBrowser(((TextView) v.findViewById(R.id.contactResource))
+                        .getText().toString(), getActivity());
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getActivity(), "Spiacenti, non è stato possibile aprire la pagina.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
     }
     
     protected static class DettaglioEsercenteAdapter<T extends Esercente> extends
@@ -179,6 +219,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             TextView textView = null;
             TextView contactTextView = null;
             TextView kindContactTextView = null;
+            TextView cellKind = null;
             
             Log.d("XXX", "get view madre position --> " + position);
             
@@ -221,7 +262,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                     
                     try {
                         giorniString = (esercente.getGiorniString() != null ?
-                                "<b> Giorni validit� </b>" + "<br />"
+                                "<b> Giorni validità </b>" + "<br />"
                                         + esercente.getGiorniString() + "<br />" : "");
                     } catch (NullPointerException e) {
                         Log.d(DEBUG_TAG, "eccezione in getView: " + e.getLocalizedMessage());
@@ -242,7 +283,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                     
                     textView = (TextView) v.findViewById(R.id.mapInfo);
                     textView.setText(Html.fromHtml(
-                            (esercente.getCitta() != null ? "<b>Citt�</b>" + "<br />" +
+                            (esercente.getCitta() != null ? "<b>Città</b>" + "<br />" +
                                     esercente.getCitta() + "<br />" : "")
                                     +
                                     (esercente.getZona() != null ? "<b> Zona </b>" + "<br />"
@@ -253,7 +294,6 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                                             + "<br />" + esercente.getIndirizzo() : "")));
                     
                     mapImage = (CachedAsyncImageView) v.findViewById(R.id.mapImage);
-                    
                     String urlString =
                             "http://maps.googleapis.com/maps/api/staticmap?" +
                                     "zoom=16&size=512x240&markers=size:big|color:red|" +
@@ -268,20 +308,26 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                 else if (sections.get(position).equals("tel")) {
                     contactTextView = (TextView) v.findViewById(R.id.contactResource);
                     kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
+                    cellKind = (TextView) v.findViewById(R.id.cellKind);
                     contactTextView.setText(esercente.getTelefono());
                     kindContactTextView.setText("Telefono");
+                    cellKind.setText("tel");
                 }
                 else if (sections.get(position).equals("mail")) {
                     contactTextView = (TextView) v.findViewById(R.id.contactResource);
                     kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
+                    cellKind = (TextView) v.findViewById(R.id.cellKind);
                     contactTextView.setText(esercente.getEmail());
                     kindContactTextView.setText("E-mail");
+                    cellKind.setText("mail");
                 }
                 else if (sections.get(position).equals("url")) {
                     contactTextView = (TextView) v.findViewById(R.id.contactResource);
                     kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
+                    cellKind = (TextView) v.findViewById(R.id.cellKind);
                     contactTextView.setText(esercente.getUrl());
                     kindContactTextView.setText("Sito web");
+                    cellKind.setText("web");
                 }
                 else if (sections.get(position).equals("altre")) {
                     TextView actionTextView = (TextView) v.findViewById(R.id.action);

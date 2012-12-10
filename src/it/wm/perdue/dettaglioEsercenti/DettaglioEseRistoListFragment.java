@@ -66,6 +66,7 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
             TextView textView = null;
             TextView contactTextView = null;
             TextView kindContactTextView = null;
+            TextView cellKind = null;
             
             Log.d("XXX", "get view madre position --> " + position);
             
@@ -169,28 +170,28 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                                     + esercente.getFasciaPrezzo() + "�" : "")));
                 }
                 else if (sections.get(position).equals("tel")) {
-                    Log.d("XXX", "1 contact = " + contactTextView + " kindContact = "
-                            + kindContactTextView);
                     contactTextView = (TextView) v.findViewById(R.id.contactResource);
                     kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
+                    cellKind = (TextView) v.findViewById(R.id.cellKind);
                     contactTextView.setText(esercente.getTelefono());
                     kindContactTextView.setText("Telefono");
+                    cellKind.setText("tel");
                 }
                 else if (sections.get(position).equals("mail")) {
-                    Log.d("XXX", "2 contact = " + contactTextView + " kindContact = "
-                            + kindContactTextView);
                     contactTextView = (TextView) v.findViewById(R.id.contactResource);
                     kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
+                    cellKind = (TextView) v.findViewById(R.id.cellKind);
                     contactTextView.setText(esercente.getEmail());
                     kindContactTextView.setText("E-mail");
+                    cellKind.setText("mail");
                 }
                 else if (sections.get(position).equals("url")) {
-                    Log.d("XXX", "3 contact = " + contactTextView + " kindContact = "
-                            + kindContactTextView);
                     contactTextView = (TextView) v.findViewById(R.id.contactResource);
                     kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
+                    cellKind = (TextView) v.findViewById(R.id.cellKind);
                     contactTextView.setText(esercente.getUrl());
                     kindContactTextView.setText("Sito web");
+                    cellKind.setText("web");
                 }
                 else if (sections.get(position).equals("altre")) {
                     Log.d("XXX", " riga altro");
