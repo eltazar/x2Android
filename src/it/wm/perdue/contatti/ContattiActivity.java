@@ -17,6 +17,7 @@ import it.wm.perdue.R;
 
 public class ContattiActivity extends SherlockListActivity {
     
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +43,7 @@ public class ContattiActivity extends SherlockListActivity {
         setListAdapter(adapter);
         
         WebView webView = (WebView) findViewById(R.id.perdueWebView);
-        webView.loadUrl("http://www.cartaperdue.it/partner/PD.html");
-        webView.getSettings().setTextZoom(22);
+        webView.loadUrl("http://www.cartaperdue.it/partner/PD2.html");
         
     }
     
