@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Html;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -239,9 +238,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                     resource = R.layout.action_row;
                 }
                 
-                v = ((LayoutInflater) super.getContext().getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE))
-                        .inflate(resource, null);
+                v = inflater.inflate(resource, null);
             }
             
             if (esercente != null) {

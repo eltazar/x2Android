@@ -3,6 +3,7 @@ package it.wm.perdue.dettaglioEsercenti;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.widget.ArrayAdapter;
 
 import com.google.gson.Gson;
@@ -19,11 +20,13 @@ public class DettaglioJSONAdapter<T extends Esercente> extends
     ArrayList<String> sections  = null;
     Context           context   = null;
     T                 esercente = null;
+    protected LayoutInflater inflater = null;
     
     public DettaglioJSONAdapter(Context context, int resource, Class<T> clazz) {
         super(context, resource);
         this.clazz = clazz;
         this.context = context;
+        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         sections = new ArrayList<String>();
     }
     

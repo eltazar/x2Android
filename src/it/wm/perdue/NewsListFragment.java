@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -90,10 +89,7 @@ public class NewsListFragment extends EndlessListFragment
             
             View v = convertView;
             if (v == null) {
-                v = ((LayoutInflater) super.getContext().getSystemService(
-                        
-                        Context.LAYOUT_INFLATER_SERVICE))
-                        .inflate(R.layout.news_row, null);
+                v = inflater.inflate(R.layout.news_row, null);
             }
             
             Notizia str = getItem(position);
