@@ -2,11 +2,11 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/richiedi_carta"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="fill_parent" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="fill_parent"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="vertical"
@@ -21,6 +21,7 @@
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/spinnerCarta"
             android:ems="10"
             android:hint="Nome"
             android:inputType="textPersonName" >
@@ -32,6 +33,7 @@
             android:id="@+id/surname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/name"
             android:ems="10"
             android:hint="Cognome"
             android:inputType="textPersonName"
@@ -41,6 +43,7 @@
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/surname"
             android:ems="10"
             android:hint="E-mail"
             android:inputType="textEmailAddress"
@@ -50,6 +53,7 @@
             android:id="@+id/tel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/email"
             android:ems="10"
             android:hint="Numero di telefono"
             android:inputType="phone"
@@ -59,6 +63,7 @@
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/tel"
             android:gravity="right"
             android:paddingTop="10dp"
             android:text="@string/advise"
@@ -68,6 +73,8 @@
             android:id="@+id/sendBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/textView1"
+            android:layout_below="@+id/textView1"
             android:text="Invia" />
 
         <ScrollView
@@ -75,6 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
         </ScrollView>
-    </LinearLayout>
+
+    </RelativeLayout>
 
 </ScrollView>
