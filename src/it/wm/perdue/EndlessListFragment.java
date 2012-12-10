@@ -15,7 +15,7 @@ import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
-import it.wm.HTTPAccess;
+import java.util.ArrayList;
 
 /**
  * @author Gabriele "Whisky" Visconti
@@ -26,12 +26,11 @@ public abstract class EndlessListFragment extends SherlockListFragment
     private static final String DEBUG_TAG   = "EndlessListFragment";
     protected LayoutInflater    inflater    = null;
     protected ListAdapter       adapter     = null;
-    protected String            urlString   = null; 
-    protected HTTPAccess        httpAccess  = null;
     private Parcelable          listState   = null;
     private int                 downloading = 0;
     private boolean             noMoreData  = false;
     private View                footerView  = null;
+    private ArrayList<String>   dataToSave  = null;
     
     
     @Override
@@ -43,17 +42,26 @@ public abstract class EndlessListFragment extends SherlockListFragment
         footerView = inflater.inflate(R.layout.endless_list_footer, null);
         lv.addFooterView(footerView);
         lv.setOnScrollListener(this);
-        setListShown(false);
+        setListAdapter(adapter);
         
-        int nRows = 10;
         if (savedInstanceState != null) {
             listState = savedInstanceState.getParcelable("listState");
-            nRows = savedInstanceState.getInt("nRows");
-            if (nRows == 0)
-                nRows = 10;
+            dataToSave = savedInstanceState.getStringArrayList("dataToSave");
+            Log.d(DEBUG_TAG, "dataToSave è: " + dataToSave);
         }
         
-        downloadRows(0, nRows);
+        if (dataToSave == null) dataToSave = new ArrayList<String>();
+        
+        for (String data : dataToSave) {
+            restoreData(data);
+        }
+        
+        if (dataToSave.size() == 0) {
+            downloadRows(0);
+            setListShown(false);
+        } else {
+            setListShown(true);
+        }
     }
     
     @Override
@@ -65,11 +73,6 @@ public abstract class EndlessListFragment extends SherlockListFragment
         }
     }
     
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        httpAccess.setResponseListener(null);
-    }
     
     @Override
     public void onDestroyView() {
@@ -80,9 +83,8 @@ public abstract class EndlessListFragment extends SherlockListFragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (adapter.getCount() > 0) {
-            outState.putInt("nRows", adapter.getCount());
-        }
+        outState.putStringArrayList("dataToSave", dataToSave);
+        
         if (listState != null) {
             outState.putParcelable("listState", listState);
         } else {
@@ -103,13 +105,7 @@ public abstract class EndlessListFragment extends SherlockListFragment
         boolean loadMore =
                 firstVisibleItem + visibleItemCount >= totalItemCount - visibleItemCount;
         if (loadMore && downloading == 0 && !noMoreData) {
-            /*Log.d(DEBUG_TAG, "Donwload from: " + adapter.getCount());
-            HashMap<String, String> postMap = new HashMap<String, String>();
-            postMap.put("from", "" + adapter.getCount());
-            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
-            downloading++;
-            Log.d(DEBUG_TAG, "Donwloading " + downloading);*/
-            downloadRows(adapter.getCount(), -1);
+            downloadRows(adapter.getCount());
         }
     }
     
@@ -122,13 +118,18 @@ public abstract class EndlessListFragment extends SherlockListFragment
     
     protected void notifyDownloadStarted() {
         downloading++;
-        Log.d(DEBUG_TAG, "Donwloading " + downloading);
+        Log.d(DEBUG_TAG, "Donwloading +: " + downloading);
     }
     
     protected void notifyDownloadEnded() {
         downloading--;
-        Log.d(DEBUG_TAG, "Donwloading " + downloading);
+        Log.d(DEBUG_TAG, "Donwloading -: " + downloading);
     }
     
-    protected abstract void downloadRows(int from, int to);
+    protected abstract void downloadRows(int from);
+    protected abstract void restoreData(String data);
+    
+    protected void saveData(String data) {
+        dataToSave.add(data);
+    }
 }
