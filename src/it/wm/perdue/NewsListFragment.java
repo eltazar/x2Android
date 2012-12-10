@@ -18,8 +18,10 @@ import java.util.HashMap;
 
 public class NewsListFragment extends EndlessListFragment 
             implements HTTPAccess.ResponseListener {
-    private static final String     DEBUG_TAG   = "NewsFragment";
-    private HashMap<String, String> postMap     = null;
+    private static final String     DEBUG_TAG  = "NewsFragment";
+    private String                  urlString  = null;
+    private HashMap<String, String> postMap    = null;
+    private HTTPAccess              httpAccess = null;
 
     
     @Override
@@ -29,11 +31,17 @@ public class NewsListFragment extends EndlessListFragment
                 getActivity(),
                 R.layout.news_row,
                 Notizia[].class);
+        urlString = "http://www.cartaperdue.it/partner/v2.0/News.php";
         postMap = new HashMap<String, String>();
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
     }
     
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        httpAccess.setResponseListener(null);
+    }
     
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
@@ -54,7 +62,8 @@ public class NewsListFragment extends EndlessListFragment
             notifyDataEnded();
         }
         setListShown(true);
-        notifyDownloadEnded();        
+        notifyDownloadEnded();
+        saveData(response);
     }
     
     @Override
@@ -67,17 +76,19 @@ public class NewsListFragment extends EndlessListFragment
     
     
     @Override
-    protected void downloadRows(int from, int to) {
-        int nRows = to - from + 1;
-        for (int i = 0; i < nRows / 10; i++) {
-            postMap.put("from", "" + from + i * 10);
-            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
-            notifyDownloadStarted();
-        }
+    protected void downloadRows(int from) { 
+        postMap.put("from", "" + from);
+        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
+        notifyDownloadStarted();
     }
     
-   
+    @Override
+    protected void restoreData(String data) {
+        ((NewsJSONListAdapter)adapter).addFromJSON(data);
+    }
     
+    
+   
     private static class NewsJSONListAdapter extends JSONListAdapter<Notizia> {
         
         public NewsJSONListAdapter(Context context, int resource,  Class<Notizia[]> clazz) {
@@ -86,7 +97,6 @@ public class NewsListFragment extends EndlessListFragment
         
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            
             View v = convertView;
             if (v == null) {
                 v = inflater.inflate(R.layout.news_row, null);
