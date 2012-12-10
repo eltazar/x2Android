@@ -17,7 +17,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-import it.wm.perdue.contatti.ContattiActivity;
+import it.wm.perdue.contatti.InfoPerDueBaseActivity;
 import it.wm.perdue.contatti.RichiediCartaFragment;
 import it.wm.perdue.doveusarla.DoveUsarlaFragment;
 
@@ -86,14 +86,21 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = null;
         switch (item.getItemId()) {
             case android.R.id.home:
                 // NavUtils.navigateUpFromSameTask(this);
                 return true;
-            case R.id.infoMenuItem:
-                Intent intent = new Intent(this, ContattiActivity.class);
+            case R.id.infoPerDue:
+                intent = new Intent(this, InfoPerDueBaseActivity.class);
+                intent.putExtra("request", "info");
                 startActivity(intent);
                 
+                return true;
+            case R.id.contactInfo:
+                intent = new Intent(this, InfoPerDueBaseActivity.class);
+                intent.putExtra("request", "contacts");
+                startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
