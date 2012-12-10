@@ -17,6 +17,7 @@ l'immagine ( mostrare pulsante refresh o qlc del genere)
 - in android 4.x il dialog ha le righe esitabili :| 
 - mettere le immagini per cell, mail, facebook, filtri ecc
 
+--------------------
 
 * Clonare il repo
 * Dare 'git submodule init'
