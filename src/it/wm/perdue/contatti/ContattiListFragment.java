@@ -132,19 +132,19 @@ public class ContattiListFragment extends SherlockListFragment {
                     break;
                 
                 case 1:
-                    resource.setText(values[1]);
+                    resource.setText(values[position]);
                     kind.setText("Telefono");
                     break;
                 case 2:
-                    resource.setText(values[2]);
+                    resource.setText(values[position]);
                     kind.setText("E-mail");
                     break;
                 case 3:
-                    resource.setText(values[3]);
+                    resource.setText(values[position]);
                     kind.setText("Sito web");
                     break;
                 case 4:
-                    resource.setText(values[4]);
+                    resource.setText(values[position]);
                     kind.setText("Facebook");
                     break;
                 default:
@@ -152,10 +152,6 @@ public class ContattiListFragment extends SherlockListFragment {
             }
             
             return rowView;
-        }
-        
-        public int getViewTypeCount() {
-            return 2;
         }
         
         // Returns the number of types of Views that will be created ...
