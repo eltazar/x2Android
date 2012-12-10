@@ -5,6 +5,7 @@
 package it.wm.perdue;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -12,6 +13,7 @@ import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
+import android.net.Uri;
 
 import com.google.android.maps.GeoPoint;
 import com.google.gson.Gson;
@@ -249,6 +251,30 @@ public final class Utils {
         // Log.d("XXX", "STRINGA SOSTITUITA -> " + newPhone);
         return newPhone.toString();
         
+    }
+    
+    public static void callNumber(String number, Context context) {
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + number));
+        context.startActivity(callIntent);
+    }
+    
+    public static void openBrowser(String urlString, Context context) {
+        
+        if (!urlString.startsWith("http://") && !urlString.startsWith("https://"))
+            urlString = "http://" + urlString;
+        
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlString));
+        context.startActivity(browserIntent);
+    }
+    
+    public static void writeEmail(String address, Context context) {
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_EMAIL, address);
+        i.putExtra(Intent.EXTRA_SUBJECT, "Informazioni");
+        i.putExtra(Intent.EXTRA_TEXT, "");
+        context.startActivity(Intent.createChooser(i, "Invia email"));
     }
     
 }
