@@ -3,6 +3,7 @@ package it.wm.perdue;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.widget.ArrayAdapter;
 
 import com.google.gson.Gson;
@@ -14,13 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JSONListAdapter<T extends HasID> extends ArrayAdapter<T> {
+    //private static final String DEBUG_TAG = "JONListAdapter"; 
     Class<T[]>    clazz = null;
     List<Integer> ids   = null;
+    protected LayoutInflater inflater = null; 
+
     
     public JSONListAdapter(Context context, int resource, Class<T[]> clazz) {
         super(context, resource);
         this.clazz = clazz;
         this.ids = new ArrayList<Integer>();
+        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
     
     public int addFromJSON(String jsonString) throws NullPointerException {

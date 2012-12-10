@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -86,9 +85,7 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                 resource = R.layout.action_row;
             }
             
-            v = ((LayoutInflater) super.getContext().getSystemService(
-                    Context.LAYOUT_INFLATER_SERVICE))
-                    .inflate(resource, null);
+            v = inflater.inflate(resource, null);
             
             if (esercente != null) {
                 
