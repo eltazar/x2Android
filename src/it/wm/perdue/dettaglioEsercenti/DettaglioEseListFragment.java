@@ -80,7 +80,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                 + eseId;
         ((CachedAsyncImageView) detailImg.findViewById(R.id.dettaglioImg))
                 .loadImageFromURL(urlImageString);
-        lv.addHeaderView(detailImg);
+        lv.addHeaderView(detailImg, null, false);
         
         setListAdapter(adapter);
         
@@ -335,6 +335,17 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                 }
             }
             return v;
+        }
+        
+        public boolean isEnabled(int position) {
+            
+            if (sections.get(position).equals("info") || sections.get(position).equals("info") ||
+                    sections.get(position).equals("map")
+                    || sections.get(position).equals("infoRisto")) {
+                return false;
+            }
+            
+            return true;
         }
         
         @Override
