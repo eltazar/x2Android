@@ -6,9 +6,11 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="#EC7703"
+        android:padding="5dp"
+        android:textStyle="bold"
         android:text="TextView" />
 
     <WebView
