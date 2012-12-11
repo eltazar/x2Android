@@ -2,11 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res/it.wm.perdue">
     	
+    
+    <!-- background cambia il colore del pager -->
     <com.viewpagerindicator.TitlePageIndicator
         android:id="@+id/indicator"
         android:padding="10dip"
+        android:background="#CC0000"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         />
@@ -15,39 +18,5 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        />
- 
-    
-<!--<FrameLayout
-        android:id="@+id/esercentiFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />-->
-    
-  <!-- <fragment
-       android:id="@+id/esercentiFragmentDistance"
-       android:layout_width="fill_parent"
-       android:layout_height="fill_parent"
-       class="it.wm.perdue.EsercentiListFragment" >
-    </fragment>
-    
-    <fragment
-       android:id="@+id/esercentiFragmentName"
-       android:layout_width="fill_parent"
-       android:layout_height="fill_parent"
-       android:visibility="gone"
-       class="it.wm.perdue.EsercentiListFragment" >
-    </fragment>
-    
-    <fragment
-       android:id="@+id/esercentiFragmentPrice"
-       android:layout_width="fill_parent"
-       android:layout_height="fill_parent"
-       android:visibility="gone"
-       class="it.wm.perdue.EsercentiListFragment" >
-   </fragment>
-     
-     -->
-
-
-    
+        />    
 </LinearLayout>
