@@ -24,13 +24,13 @@ import java.util.ArrayList;
 public abstract class EndlessListFragment extends SherlockListFragment
         implements AbsListView.OnScrollListener {
     private static final String DEBUG_TAG   = "EndlessListFragment";
-    protected LayoutInflater    inflater    = null;
-    protected ListAdapter       adapter     = null;
-    private Parcelable          listState   = null;
-    private int                 downloading = 0;
-    private boolean             noMoreData  = false;
-    private View                footerView  = null;
-    private ArrayList<String>   dataToSave  = null;
+    protected LayoutInflater        inflater    = null;
+    protected ListAdapter           adapter     = null;
+    private   Parcelable            listState   = null;
+    private   int                   downloading = 0;
+    private   boolean               noMoreData  = false;
+    protected View                  footerView  = null;
+    private   ArrayList<String>     dataToSave  = null;
     
     
     @Override
@@ -40,13 +40,14 @@ public abstract class EndlessListFragment extends SherlockListFragment
         inflater = (LayoutInflater) getActivity()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         footerView = inflater.inflate(R.layout.endless_list_footer, null);
-        lv.addFooterView(footerView);
+        lv.addFooterView(footerView, null, false);
         lv.setOnScrollListener(this);
         setListAdapter(adapter);
         
         if (savedInstanceState != null) {
-            listState = savedInstanceState.getParcelable("listState");
-            dataToSave = savedInstanceState.getStringArrayList("dataToSave");
+            listState = savedInstanceState.getParcelable(Tags.LIST_STATE);
+            dataToSave = savedInstanceState.getStringArrayList(Tags.DATA_TO_SAVE);
+            noMoreData = savedInstanceState.getBoolean(Tags.NO_MORE_DATA);
             Log.d(DEBUG_TAG, "dataToSave è: " + dataToSave);
         }
         
@@ -56,13 +57,24 @@ public abstract class EndlessListFragment extends SherlockListFragment
             restoreData(data);
         }
         
-        if (dataToSave.size() == 0) {
-            downloadRows(0);
-            setListShown(false);
-        } else {
-            setListShown(true);
-        }
+        setupFooterAndList();
     }
+    
+    protected void setupFooterAndList() {
+        if (noMoreData) {
+            setListShown(true);
+            footerView.setVisibility(View.INVISIBLE);
+        } else {
+            footerView.setVisibility(View.VISIBLE);
+            if (dataToSave.size() == 0) {
+                downloadRows(0);
+                setListShown(false); 
+            } else {
+                setListShown(true);
+            }
+        }
+    } 
+
     
     @Override
     public void onResume() {
@@ -83,12 +95,13 @@ public abstract class EndlessListFragment extends SherlockListFragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putStringArrayList("dataToSave", dataToSave);
+        outState.putStringArrayList(Tags.DATA_TO_SAVE, dataToSave);
+        outState.putBoolean(Tags.NO_MORE_DATA, noMoreData);
         
         if (listState != null) {
-            outState.putParcelable("listState", listState);
+            outState.putParcelable(Tags.LIST_STATE, listState);
         } else {
-            outState.putParcelable("listState", getListView().onSaveInstanceState());
+            outState.putParcelable(Tags.LIST_STATE, getListView().onSaveInstanceState());
         }
         
     }
@@ -104,7 +117,7 @@ public abstract class EndlessListFragment extends SherlockListFragment
         // Fonte: http://stackoverflow.com/questions/1080811/
         boolean loadMore =
                 firstVisibleItem + visibleItemCount >= totalItemCount - visibleItemCount;
-        if (loadMore && downloading == 0 && !noMoreData) {
+        if (loadMore && (downloading == 0) && !noMoreData) {
             downloadRows(adapter.getCount());
         }
     }
@@ -126,10 +139,16 @@ public abstract class EndlessListFragment extends SherlockListFragment
         Log.d(DEBUG_TAG, "Donwloading -: " + downloading);
     }
     
+    protected void saveData(String data) {
+        dataToSave.add(data);
+    }
+    
     protected abstract void downloadRows(int from);
     protected abstract void restoreData(String data);
     
-    protected void saveData(String data) {
-        dataToSave.add(data);
+    private static class Tags {
+        public static final String LIST_STATE   = "listState";
+        public static final String DATA_TO_SAVE = "dataToSave";
+        public static final String NO_MORE_DATA = "noMoreData";
     }
 }
