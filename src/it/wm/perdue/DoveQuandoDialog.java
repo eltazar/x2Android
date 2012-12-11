@@ -55,6 +55,7 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
                     cities);
             listWhere.setAdapter(adapter);
             listWhere.setOnItemClickListener(this);
+            listWhere.setDividerHeight(0);
             
             ListView listQuando = (ListView) view.findViewById(R.id.when);
             adapter = new ArrayAdapter<String>(
@@ -63,6 +64,7 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
                     android.R.id.text1,
                     days);
             listQuando.setAdapter(adapter);
+            listQuando.setDividerHeight(0);
             listQuando.setOnItemClickListener(this);
         } else {
             final NumberPicker pickerWhere = (NumberPicker) view.findViewById(R.id.where);
