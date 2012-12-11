@@ -69,7 +69,6 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        
         ListView lv = getListView();
         LayoutInflater inflater = (LayoutInflater) getActivity()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -337,17 +336,24 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             return v;
         }
         
-        public boolean isEnabled(int position) {
-            
-            if (sections.get(position).equals("info") || sections.get(position).equals("info") ||
-                    sections.get(position).equals("map")
-                    || sections.get(position).equals("infoRisto")) {
-                return false;
-            }
-            
-            return true;
-        }
-        
+        // @Override
+        // public boolean isEnabled(int position) {
+        //
+        // if (sections.get(position).equals("info") ||
+        // sections.get(position).equals("info") ||
+        // sections.get(position).equals("map")
+        // || sections.get(position).equals("infoRisto")) {
+        // return false;
+        // }
+        // else
+        // return true;
+        // }
+        //
+        // @Override
+        // public boolean areAllItemsEnabled() {
+        // return true;
+        // }
+        //
         @Override
         protected void checkFields() {
             if (esercente.getGiorni() != null || esercente.getGiornoChiusura() != null ||
