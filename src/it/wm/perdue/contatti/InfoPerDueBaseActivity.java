@@ -35,6 +35,9 @@ public class InfoPerDueBaseActivity extends SherlockFragmentActivity {
         }
         Log.d("YYY", "REQUEST = " + request);
         
+        if (savedInstanceState != null)
+            return;
+        
         if (request.equals("info")) {
             setContentView(R.layout.contatti_list_activity);
             
