@@ -12,14 +12,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import it.wm.CachedAsyncImageView;
-import it.wm.HTTPAccess;
 import it.wm.perdue.JSONListAdapter;
 import it.wm.perdue.R;
-import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.EsercenteRistorazione;
 import it.wm.perdue.dettaglioEsercenti.DettaglioEsercenteBaseActivity;
-
-import java.util.HashMap;
 
 public class EsercentiRistoListFragment extends EsercentiListFragment {
     
@@ -62,25 +58,9 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
     }
     
     public void onChangeFilter(String f) {
-        
         this.filter = f;
-        Log.d("BLA", " cambiato filtro dentro risto = " + this.filter);
-        
-        postMap = new HashMap<String, String>();
-        postMap.put("request", "fetch");
-        postMap.put("categ", category.toLowerCase().replace(" ", ""));
-        postMap.put("prov", Utils.getPreferenceString(getActivity(), "where", "Qui"));
-        postMap.put("giorno", Utils.getWeekDay(getActivity()));
-        postMap.put("lat", "" + latitude);
-        postMap.put("long", "" + longitude);
-        postMap.put("ordina", sorting);
-        postMap.put("from", "" + 0);
-        postMap.put("filtro", this.filter);
-        //adapter.clear();
-        setListAdapter(adapter);
-        // Log.d("BLA", "4) postMap is: " + postMap);
-        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
-                postMap, Tags.TAG_NORMAL);
+        Log.d(DEBUG_TAG, " cambiato filtro dentro risto = " + this.filter);
+        onChangeWhereWhenFilter();
     }
     
     public void onListItemClick(ListView l, View v, int position, long id) {
@@ -95,18 +75,16 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
     
     private static class EsercenteRistoJSONListAdapter extends
             JSONListAdapter<EsercenteRistorazione> {
-        private String sorting = null;
-        
+        private static final String DEBUG_TAG = "EsercenteRistoJSONListAdapter";
         public EsercenteRistoJSONListAdapter(Context context, int resource,
                 Class<EsercenteRistorazione[]> clazz, String sorting) {
             super(context, resource, clazz);
-            Log.d("--------------", " RISTO ADAPTER ISTANZIATO");
-            this.sorting = sorting;
+            Log.d(DEBUG_TAG, " RISTO ADAPTER ISTANZIATO");
         }
         
         public View getView(int position, View convertView, ViewGroup parent) {
             
-            Log.d("--------------", " GET VIEW DI RISTO LIST");
+            Log.d(DEBUG_TAG, " GET VIEW DI RISTO LIST");
             
             View v = convertView;
             if (v == null) {
@@ -129,19 +107,18 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
                         + esercente.getID();
                 
                 if (caImageView != null) {
-                    Log.d("DEBUG_TAG", "esercente id  = " + esercente.getID());
+                    Log.d(DEBUG_TAG, "esercente id  = " + esercente.getID());
                     caImageView.loadImageFromURL(urlImageString);
                 }
                 
                 if (title != null) {
-                    Log.d(DEBUG_TAG, "Sorting è: " + sorting);
                     title.setText(esercente.getInsegna());
                 }
                 if (address != null) {
                     address.setText(esercente.getIndirizzo());
                 }
                 if (distance != null) {
-                    distance.setText(String.format("a %.3f km ", esercente.getDistanza()));
+                    distance.setText(String.format("a %.3fkm ", esercente.getDistanza()));
                 }
                 if (foodKind != null) {
                     foodKind.setText(String.format("Cucina: %s ", esercente.getSottoTipologia()));
