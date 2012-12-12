@@ -78,8 +78,8 @@ public class NewsListFragment extends EndlessListFragment
     @Override
     protected void downloadRows(int from) { 
         postMap.put("from", "" + from);
-        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
-        notifyDownloadStarted();
+        Boolean downloadStarted = httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
+        if (downloadStarted) notifyDownloadStarted();
     }
     
     @Override
