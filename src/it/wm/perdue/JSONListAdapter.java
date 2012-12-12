@@ -23,7 +23,7 @@ public class JSONListAdapter<T extends HasID> extends ArrayAdapter<T> {
         this.ids = new ArrayList<Integer>();
     }
     
-    public int addFromJSON(String jsonString) {
+    public int addFromJSON(String jsonString) throws NullPointerException {
         jsonString = Utils.formatJSON(jsonString);
         
         Log.d("JSONListAdapter", "JSONSTRING = " + jsonString);
