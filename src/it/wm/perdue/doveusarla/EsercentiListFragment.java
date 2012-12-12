@@ -246,33 +246,40 @@ public class EsercentiListFragment extends SherlockListFragment implements
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
         // downloading--;
-        // Log.d(DEBUG_TAG, "Donwloading " + downloading);
+        Log.d("YYY", "-------------- " + response);
         int n;
-        if (tag.equals(TAG_NORMAL)) {
-            // Se riceviamo un risultato non di ricerca, lo aggiungiamo sempre e
-            // comunque:
-            n = adapter.addFromJSON(response);
-            if (n == 0) {
-                noMoreData = true;
-                footerView.setVisibility(View.INVISIBLE);
+        
+        try {
+            if (tag.equals(TAG_NORMAL)) {
+                // Se riceviamo un risultato non di ricerca, lo aggiungiamo
+                // sempre e
+                // comunque:
+                n = adapter.addFromJSON(response);
+                if (n == 0) {
+                    noMoreData = true;
+                    footerView.setVisibility(View.INVISIBLE);
+                }
+            } else {
+                /*
+                 * Se invece riceviamo un risultato di ricerca, lo aggiungiamo
+                 * solo se siamo in modalità di ricerca, altrimenti è tempo
+                 * perso: al prossimo rientro in search mode l'adapter verrà
+                 * svuotato. Inoltre aggiungiamo i risultati solo se sono della
+                 * ricerca corrente scartando quelli di ricerche vecchie. TODO:
+                 * le connessioni delle ricerche vecchie andrebbero proprio
+                 * fermate
+                 */
+                if (state != STATE_SEARCH || !tag.equals(TAG_SEARCH + searchKey)) {
+                    return;
+                }
+                n = searchAdapter.addFromJSON(response);
+                if (n == 0) {
+                    noMoreData = true;
+                    footerView.setVisibility(View.INVISIBLE);
+                }
             }
-        } else {
-            /*
-             * Se invece riceviamo un risultato di ricerca, lo aggiungiamo solo
-             * se siamo in modalità di ricerca, altrimenti è tempo perso: al
-             * prossimo rientro in search mode l'adapter verrà svuotato.
-             * Inoltre aggiungiamo i risultati solo se sono della ricerca
-             * corrente scartando quelli di ricerche vecchie. TODO: le
-             * connessioni delle ricerche vecchie andrebbero proprio fermate
-             */
-            if (state != STATE_SEARCH || !tag.equals(TAG_SEARCH + searchKey)) {
-                return;
-            }
-            n = searchAdapter.addFromJSON(response);
-            if (n == 0) {
-                noMoreData = true;
-                footerView.setVisibility(View.INVISIBLE);
-            }
+        } catch (NullPointerException e) {
+            Log.d(DEBUG_TAG, " errore in addFromJson = " + e.getLocalizedMessage());
         }
     }
     
