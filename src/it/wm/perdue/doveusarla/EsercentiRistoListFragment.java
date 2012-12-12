@@ -32,8 +32,8 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
     public static EsercentiRistoListFragment newInstance(String sort, String categ) {
         EsercentiRistoListFragment fragment = new EsercentiRistoListFragment();
         Bundle args = new Bundle();
-        args.putString(ARGS_CATEGORY, categ.toLowerCase());
-        args.putString(ARGS_SORTING, sort.toLowerCase());
+        args.putString(Tags.ARGS_CATEGORY, categ.toLowerCase());
+        args.putString(Tags.ARGS_SORTING, sort.toLowerCase());
         fragment.setArguments(args);
         Log.d("***************", "NEW INSTANCE --> SORTING = " + fragment.sorting + " category = "
                 + fragment.category);
@@ -76,26 +76,20 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
         postMap.put("ordina", sorting);
         postMap.put("from", "" + 0);
         postMap.put("filtro", this.filter);
-        adapter.clear();
+        //adapter.clear();
         setListAdapter(adapter);
         // Log.d("BLA", "4) postMap is: " + postMap);
         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
-                postMap, TAG_NORMAL);
+                postMap, Tags.TAG_NORMAL);
     }
     
     public void onListItemClick(ListView l, View v, int position, long id) {
-        
-        if (v.getId() == FOOTER_VIEW_ID) {
-            return;
-        }
-        
         EsercenteRistorazione ese = (EsercenteRistorazione) l.getAdapter().getItem(position);
         
-        // Log.d("XXX", "cliccato item = " + ese.getID());
         Intent intent = new Intent(getActivity(), DettaglioEsercenteBaseActivity.class);
-        intent.putExtra(ESE_ID, "" + ese.getID());
-        intent.putExtra("ESE_TITLE", ese.getInsegna());
-        intent.putExtra("isRisto", true);
+        intent.putExtra(DettaglioEsercenteBaseActivity.Tags.ID,       "" + ese.getID());
+        intent.putExtra(DettaglioEsercenteBaseActivity.Tags.TITLE,    ese.getInsegna());
+        intent.putExtra(DettaglioEsercenteBaseActivity.Tags.IS_RISTO, true);
         startActivity(intent);
     }
     
@@ -154,9 +148,9 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
                 }
                 if (price != null) {
                     if (esercente.getFasciaPrezzo() == null)
-                        price.setText("-- Û");
+                        price.setText("Prezzo non disponibile");
                     else
-                        price.setText(String.format("%s Û: ", esercente.getFasciaPrezzo()));
+                        price.setText(String.format("%sâ‚¬", esercente.getFasciaPrezzo()));
                 }
             }
             return v;

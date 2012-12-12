@@ -21,10 +21,9 @@ public class DettaglioEsercenteBaseActivity extends SherlockFragmentActivity {
     // http://www.cartaperdue.it/partner/v2.0/DettaglioEsercente.php?id=%d
     
     private static final String DEBUG_TAG  = "DettaglioBaseActivity";
-    private static final String ESE_ID     = "eseId";
-    private String              eseId      = "";
-    private String              eseInsegna = "";
-    private boolean             isRisto    = false;
+    private String              id      = "";
+    private String              insegna = "";
+    private boolean             isRisto = false;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,9 +33,9 @@ public class DettaglioEsercenteBaseActivity extends SherlockFragmentActivity {
         
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            eseId = extras.getString(ESE_ID);
-            eseInsegna = extras.getString("ESE_TITLE");
-            isRisto = extras.getBoolean("isRisto");
+            id      = extras.getString (Tags.ID);
+            insegna = extras.getString (Tags.TITLE);
+            isRisto = extras.getBoolean(Tags.IS_RISTO);
             
         }
         
@@ -45,7 +44,7 @@ public class DettaglioEsercenteBaseActivity extends SherlockFragmentActivity {
                 | ActionBar.DISPLAY_SHOW_HOME
                 | ActionBar.DISPLAY_SHOW_TITLE);
         
-        bar.setTitle(eseInsegna);
+        bar.setTitle(insegna);
         
         Fragment f = null;
         
@@ -53,10 +52,10 @@ public class DettaglioEsercenteBaseActivity extends SherlockFragmentActivity {
             return;
         
         if (isRisto) {
-            f = DettaglioEseRistoListFragment.newInstance(eseId);
+            f = DettaglioEseRistoListFragment.newInstance(id);
         }
         else {
-            f = DettaglioEseListFragment.newInstance(eseId);
+            f = DettaglioEseListFragment.newInstance(id);
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction =
@@ -94,16 +93,22 @@ public class DettaglioEsercenteBaseActivity extends SherlockFragmentActivity {
                 NavUtils.navigateUpTo(this, intent);
                 return true;
             case R.id.commenti:
-                Log.d("BBB", "cliccato pulsante commenti, eseID = " + eseId);
+                Log.d("BBB", "cliccato pulsante commenti, eseID = " + id);
                 Bundle extras = new Bundle();
                 // extras.putSerializable("notizia", (Serializable)
                 // l.getItemAtPosition(position));
                 intent = new Intent(this, CommentiBaseActivity.class);
-                extras.putString(ESE_ID, eseId);
+                extras.putString(CommentiBaseActivity.Tags.ID, id);
                 intent.putExtras(extras);
                 startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    
+    public static class Tags {
+        public static final String ID       = "id";
+        public static final String TITLE    = "title";
+        public static final String IS_RISTO = "isRisto";
     }
 }

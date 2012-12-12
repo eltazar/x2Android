@@ -53,7 +53,7 @@ public class CommentiListFragment extends SherlockListFragment implements
         
         Bundle extras = getArguments();
         if (extras != null) {
-            eseId = extras.getString("eseId");
+            eseId = extras.getString(Tags.ID);
         }
         
         ListView lv = getListView();
@@ -241,6 +241,10 @@ public class CommentiListFragment extends SherlockListFragment implements
             
             return v;
         }
+    }
+    
+    public static class Tags {
+        public static final String ID = "id";
     }
     
 }

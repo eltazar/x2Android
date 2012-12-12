@@ -25,7 +25,6 @@ import it.wm.perdue.R;
 public class CommentiBaseActivity extends SherlockFragmentActivity {
     
     private static final String DEBUG_TAG  = "DettaglioBaseActivity";
-    private static final String ESE_ID     = "eseId";
     private String              eseId      = "";
     private String              eseInsegna = "";
     private boolean             isRisto    = false;
@@ -38,7 +37,7 @@ public class CommentiBaseActivity extends SherlockFragmentActivity {
         
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            eseId = extras.getString(ESE_ID);
+            eseId = extras.getString(Tags.ID);
             eseInsegna = extras.getString("ESE_TITLE");
         }
         
@@ -55,7 +54,7 @@ public class CommentiBaseActivity extends SherlockFragmentActivity {
         // creo il fragment da mostrare e gli passo degli argomenti
         
         Bundle args = new Bundle();
-        args.putString(ESE_ID, eseId);
+        args.putString(CommentiListFragment.Tags.ID, eseId);
         
         extras = new Bundle();
         
@@ -92,5 +91,9 @@ public class CommentiBaseActivity extends SherlockFragmentActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    
+    public static class Tags {
+        public static final String ID = "id";
     }
 }

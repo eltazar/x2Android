@@ -22,28 +22,35 @@ public abstract class SearchEndlessListFragment extends EndlessListFragment {
     private   boolean               searchNoMoreData  = false;
     private   ArrayList<String>     searchDataToSave  = null;
     private   Boolean               inSearch          = false;
+    private   Boolean				previousInSearch     = false;
     private   String                query             = null;
     
    
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Boolean previousState = false;
+        super.onCreate(savedInstanceState);
         
         if (savedInstanceState != null) {
             searchDataToSave = savedInstanceState.getStringArrayList(Tags.SEARCH_DATA_TO_SAVE);
             searchNoMoreData = savedInstanceState.getBoolean(Tags.SEARCH_NO_MORE_DATA);
-            previousState    = savedInstanceState.getBoolean(Tags.IN_SEARCH);
+            previousInSearch = savedInstanceState.getBoolean(Tags.IN_SEARCH);
         }
         
         if (searchDataToSave == null) searchDataToSave = new ArrayList<String>();
         
-        for (String data : searchDataToSave) {
-            restoreData(data);
+        if (previousInSearch) for (String data : searchDataToSave) {
+            restoreSearchData(data);
         }
-        
-        changeState(previousState);
+    }
+    
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+    	super.onActivityCreated(savedInstanceState);
+    	if (previousInSearch)
+    		setSearchMode();
+    	else 
+    		setNormalMode();
     }
     
     
@@ -69,7 +76,8 @@ public abstract class SearchEndlessListFragment extends EndlessListFragment {
             boolean loadMore =
                     firstVisibleItem + visibleItemCount >= totalItemCount - visibleItemCount;
             if (loadMore && (searchDownloading == 0) && !searchNoMoreData) {
-                    downloadSearchRows(adapter.getCount());
+                Log.d(DEBUG_TAG, "onScroll Downloading from: " + searchAdapter.getCount());
+                downloadSearchRows(searchAdapter.getCount());
             }
         }
     }
@@ -94,11 +102,10 @@ public abstract class SearchEndlessListFragment extends EndlessListFragment {
         searchDataToSave.add(data);
     }
     
-    protected void purgeSearchDataToSave() {
-    	if (searchDataToSave != null)
-    		// sul config change il metodo viene richiamato 
-    		// PRIMA che il membro venga inizializzato
-    		searchDataToSave.clear();
+    protected void resetSearchData() {
+    	searchDataToSave.clear();
+    	searchDownloading = 0;
+    	searchNoMoreData = false;
     }
     
     
@@ -106,30 +113,22 @@ public abstract class SearchEndlessListFragment extends EndlessListFragment {
         this.query = query; 
     }
     
-    protected void changeState(Boolean inSearch) {
-        if (this.inSearch == inSearch) return;
-        
-        this.inSearch = inSearch;
-        
-        if (inSearch) {
+    protected void setNormalMode() {
+    	if (!inSearch) return;
+    	inSearch = false;
+    	setListAdapter(adapter);
+        super.setupFooterAndList();
+        onStateChange(inSearch);
+    }
+    
+    protected void setSearchMode() {
+    	resetSearchData();
+        if (!inSearch) {
+        	inSearch = true;
             setListAdapter(searchAdapter);
-            if (searchNoMoreData) {
-                setListShown(true);
-                footerView.setVisibility(View.INVISIBLE);
-            } else {
-                footerView.setVisibility(View.VISIBLE);
-                if (searchDataToSave.size() == 0) {
-                    downloadSearchRows(0);
-                    setListShown(false); 
-                } else {
-                    setListShown(true);
-                }
-            }
-        } else {
-            setListAdapter(adapter);
-            super.setupFooterAndList();
-        } 
-        
+            footerView.setVisibility(View.VISIBLE);
+            setListShown(false);   
+        }
         onStateChange(inSearch);
     }
     
