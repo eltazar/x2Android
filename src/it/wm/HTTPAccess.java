@@ -60,7 +60,7 @@ public class HTTPAccess implements DownloaderTask.DownloadListener {
      *            completed successfully or with error. If <code>null</code> the
      *            connection status won't be notified.
      */
-    public void startHTTPConnection(String urlString, Method method,
+    public Boolean startHTTPConnection(String urlString, Method method,
             HashMap<String, String> postMap, String tag) {
         int httpMethod;
         if (method == Method.POST) {
@@ -77,7 +77,9 @@ public class HTTPAccess implements DownloaderTask.DownloadListener {
             DownloaderTask task = new DownloaderTask();
             task.setListener(this);
             task.execute(params);
+            return true;
         }
+        return false;
     }
     
     /* *** BEGIN: DownloaderTask.ResponseListener **************** */
