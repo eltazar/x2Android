@@ -6,7 +6,7 @@
           android:showAsAction="ifRoom|collapseActionView" />
          <item android:id="@+id/commenti"
           android:title="Commenti"
-          android:showAsAction="ifRoom|collapseActionView" android:icon="@drawable/comment"/>
+          android:showAsAction="ifRoom|collapseActionView" android:icon="@drawable/ic_action_comment"/>
     
     <!--   <item
     android:showAsAction="always"
