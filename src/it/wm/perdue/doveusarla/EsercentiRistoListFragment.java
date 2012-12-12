@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -17,19 +16,14 @@ import it.wm.perdue.R;
 import it.wm.perdue.businessLogic.EsercenteRistorazione;
 import it.wm.perdue.dettaglioEsercenti.DettaglioEsercenteBaseActivity;
 
-public class EsercentiRistoListFragment extends EsercentiListFragment {
-    
+public class EsercentiRistoListFragment extends EsercentiListFragment { 
     private static final String DEBUG_TAG = "EsercentiRistoListFragment";
-    
-    // Gestione dello stato della lista:
-    // protected EsercenteRistoJSONListAdapter adapter = null;
-    // protected EsercenteRistoJSONListAdapter searchAdapter = null;
-    
+        
     public static EsercentiRistoListFragment newInstance(String sort, String categ) {
         EsercentiRistoListFragment fragment = new EsercentiRistoListFragment();
         Bundle args = new Bundle();
         args.putString(Tags.ARGS_CATEGORY, categ.toLowerCase());
-        args.putString(Tags.ARGS_SORTING, sort.toLowerCase());
+        args.putString(Tags.ARGS_SORTING,  sort.toLowerCase());
         fragment.setArguments(args);
         Log.d("***************", "NEW INSTANCE --> SORTING = " + fragment.sorting + " category = "
                 + fragment.category);
@@ -59,7 +53,7 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
     
     public void onChangeFilter(String f) {
         this.filter = f;
-        Log.d(DEBUG_TAG, " cambiato filtro dentro risto = " + this.filter);
+        Log.d(DEBUG_TAG, "cambiato filtro dentro risto = " + this.filter);
         onChangeWhereWhenFilter();
     }
     
@@ -79,27 +73,24 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
         public EsercenteRistoJSONListAdapter(Context context, int resource,
                 Class<EsercenteRistorazione[]> clazz, String sorting) {
             super(context, resource, clazz);
-            Log.d(DEBUG_TAG, " RISTO ADAPTER ISTANZIATO");
+            Log.d(DEBUG_TAG, "RISTO ADAPTER ISTANZIATO");
         }
         
         public View getView(int position, View convertView, ViewGroup parent) {
-            
-            Log.d(DEBUG_TAG, " GET VIEW DI RISTO LIST");
+            Log.d(DEBUG_TAG, "GET VIEW DI RISTO LIST");
             
             View v = convertView;
             if (v == null) {
-                v = ((LayoutInflater) super.getContext().getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE))
-                        .inflate(R.layout.esercente_risto_row, null);
+                v = inflater.inflate(R.layout.esercente_risto_row, null);
             }
             
             EsercenteRistorazione esercente = getItem(position);
             if (esercente != null) {
-                TextView title = (TextView) v.findViewById(R.id.eseTitle);
-                TextView address = (TextView) v.findViewById(R.id.address);
+                TextView title    = (TextView) v.findViewById(R.id.eseTitle);
+                TextView address  = (TextView) v.findViewById(R.id.address);
                 TextView distance = (TextView) v.findViewById(R.id.distance);
                 TextView foodKind = (TextView) v.findViewById(R.id.kindFood);
-                TextView price = (TextView) v.findViewById(R.id.price);
+                TextView price    = (TextView) v.findViewById(R.id.price);
                 CachedAsyncImageView caImageView = (CachedAsyncImageView) v
                         .findViewById(R.id.eseImage);
                 

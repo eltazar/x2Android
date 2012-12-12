@@ -26,7 +26,7 @@ import java.util.HashMap;
 
 public class EsercentiListFragment extends SearchEndlessListFragment
 		implements HTTPAccess.ResponseListener  {
-    private static String				DEBUG_TAG        = "EsercentiListFragment";
+    private static String				    DEBUG_TAG        = "EsercentiListFragment";
     private   Boolean						activityCreated  = false;
     private   Boolean						areWeRestoring   = false;
     protected String                        category         = "";
