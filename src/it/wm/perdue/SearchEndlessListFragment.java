@@ -22,7 +22,7 @@ public abstract class SearchEndlessListFragment extends EndlessListFragment {
     private   boolean               searchNoMoreData  = false;
     private   ArrayList<String>     searchDataToSave  = null;
     private   Boolean               inSearch          = false;
-    private   Boolean				previousInSearch     = false;
+    private   Boolean				previousInSearch  = false;
     private   String                query             = null;
     
    
