@@ -53,8 +53,8 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
             "Cena"
                                                    };
     private Integer[]             icons            = {
-            R.drawable.filter,
-            R.drawable.sun, R.drawable.moon
+            R.drawable.ic_action_filter,
+            R.drawable.ic_action_sun, R.drawable.ic_action_moon
                                                    };
     
     private Menu                  menu             = null;
