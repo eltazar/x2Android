@@ -38,13 +38,17 @@ public abstract class EndlessListFragment extends SherlockListFragment
     	// TODO Auto-generated method stub
     	super.onCreate(savedInstanceState);
     	inflater = (LayoutInflater) getActivity()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    			.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     	footerView = inflater.inflate(R.layout.endless_list_footer, null);
+    	if (footerView == null) {
+    		Log.d(DEBUG_TAG, "footerView è null");
+    	} else 
+    		Log.d(DEBUG_TAG, "footerView non è null");
     	
     	if (savedInstanceState != null) {
-            listState = savedInstanceState.getParcelable(Tags.LIST_STATE);
-            dataToSave = savedInstanceState.getStringArrayList(Tags.DATA_TO_SAVE);
-            noMoreData = savedInstanceState.getBoolean(Tags.NO_MORE_DATA);
+            listState  = savedInstanceState.getParcelable(		Tags.LIST_STATE);
+            dataToSave = savedInstanceState.getStringArrayList(	Tags.DATA_TO_SAVE);
+            noMoreData = savedInstanceState.getBoolean(			Tags.NO_MORE_DATA);
             Log.d(DEBUG_TAG, "dataToSave è: " + dataToSave);
         }
         
@@ -147,6 +151,12 @@ public abstract class EndlessListFragment extends SherlockListFragment
     
     protected void saveData(String data) {
         dataToSave.add(data);
+    }
+    
+    protected void resetData() {
+    	dataToSave.clear();
+    	downloading = 0;
+    	noMoreData = false;
     }
     
     protected abstract void downloadRows(int from);

@@ -37,63 +37,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
- * Questa classe funge da contenitore per un fragment. Ha il compito di visualizzare i vari elementi dell'interfaccia
- * come la search bar ecc...
- * 
- * */
+ * Questa classe funge da contenitore per un fragment. Ha il compito di visualizzare i vari 
+ * elementi dell'interfaccia come la search bar ecc... 
+ */
 public class EsercentiBaseActivity extends SherlockFragmentActivity implements OnQueryTextListener,
         OnNavigationListener, ChangeDoveQuandoDialogListener {
     
+
     private static final String   DEBUG_TAG        = "EsercentiBaseActivity";
     private String                category         = "";
+    private Boolean		          inSearch		   = false;
     private EsercentiPagerAdapter pagerAdapter;
-    private String[]              mealHourFilter   = new String[] {
-            "Tutti",
-            "Pranzo",
-            "Cena"
-                                                   };
-    private Integer[]             icons            = {
-            R.drawable.ic_action_filter,
-            R.drawable.ic_action_sun, R.drawable.ic_action_moon
-                                                   };
-    
+    private String[]              mealHourFilter   = new String[] {"Tutti", "Pranzo", "Cena"};
+    private Integer[]             icons            = {R.drawable.filter, R.drawable.sun, R.drawable.moon};
     private Menu                  menu             = null;
     private static final String   WHERE            = "where";
     private static final String   WHEN             = "when";
-    
     private String                providerId       = LocationManager.GPS_PROVIDER;
     private LocationListener      locationListener = new LocationListener() {
-                                                       @Override
-                                                       public void onStatusChanged(
-                                                               String provider, int status,
-                                                               Bundle extras) {
-                                                           if (status == LocationProvider.AVAILABLE) {
-                                                               
-                                                           } else {
-                                                               
-                                                           }
-                                                       }
-                                                       
-                                                       @Override
-                                                       public void onProviderEnabled(
-                                                               String provider) {
-                                                           
-                                                       }
-                                                       
-                                                       @Override
-                                                       public void onProviderDisabled(
-                                                               String provider) {
-                                                       }
-                                                       
-                                                       @Override
-                                                       public void onLocationChanged(
-                                                               Location location) {
-                                                           updateLocationData(location);
-                                                       }
-                                                   };
+                               @Override
+                               public void onStatusChanged(
+                                       String provider, int status, Bundle extras) {
+                                   if (status == LocationProvider.AVAILABLE) {} 
+                                   else {}
+                               }
+                               
+                               @Override
+                               public void onProviderEnabled(
+                                       String provider) {
+                                   
+                               }
+                               
+                               @Override
+                               public void onProviderDisabled(
+                                       String provider) {
+                               }
+                               
+                               @Override
+                               public void onLocationChanged(
+                                       Location location) {
+                                   updateLocationData(location);
+                               }
+                           };
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	Log.d(DEBUG_TAG, "onCreate");
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.esercenti_base_activity);
@@ -121,21 +110,15 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         
         // dropDownList per il filtro pranzo-cena
         if (category.equals("Ristoranti") || category.equals("Pubs e Bar")) {
-            
-            /** Create an array adapter to populate dropdownlist */
             FilterSpinnerAdapter adapter = new FilterSpinnerAdapter(getBaseContext(),
                     android.R.layout.simple_spinner_dropdown_item, mealHourFilter, icons);
-            
-            /** Enabling dropdown list navigation for the action bar */
             bar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-            
-            /**
-             * Setting dropdown items and item navigation listener for the
-             * actionbar
-             */
             bar.setListNavigationCallbacks(adapter, this);
         }
         
+        if (savedInstanceState != null) {
+        	inSearch = savedInstanceState.getBoolean(Tags.IN_SEARCH);
+        }
     }
     
     @Override
@@ -207,11 +190,17 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
             f.onChangeWhereWhenFilter();
         }
     }
-    
     /* *** END: Aggiornamento coordinate gps **************** */
     
-    /* *** BEGIN: OptionsMenu Methods **************** */
+
+ 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+    	super.onSaveInstanceState(outState);
+    	outState.putBoolean(Tags.IN_SEARCH, inSearch);
+    }
     
+    /* *** BEGIN: OptionsMenu Methods **************** */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.esercenti_menu, menu);
@@ -244,6 +233,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
     }
     
     private void setupSearchView(Menu menu) {
+    	Log.d(DEBUG_TAG, "setupSearchView");
         SearchView mSearchView = (SearchView) menu.findItem(R.id.abSearch)
                 .getActionView();
         mSearchView.setOnQueryTextListener(this);
@@ -251,18 +241,20 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
             
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+            	inSearch = true;
                 return true;
             }
             
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 Log.d(DEBUG_TAG, "onMenuItemActionCollapse");
+                inSearch = false;
                 onQueryTextChange("");
                 return true;
             }
         });
     }
-    
     /* *** END: OptionsMenu Methods **************** */
+    
     
     /* *** BEGIN: OnQueryTextListener Methods **************** */
     @Override
@@ -288,30 +280,26 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         }
         return true;
     }
-    
     /* *** END: OnQueryTextListener Methods **************** */
+    
+    
     
     /* *** START:: OnNavigationListener **************** */
     @Override
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-        
         for (int i = 0; i < pagerAdapter.getCount(); i++) {
-            EsercentiRistoListFragment f = (EsercentiRistoListFragment)
-                    pagerAdapter.getItem(i);
+            EsercentiRistoListFragment f = (EsercentiRistoListFragment) pagerAdapter.getItem(i);
             f.onChangeFilter(mealHourFilter[itemPosition]);
         }
-        
         return false;
     }
-    
     /* *** END:: OnNavigationListener **************** */
     
-    /* *** START:: ChangeDoveQuandoDialogListener **************** */
     
+    
+    /* *** START:: ChangeDoveQuandoDialogListener **************** */
     @Override
-    public void onSaveDoveQuandoDialog() {
-        // TODO Auto-generated method stub
-        
+    public void onSaveDoveQuandoDialog() {        
         MenuItem wwMenuItem = menu.findItem(R.id.ww);
         // wwMenuItem.setTitle(wwMap.get("label"));
         
@@ -330,8 +318,10 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
             f.onChangeWhereWhenFilter();
         }
     }
-    
     /* *** END:: ChangeDoveQuandoDialogListener **************** */
+    
+    
+    
     
     private static class EsercentiPagerAdapter extends FragmentPagerAdapter implements
             IconPagerAdapter {
@@ -396,7 +386,6 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         
         @Override
         public int getCount() {
-            // Log.d(DEBUG_TAG, "getCount:" + mCount);
             return mCount;
         }
         
@@ -409,6 +398,11 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         public int getIconResId(int index) {
             return 0;
         }
+    }
+    
+    private static class Tags {
+    	private static final String IN_SEARCH = "inSearch";
+    	private static final String QUERY = "query";
     }
     
 }
