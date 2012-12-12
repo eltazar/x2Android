@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="PerDueSecondTheme" parent="@style/Theme.Sherlock.Light">
+
+    <item name="android:editTextStyle">@style/EditTextPerDueSecondTheme</item>
+
+    <item name="android:buttonStyle">@style/ButtonPerDueSecondTheme</item>
+
+    <item name="android:imageButtonStyle">@style/ImageButtonPerDueSecondTheme</item>
+
+    <item name="android:listViewStyle">@style/ListViewPerDueSecondTheme</item>
+
+    <item name="android:listViewWhiteStyle">@style/ListViewPerDueSecondTheme.White</item>
+
+    <item name="android:spinnerItemStyle">@style/SpinnerItemPerDueSecondTheme</item>
+
+  </style>
+
+</resources>
