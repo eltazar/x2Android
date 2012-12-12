@@ -34,17 +34,14 @@ public abstract class EndlessListFragment extends SherlockListFragment
     
     
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        ListView lv = getListView();
-        inflater = (LayoutInflater) getActivity()
+    public void onCreate(Bundle savedInstanceState) {
+    	// TODO Auto-generated method stub
+    	super.onCreate(savedInstanceState);
+    	inflater = (LayoutInflater) getActivity()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        footerView = inflater.inflate(R.layout.endless_list_footer, null);
-        lv.addFooterView(footerView, null, false);
-        lv.setOnScrollListener(this);
-        setListAdapter(adapter);
-        
-        if (savedInstanceState != null) {
+    	footerView = inflater.inflate(R.layout.endless_list_footer, null);
+    	
+    	if (savedInstanceState != null) {
             listState = savedInstanceState.getParcelable(Tags.LIST_STATE);
             dataToSave = savedInstanceState.getStringArrayList(Tags.DATA_TO_SAVE);
             noMoreData = savedInstanceState.getBoolean(Tags.NO_MORE_DATA);
@@ -56,7 +53,16 @@ public abstract class EndlessListFragment extends SherlockListFragment
         for (String data : dataToSave) {
             restoreData(data);
         }
-        
+    }
+    
+    
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ListView lv = getListView();
+        lv.addFooterView(footerView, null, false);
+        lv.setOnScrollListener(this);
+        setListAdapter(adapter);
         setupFooterAndList();
     }
     
