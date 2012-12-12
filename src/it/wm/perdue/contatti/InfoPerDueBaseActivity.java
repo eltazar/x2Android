@@ -1,16 +1,20 @@
 
 package it.wm.perdue.contatti;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.webkit.WebView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 
+import it.wm.perdue.MainActivity;
 import it.wm.perdue.R;
 
 public class InfoPerDueBaseActivity extends SherlockFragmentActivity {
@@ -55,6 +59,18 @@ public class InfoPerDueBaseActivity extends SherlockFragmentActivity {
             bar.setTitle("Contatti");
         }
         
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = NavUtils.getParentActivityIntent(this);
+                intent.putExtra(Intent.EXTRA_TEXT, MainActivity.DOVE_USARLA_TAB_TAG);
+                NavUtils.navigateUpTo(this, intent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
     
 }
