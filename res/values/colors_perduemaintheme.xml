@@ -18,4 +18,5 @@
 
 <resources>
     <color name="pressed_perduemaintheme">#CCe66161</color>
+    <color name="main_background_color">#ffffff</color>
 </resources>

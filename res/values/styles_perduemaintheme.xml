@@ -19,6 +19,7 @@
 <resources>
 
     <style name="Theme.perduemaintheme" parent="@style/PerDueSecondTheme">
+        <item name="android:windowBackground">@color/main_background_color</item>
         <item name="actionBarItemBackground">@drawable/selectable_background_perduemaintheme</item>
         <item name="popupMenuStyle">@style/perduemaintheme_PopupMenu</item>
         <item name="dropDownListViewStyle">@style/perduemaintheme_DropDownListView</item>
