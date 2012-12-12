@@ -2,7 +2,7 @@
 
     <string name="app_name">PerDue</string>
     <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Info</string>
+    <string name="menu_settings">Informazioni</string>
     <string name="main_activity_title">PerDue</string>
 	<string name="image">Thumbnail</string>
 	<string name="loading">Caricamento&#8230;</string>
