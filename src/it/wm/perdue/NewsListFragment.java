@@ -26,11 +26,13 @@ public class NewsListFragment extends EndlessListFragment
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         adapter = new NewsJSONListAdapter(
                 getActivity(),
                 R.layout.news_row,
                 Notizia[].class);
+        super.onCreate(savedInstanceState); 
+        // Super. onCreate utilizza l'adapter in caso di config change, 
+        // quindi va richiamato dopo averlo inizializzato
         urlString = "http://www.cartaperdue.it/partner/v2.0/News.php";
         postMap = new HashMap<String, String>();
         httpAccess = new HTTPAccess();

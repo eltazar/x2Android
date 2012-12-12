@@ -24,16 +24,17 @@ public abstract class SearchEndlessListFragment extends EndlessListFragment {
     private   Boolean               inSearch          = false;
     private   String                query             = null;
     
+   
     
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Boolean previousState = false;
         
         if (savedInstanceState != null) {
             searchDataToSave = savedInstanceState.getStringArrayList(Tags.SEARCH_DATA_TO_SAVE);
             searchNoMoreData = savedInstanceState.getBoolean(Tags.SEARCH_NO_MORE_DATA);
-            previousState = savedInstanceState.getBoolean(Tags.IN_SEARCH);
+            previousState    = savedInstanceState.getBoolean(Tags.IN_SEARCH);
         }
         
         if (searchDataToSave == null) searchDataToSave = new ArrayList<String>();
@@ -94,7 +95,10 @@ public abstract class SearchEndlessListFragment extends EndlessListFragment {
     }
     
     protected void purgeSearchDataToSave() {
-        searchDataToSave.clear();
+    	if (searchDataToSave != null)
+    		// sul config change il metodo viene richiamato 
+    		// PRIMA che il membro venga inizializzato
+    		searchDataToSave.clear();
     }
     
     
@@ -127,6 +131,10 @@ public abstract class SearchEndlessListFragment extends EndlessListFragment {
         } 
         
         onStateChange(inSearch);
+    }
+    
+    public Boolean isInSearchMode() {
+    	return inSearch;
     }
     
     protected abstract void downloadSearchRows(int from);
