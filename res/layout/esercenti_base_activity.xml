@@ -9,9 +9,11 @@
     <com.viewpagerindicator.TitlePageIndicator
         android:id="@+id/indicator"
         android:padding="10dip"
-        android:background="#bababa"
+        android:background="#e8e8e8"
+        android:textColor="#7d7d7d"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
+         style="@style/Widget.MyTitlepageIndicator" 
         />
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
