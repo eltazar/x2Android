@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -219,6 +220,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             TextView contactTextView = null;
             TextView kindContactTextView = null;
             TextView cellKind = null;
+            ImageView contactImage = null;
             
             Log.d("XXX", "get view madre position --> " + position);
             
@@ -293,7 +295,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                     mapImage = (CachedAsyncImageView) v.findViewById(R.id.mapImage);
                     String urlString =
                             "http://maps.googleapis.com/maps/api/staticmap?" +
-                                    "zoom=16&size=512x240&markers=size:big|color:red|" +
+                                    "zoom=14&size=512x240&markers=size:big|color:red|" +
                                     esercente.getLatitude() +
                                     "," +
                                     esercente.getLongitude() +
@@ -309,6 +311,8 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                     contactTextView.setText(esercente.getTelefono());
                     kindContactTextView.setText("Telefono");
                     cellKind.setText("tel");
+                    contactImage = (ImageView) v.findViewById(R.id.contactImage);
+                    contactImage.setImageResource(R.drawable.ic_phone);
                 }
                 else if (sections.get(position).equals("mail")) {
                     contactTextView = (TextView) v.findViewById(R.id.contactResource);
@@ -317,6 +321,8 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                     contactTextView.setText(esercente.getEmail());
                     kindContactTextView.setText("E-mail");
                     cellKind.setText("mail");
+                    contactImage = (ImageView) v.findViewById(R.id.contactImage);
+                    contactImage.setImageResource(R.drawable.ic_mail);
                 }
                 else if (sections.get(position).equals("url")) {
                     contactTextView = (TextView) v.findViewById(R.id.contactResource);
@@ -325,6 +331,8 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                     contactTextView.setText(esercente.getUrl());
                     kindContactTextView.setText("Sito web");
                     cellKind.setText("web");
+                    contactImage = (ImageView) v.findViewById(R.id.contactImage);
+                    contactImage.setImageResource(R.drawable.ic_web);
                 }
                 else if (sections.get(position).equals("altre")) {
                     TextView actionTextView = (TextView) v.findViewById(R.id.action);
