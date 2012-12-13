@@ -7,6 +7,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import it.wm.CachedAsyncImageView;
@@ -66,6 +67,7 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
             TextView contactTextView = null;
             TextView kindContactTextView = null;
             TextView cellKind = null;
+            ImageView contactImage = null;
             
             Log.d("XXX", "get view madre position --> " + position);
             
@@ -100,7 +102,7 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                                     esercente.getInsegna()
                                     + "<br />")
                                     +
-                                    (esercente.getPranzoString() != null ? "<b>Giorni di validit�</b><br />"
+                                    (esercente.getPranzoString() != null ? "<b>Giorni di validità</b><br />"
                                             +
                                             esercente.getPranzoString() + "<br />"
                                             : "")
@@ -112,7 +114,7 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                                             +
                                             esercente.getGiornoChiusura() + "<br />"
                                             : "")
-                                    + (esercente.getNoteVarie() != null ? "<b> Condizioni</b>"
+                                    + (esercente.getNoteVarie() != null ? "<b> Condizioni di validità</b>"
                                     + "<br />"
                                     + esercente.getNoteVarie() : ""))));
                     
@@ -122,7 +124,7 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                     
                     textView = (TextView) v.findViewById(R.id.mapInfo);
                     textView.setText(Html.fromHtml(
-                            (esercente.getCitta() != null ? "<b>Citt�</b>" + "<br />" +
+                            (esercente.getCitta() != null ? "<b>Città</b>" + "<br />" +
                                     esercente.getCitta() + "<br />" : "")
                                     +
                                     (esercente.getZona() != null ? "<b> Zona </b>" + "<br />"
@@ -159,12 +161,12 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                                             esercente.getSottoTipologia() + "<br />" : "")
                             +
                             (esercente.getSpecialita() != null ?
-                                    "<b> Specialit� </b>"
+                                    "<b> Specialità </b>"
                                             + "<br />" +
                                             esercente.getSpecialita() + "<br />" : "")
                             + (esercente.getFasciaPrezzo() != null ? "<b> Prezzo medio</b>" +
                                     "<br />"
-                                    + esercente.getFasciaPrezzo() + "�" : "")));
+                                    + esercente.getFasciaPrezzo() + "€" : "")));
                 }
                 else if (sections.get(position).equals("tel")) {
                     contactTextView = (TextView) v.findViewById(R.id.contactResource);
@@ -173,6 +175,8 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                     contactTextView.setText(esercente.getTelefono());
                     kindContactTextView.setText("Telefono");
                     cellKind.setText("tel");
+                    contactImage = (ImageView) v.findViewById(R.id.contactImage);
+                    contactImage.setImageResource(R.drawable.ic_phone);
                 }
                 else if (sections.get(position).equals("mail")) {
                     contactTextView = (TextView) v.findViewById(R.id.contactResource);
@@ -181,6 +185,8 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                     contactTextView.setText(esercente.getEmail());
                     kindContactTextView.setText("E-mail");
                     cellKind.setText("mail");
+                    contactImage = (ImageView) v.findViewById(R.id.contactImage);
+                    contactImage.setImageResource(R.drawable.ic_mail);
                 }
                 else if (sections.get(position).equals("url")) {
                     contactTextView = (TextView) v.findViewById(R.id.contactResource);
@@ -189,6 +195,8 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                     contactTextView.setText(esercente.getUrl());
                     kindContactTextView.setText("Sito web");
                     cellKind.setText("web");
+                    contactImage = (ImageView) v.findViewById(R.id.contactImage);
+                    contactImage.setImageResource(R.drawable.ic_web);
                 }
                 else if (sections.get(position).equals("altre")) {
                     Log.d("XXX", " riga altro");
