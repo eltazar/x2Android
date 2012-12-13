@@ -89,7 +89,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            category = extras.getString("category");
+            category = extras.getString("category").replace(" ", "");
         }
         
         ActionBar bar = getSupportActionBar();
@@ -109,7 +109,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         pageIndicator.setViewPager(viewPager);
         
         // dropDownList per il filtro pranzo-cena
-        if (category.equals("Ristoranti") || category.equals("Pubs e Bar")) {
+        if (category.equals("Ristoranti") || category.equals("PubseBar")) {
             FilterSpinnerAdapter adapter = new FilterSpinnerAdapter(getBaseContext(),
                     android.R.layout.simple_spinner_dropdown_item, mealHourFilter, icons);
             bar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -340,7 +340,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
             super(fm);
             this.category = category;
             Log.d(DEBUG_TAG, "category " + category);
-            if (category.equals("Ristoranti") || category.equals("Pubs e Bar")) {
+            if (category.equals("Ristoranti") || category.equals("PubseBar")) {
                 CONTENT.add("Prezzo");
                 mCount++;
                 isRisto = true;

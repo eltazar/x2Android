@@ -226,6 +226,7 @@ public class EsercentiListFragment extends SearchEndlessListFragment
         startActivity(intent);
     }
     
+    @SuppressWarnings("rawtypes")
     public void onChangeWhereWhenFilter() {
         postMap.put("prov",   Utils.getPreferenceString(getActivity(), "where", "Qui"));
         postMap.put("giorno", Utils.getWeekDay(getActivity()));
