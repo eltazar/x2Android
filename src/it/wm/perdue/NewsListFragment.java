@@ -59,13 +59,20 @@ public class NewsListFragment extends EndlessListFragment
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
-        int n = ((NewsJSONListAdapter)adapter).addFromJSON(response);
+        
+        try{
+            int n = ((NewsJSONListAdapter)adapter).addFromJSON(response);
+        
         if (n == 0) {
             notifyDataEnded();
         }
         setListShown(true);
         notifyDownloadEnded();
         saveData(response);
+        }
+        catch(NullPointerException e){
+            Log.d(DEBUG_TAG,"Eccezione in list fragment ---> "+e.getLocalizedMessage());
+        }
     }
     
     @Override
