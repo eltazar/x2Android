@@ -49,7 +49,9 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
     private Boolean		          inSearch		   = false;
     private EsercentiPagerAdapter pagerAdapter;
     private String[]              mealHourFilter   = new String[] {"Tutti", "Pranzo", "Cena"};
-    private Integer[]             icons            = {R.drawable.ic_action_filter, R.drawable.ic_action_sun, R.drawable.ic_action_moon};
+    private Integer[]             icons            = { R.drawable.ic_action_filter, 
+                                                       R.drawable.ic_action_sun, 
+                                                       R.drawable.ic_action_moon };
     private Menu                  menu             = null;
     private static final String   WHERE            = "where";
     private static final String   WHEN             = "when";
