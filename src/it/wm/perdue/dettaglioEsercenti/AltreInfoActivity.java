@@ -48,41 +48,8 @@ public class AltreInfoActivity extends SherlockActivity implements HTTPAccess.Re
         // null, null);
         
         Log.d("XXX", "ESERECENTE ID = " + eseId);
-        String postData = "idesercente=" + eseId;
-        webView.postUrl(urlString, EncodingUtils.getBytes(postData, "BASE64"));
-        
-        // mHTTPService.doRequest(mmiEvent.getContentUrl(),
-        // HTTPRequest.HTTP_METHOD_POST, "gui="+mmiEvent.getData());
-        //
-        // The last parameter what i want to send as requestParameter
-        //
-        // There is a callback registered that my service pushs the received
-        // content back to. To display the content I use a handler where within
-        // I
-        // do:
-        //
-        // mWebView.loadDataWithBaseURL(BASE_URL,(String)msg.obj, "text/html",
-        // "utf-8",FAIL_URL);
-        
-        //
-        // NSString *infoUrlString =
-        // @"http://www.cartaperdue.it/partner/v2.0/UlterioriInformazioni.php";
-        // NSURL *url = [NSURL URLWithString:infoUrlString];
-        //
-        // NSString *postString = [NSString stringWithFormat:
-        // @"idesercente=%d", self.idEsercente];
-        // NSData *postData = [postString dataUsingEncoding:NSUTF8StringEncoding
-        // allowLossyConversion:YES];
-        // NSString *postLength = [NSString stringWithFormat:@"%d",[postData
-        // length]];
-        //
-        // NSMutableURLRequest *request = [NSMutableURLRequest
-        // requestWithURL:url];
-        // [request addValue:postLength forHTTPHeaderField:@"Content-Length"];
-        // [request setHTTPMethod:@"POST"];
-        // [request setHTTPBody:postData];
-        // [self.sitoWebView loadRequest:request];
-        
+
+        webView.postUrl(urlString, EncodingUtils.getBytes("idesercente="+eseId+"&appOs=android", "BASE64"));     
     }
     
     @Override
