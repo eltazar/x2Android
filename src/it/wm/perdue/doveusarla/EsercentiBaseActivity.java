@@ -209,9 +209,8 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         this.menu = menu;
         // mSearchView.setOnCloseListener(this);
         
-        menu.findItem(R.id.ww).setTitle(Utils.getPreferenceString(getApplicationContext(),
-                WHERE, "Qui vicino") + "-" + Utils.getPreferenceString(getApplicationContext(),
-                WHEN, "Oggi"));
+        menu.findItem(R.id.ww).setTitle(Utils.getPreferenceString(WHERE, "Qui vicino") 
+                                        + "-" + Utils.getPreferenceString(WHEN, "Oggi"));
         
         setupSearchView(menu);
         return true;
@@ -305,13 +304,13 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         MenuItem wwMenuItem = menu.findItem(R.id.ww);
         // wwMenuItem.setTitle(wwMap.get("label"));
         
-        String dove = Utils.getPreferenceString(getApplicationContext(), WHERE, "Qui vicino");
+        String dove = Utils.getPreferenceString(WHERE, "Qui vicino");
         if (dove.equals("Qui"))
             dove = "Qui vicino";
         
         wwMenuItem.setTitle(dove
                 + "-"
-                + Utils.getPreferenceString(getApplicationContext(), WHEN, "Oggi"));
+                + Utils.getPreferenceString(WHEN, "Oggi"));
         
         // rilancio query
         for (int i = 0; i < pagerAdapter.getCount(); i++) {

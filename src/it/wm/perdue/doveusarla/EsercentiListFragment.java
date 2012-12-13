@@ -81,8 +81,8 @@ public class EsercentiListFragment extends SearchEndlessListFragment
               
         postMap.put("request", 	"fetch");
         postMap.put("categ", 	category.toLowerCase());
-        postMap.put("prov", 	Utils.getPreferenceString(getActivity(), "where", "Qui"));
-        postMap.put("giorno", 	Utils.getWeekDay(getActivity()));
+        postMap.put("prov", 	Utils.getPreferenceString("where", "Qui"));
+        postMap.put("giorno", 	Utils.getWeekDay());
         postMap.put("lat",      "" + latitude);
         postMap.put("long",     "" + longitude);
         postMap.put("filtro", 	filter);
@@ -228,8 +228,8 @@ public class EsercentiListFragment extends SearchEndlessListFragment
     
     @SuppressWarnings("rawtypes")
     public void onChangeWhereWhenFilter() {
-        postMap.put("prov",   Utils.getPreferenceString(getActivity(), "where", "Qui"));
-        postMap.put("giorno", Utils.getWeekDay(getActivity()));
+        postMap.put("prov",   Utils.getPreferenceString("where", "Qui"));
+        postMap.put("giorno", Utils.getWeekDay());
         postMap.put("filtro", this.filter);
         ((JSONListAdapter)adapter).clear();
         resetData();

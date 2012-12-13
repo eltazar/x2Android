@@ -98,13 +98,13 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
                         // è vuota
                         Log.d("uu", " ### WHERE ->  : " + where + " WHEN -> " + when);
                         if (!where.equals(""))
-                            Utils.setPreferenceString(getActivity(), WHERE, where);
+                            Utils.setPreferenceString(WHERE, where);
                         else
-                            Utils.setPreferenceString(getActivity(), WHERE, "Qui");
+                            Utils.setPreferenceString(WHERE, "Qui");
                         if (!when.equals(""))
-                            Utils.setPreferenceString(getActivity(), WHEN, when);
+                            Utils.setPreferenceString(WHEN, when);
                         else
-                            Utils.setPreferenceString(getActivity(), WHEN, "Oggi");
+                            Utils.setPreferenceString(WHEN, "Oggi");
                         mListener.onSaveDoveQuandoDialog();
                         dismiss();
                     }
