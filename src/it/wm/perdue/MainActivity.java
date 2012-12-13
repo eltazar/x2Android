@@ -36,6 +36,8 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        Utils.setContext(this.getApplicationContext());
+        
         tabList = new ArrayList<TabDescriptor>();
         tabList.add(new TabDescriptor(DOVE_USARLA_TAB_TAG, DoveUsarlaFragment.class, "Dove Usarla"));
         tabList.add(new TabDescriptor(NEWS_TAB_TAG, NewsListFragment.class, "News"));
@@ -71,6 +73,7 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
             }
         }
     }
+    
     
     @Override
     protected void onSaveInstanceState(Bundle outState) {

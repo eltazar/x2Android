@@ -44,6 +44,7 @@ public final class Utils {
                                                                       +
                                                                       ")+"
                                                               );
+    public static Context context = null; // TODO: passare a private
     
     public static boolean checkEmail(String email) {
         return EMAIL_ADDRESS_PATTERN.matcher(email).matches();
@@ -112,14 +113,18 @@ public final class Utils {
                 .create();
     }
     
-    public static String getPreferenceString(Context context, String key, String defaultValue) {
+    public static void setContext(Context c) {
+        context = c;
+    }
+    
+    public static String getPreferenceString(String key, String defaultValue) {
         SharedPreferences settings = context.getSharedPreferences(
                 APP_PREFERENCES,
                 0);
         return settings.getString(key, defaultValue);
     }
     
-    public static void setPreferenceString(Context context, String key, String value) {
+    public static void setPreferenceString(String key, String value) {
         SharedPreferences settings = context.getSharedPreferences(
                 APP_PREFERENCES,
                 0);
@@ -129,9 +134,9 @@ public final class Utils {
         editor.commit();
     }
     
-    public static String getWeekDay(Context context) {
+    public static String getWeekDay() {
         
-        String day = getPreferenceString(context, "when", "Qui");
+        String day = getPreferenceString("when", "Qui");
         
         if (day.equals("Lunedì")) {
             return "Lunedi";
