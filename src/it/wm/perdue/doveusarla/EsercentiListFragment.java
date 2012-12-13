@@ -230,7 +230,7 @@ public class EsercentiListFragment extends SearchEndlessListFragment
         postMap.put("prov",   Utils.getPreferenceString(getActivity(), "where", "Qui"));
         postMap.put("giorno", Utils.getWeekDay(getActivity()));
         postMap.put("filtro", this.filter);
-        ((EsercenteJSONListAdapter)adapter).clear();
+        ((JSONListAdapter)adapter).clear();
         resetData();
         downloadRows(0);
 	}
