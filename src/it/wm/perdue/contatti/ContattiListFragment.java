@@ -103,7 +103,7 @@ public class ContattiListFragment extends SherlockListFragment {
             View rowView = inflater.inflate(getItemViewType(position), parent, false);
             TextView resource = null;
             TextView kind = null;
-            ImageView imageView = null;
+            ImageView contactImage = null;
             CachedAsyncImageView mapImage = null;
             
             if (position == 0) {
@@ -113,7 +113,7 @@ public class ContattiListFragment extends SherlockListFragment {
             else {
                 resource = (TextView) rowView.findViewById(R.id.contactResource);
                 kind = (TextView) rowView.findViewById(R.id.contactKind);
-                imageView = (ImageView)
+                contactImage = (ImageView)
                         rowView.findViewById(R.id.contactImage);
             }
             
@@ -126,22 +126,23 @@ public class ContattiListFragment extends SherlockListFragment {
                     mapImage.loadImageFromURL(urlString);
                     
                     TextView textView = (TextView) rowView.findViewById(R.id.mapInfo);
-                    textView.setText(Html.fromHtml("<b>Città</b>" + "<br />" + "Roma <br />"
-                            + "<b>Indirizzo</b>" + "<br />"
-                            + "Via Po 116, 00198"));
+                    textView.setText(Html.fromHtml("<b>Sede</b>" + "<br />" + "Via Po 116, 00198, Roma <br />"));
                     break;
                 
                 case 1:
                     resource.setText(values[position]);
                     kind.setText("Telefono");
+                    contactImage.setImageResource(R.drawable.ic_phone);
                     break;
                 case 2:
                     resource.setText(values[position]);
                     kind.setText("E-mail");
+                    contactImage.setImageResource(R.drawable.ic_mail);
                     break;
                 case 3:
                     resource.setText(values[position]);
                     kind.setText("Sito web");
+                    contactImage.setImageResource(R.drawable.ic_web);
                     break;
                 case 4:
                     resource.setText(values[position]);
