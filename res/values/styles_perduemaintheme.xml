@@ -16,7 +16,7 @@
      limitations under the License.
 -->
 
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.perduemaintheme" parent="@style/PerDueSecondTheme">
         <item name="android:windowBackground">@color/main_background_color</item>
@@ -91,6 +91,12 @@
         
         <item name="android:popupMenuStyle">@style/perduemaintheme_PopupMenu</item>
         <item name="android:dropDownListViewStyle">@style/perduemaintheme_DropDownListView</item>
+    </style>
+    
+  	<style
+        name="Widget.MyTitlepageIndicator">
+        <item name="footerColor">#fc4e4e</item>
+        <item name="selectedColor">#616161</item>
     </style>
 
 </resources>
