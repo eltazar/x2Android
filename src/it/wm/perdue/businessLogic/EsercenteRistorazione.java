@@ -144,19 +144,19 @@ public class EsercenteRistorazione extends Esercente {
         
         String cena = "<font color=\"red\">Cena: </font>";
         
-        if (this.isLunMattina())
+        if (this.isLunSera())
             cena = cena.concat("Lun ");
-        if (this.isMarMattina())
+        if (this.isMarSera())
             cena = cena.concat("Mar ");
         if (this.isMerMattina())
             cena = cena.concat("Merc ");
-        if (this.isGioMattina())
+        if (this.isGioSera())
             cena = cena.concat("Gio ");
-        if (this.isVenMattina())
+        if (this.isVenSera())
             cena = cena.concat("Ven ");
-        if (this.isSabMattina())
+        if (this.isSabSera())
             cena = cena.concat("Sab ");
-        if (this.isDomMattina())
+        if (this.isDomSera())
             cena = cena.concat("Dom ");
         
         if (cena.length() == 31)
