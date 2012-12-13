@@ -228,6 +228,9 @@ public class EsercentiListFragment extends SearchEndlessListFragment
     
     @SuppressWarnings("rawtypes")
     public void onChangeWhereWhenFilter() {
+        if (postMap == null) {
+            return;
+        }
         postMap.put("prov",   Utils.getPreferenceString("where", "Qui"));
         postMap.put("giorno", Utils.getWeekDay());
         postMap.put("filtro", this.filter);
