@@ -197,50 +197,49 @@ public class CommentiListFragment extends SherlockListFragment implements
         public View getView(int position, View convertView, ViewGroup parent) {
             
             View v = convertView;
+            CommentViewHolder commentViewHolder = null;
+            
             if (v == null) {
                 v = ((LayoutInflater) super.getContext().getSystemService(
                         
                         Context.LAYOUT_INFLATER_SERVICE))
                         .inflate(R.layout.commento_row, null);
+                commentViewHolder = new CommentViewHolder();
+                commentViewHolder.author = (TextView) v.findViewById(R.id.autoreData);
+                commentViewHolder.demoComment = (TextView) v.findViewById(R.id.commentoDemo);
+                v.setTag(commentViewHolder);
+            }
+            else{
+                commentViewHolder = (CommentViewHolder)v.getTag();
             }
             
             Commento comm = getItem(position);
+            
             if (comm != null) {
                 
-                TextView author = (TextView) v.findViewById(R.id.autoreData);
-                TextView demoComment = (TextView) v.findViewById(R.id.commentoDemo);
-                
-                author.setText("Inviato da "
+                commentViewHolder.author.setText("Inviato da "
                         + (comm.getAutore().length() == 0 ? "Anonimo" : comm.getAutore()) + " il "
                         + comm.getData());
-                demoComment.setText(comm.getTesto());
+                commentViewHolder.demoComment.setText(comm.getTesto());
                 
                 if (comm.getAutore().length() == 0) {
-                    author.setText("Inviato da Anonimo il " + comm.getData());
+                    commentViewHolder.author.setText("Inviato da Anonimo il " + comm.getData());
                 }
                 else {
-                    author.setText("Inviato da " + comm.getAutore().replace("&amp;", "&") + " il "
+                    commentViewHolder.author.setText("Inviato da " + comm.getAutore().replace("&amp;", "&") + " il "
                             + comm.getData());
                 }
-                demoComment.setText(comm.getTesto());
+                commentViewHolder.demoComment.setText(comm.getTesto());
                 
             }
             
-            /*
-             * titolo.text = [commento objectForKey:@"comment_content"];
-             * NSString *dateString = [Utilita dateStringFromMySQLDate:[commento
-             * objectForKey:@"comment_date"]]; if ([[commento
-             * objectForKey:@"comment_author"] length] == 0 ) { data.text =
-             * [NSString stringWithFormat:@"Inviato da Anonimo %@ il %@",
-             * [commento objectForKey:@"comment_author"], dateString]; } else {
-             * data.text = [NSString stringWithFormat:@"Inviato da %@ il %@",
-             * [commento objectForKey:@"comment_author"], dateString]; data.text
-             * = [data.text stringByReplacingOccurrencesOfString:@"&amp;"
-             * withString:@"&"]; }
-             */
-            
             return v;
         }
+    }
+    
+    static class CommentViewHolder{
+        TextView author;
+        TextView demoComment;
     }
     
     public static class Tags {
