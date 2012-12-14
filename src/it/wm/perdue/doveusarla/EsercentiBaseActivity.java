@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
@@ -243,6 +244,10 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         SearchView mSearchView = (SearchView) menu.findItem(R.id.abSearch)
                 .getActionView();
         mSearchView.setOnQueryTextListener(this);
+
+        View searchPlate = mSearchView.findViewById(R.id.abs__search_plate);
+        searchPlate.setBackgroundResource(R.drawable.texfield_search_view_holo_light); 
+
         menu.findItem(R.id.abSearch).setOnActionExpandListener(new OnActionExpandListener() {
             
             @Override
