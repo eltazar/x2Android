@@ -109,7 +109,7 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
                     address.setText(esercente.getIndirizzo());
                 }
                 if (distance != null) {
-                    distance.setText(String.format("a %.3fkm ", esercente.getDistanza()));
+                    distance.setText(String.format("a %.1fkm ", esercente.getDistanza()));
                 }
                 if (foodKind != null) {
                     foodKind.setText(String.format("Cucina: %s ", esercente.getSottoTipologia()));

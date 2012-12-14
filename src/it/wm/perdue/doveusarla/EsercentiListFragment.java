@@ -327,7 +327,7 @@ public class EsercentiListFragment extends SearchEndlessListFragment
                     address.setText(esercente.getIndirizzo());
                 }
                 if (distance != null) {
-                    distance.setText(String.format("%.3f km", esercente.getDistanza()));
+                    distance.setText(String.format("%.1f km", esercente.getDistanza()));
                 }
             }
             return v;
