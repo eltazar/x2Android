@@ -137,7 +137,9 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
         // salvo in variabili locali le scelte effettuate
         switch (view.getId()) {
             case R.id.where:
-                where = cities[position];
+                if(position == 0)
+                    where = "Qui";
+                else where = cities[position];
                 Log.d("XX", "LISTA WHERE -> oggetto : " + where);
                 break;
             case R.id.when:
