@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import it.wm.perdue.R;
 import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.Esercente;
 
@@ -78,6 +79,27 @@ public class DettaglioJSONAdapter<T extends Esercente> extends
     public void clear() {
         super.clear();
         sections.clear();
+    }
+    
+    public int getItemViewType(int position){
+        
+        int resource = 0;
+        if (sections.get(position).equals("info") || sections.get(position).equals("infoRisto")) {
+            resource = R.layout.dettaglio_info_row;
+        }
+        else if (sections.get(position).equals("map")) {
+            resource = R.layout.map_row;
+        }
+        else if (sections.get(position).equals("tel")
+                || sections.get(position).equals("mail") ||
+                sections.get(position).equals("url")) {
+            resource = R.layout.contact_row;
+        }
+        else if (sections.get(position).equals("altre")) {
+            resource = R.layout.action_row;
+        }
+        
+        return resource;
     }
     
 }
