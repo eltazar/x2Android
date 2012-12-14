@@ -2,10 +2,12 @@
 package it.wm.perdue.dettaglioEsercenti;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -22,7 +24,7 @@ import it.wm.perdue.businessLogic.Esercente;
 import java.util.ArrayList;
 
 public class DettaglioJSONAdapter<T extends Esercente> extends
-        ArrayAdapter<T> {
+        ArrayAdapter<T> implements OnClickListener {
     Class<T>          clazz     = null;
     ArrayList<String> sections  = null;
     Context           context   = null;
@@ -78,6 +80,7 @@ public class DettaglioJSONAdapter<T extends Esercente> extends
                                                 + "<br />" + esercente.getIndirizzo() : "")));
                 
                 mapImage = (CachedAsyncImageView) v.findViewById(R.id.mapImage);
+                mapImage.setOnClickListener(this);
                 String urlString =
                         "http://maps.googleapis.com/maps/api/staticmap?" +
                                 "zoom=14&size=512x240&markers=size:big|color:red|" +
@@ -196,4 +199,14 @@ public class DettaglioJSONAdapter<T extends Esercente> extends
         return resource;
     }
     
+    @Override
+    public void onClick(View v) {
+
+        switch(v.getId()){
+            case R.id.mapImage:
+                Intent intent = new Intent(v.getContext(), DettaglioEseMapActivity.class);                  
+                intent.putExtra("esercente",esercente);
+                v.getContext().startActivity(intent);
+        }
+    }
 }
