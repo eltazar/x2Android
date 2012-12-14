@@ -137,7 +137,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
             } else {
             }
             Location location = locationManager.getLastKnownLocation(
-                    LocationManager.GPS_PROVIDER
+                    LocationManager.NETWORK_PROVIDER
                     );
             if (location != null) {
                 Log.d("AA", "ON RESUME");
@@ -310,6 +310,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         // wwMenuItem.setTitle(wwMap.get("label"));
         
         String dove = Utils.getPreferenceString(WHERE, "Qui vicino");
+                
         if (dove.equals("Qui"))
             dove = "Qui vicino";
         
