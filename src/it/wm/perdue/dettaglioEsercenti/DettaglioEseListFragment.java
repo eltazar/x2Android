@@ -33,14 +33,16 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
     // Gestione dei download:
     protected HTTPAccess                                httpAccess = null;
     protected String                                    urlString  = null;
+    private ProgressDialog                              progressDialog;
     
     // Gestione dello stato della lista:
     protected DettaglioJSONAdapter<? extends Esercente> adapter    = null;
     private Parcelable                                  listState  = null;
     
+    //dati esercente
     protected String                                    eseId      = null;
+
     
-    private ProgressDialog                              progressDialog;
     
     public static DettaglioEseListFragment newInstance(String eseId) {
         DettaglioEseListFragment fragment = new DettaglioEseListFragment();
@@ -255,6 +257,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                 sections.add(0,"info");
             }
         }
+        
         
         // @Override
         // public boolean isEnabled(int position) {
