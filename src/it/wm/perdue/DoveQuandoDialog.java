@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -66,6 +67,8 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
             listQuando.setAdapter(adapter);
             listQuando.setDividerHeight(0);
             listQuando.setOnItemClickListener(this);
+            listQuando.setBackgroundColor(Color.WHITE);
+            listWhere.setBackgroundColor(Color.WHITE);
         } else {
             final NumberPicker pickerWhere = (NumberPicker) view.findViewById(R.id.where);
             pickerWhere.setMinValue(0);
