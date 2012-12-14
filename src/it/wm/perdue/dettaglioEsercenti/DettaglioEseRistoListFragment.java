@@ -7,10 +7,8 @@ import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import it.wm.CachedAsyncImageView;
 import it.wm.perdue.R;
 import it.wm.perdue.businessLogic.EsercenteRistorazione;
 
@@ -55,44 +53,14 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
         }
         
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            
-            Log.d("xxx", "getView figlia n sections = " + sections.size() +
-                    " position = "
-                    + position + " section name = " + sections.get(position));
-            
-            View v = convertView;
-            int resource = 0;
-            TextView textView = null;
-            TextView contactTextView = null;
-            TextView kindContactTextView = null;
-            TextView cellKind = null;
-            ImageView contactImage = null;
-            
-            Log.d("XXX", "get view madre position --> " + position);
-            
-            if (sections.get(position).equals("info")
-                    || sections.get(position).equals("infoRisto")) {
-                resource = R.layout.dettaglio_info_row;
-            }
-            else if (sections.get(position).equals("map")) {
-                resource = R.layout.map_row;
-            }
-            else if (sections.get(position).equals("tel")
-                    || sections.get(position).equals("mail") ||
-                    sections.get(position).equals("url")) {
-                resource = R.layout.contact_row;
-            }
-            else if (sections.get(position).equals("altre")) {
-                resource = R.layout.action_row;
-            }
-            
-            v = inflater.inflate(resource, null);
+        public View getView(int position, View v, ViewGroup parent) {
+            v = super.getView(position, v, parent);
             
             if (esercente != null) {
-                
+                TextView infoTextView = (TextView) v.findViewById(R.id.infoRow);
+            
                 if (sections.get(position).equals("info")) {
-                    textView = (TextView) v.findViewById(R.id.infoRow);
+                    
                     
                     //costruisco stringa giorni validità
                     
@@ -105,7 +73,7 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                     if(giorniValidita.equals("<b>Giorni di validità</b><br />"))
                         giorniValidita = "";
                     
-                    textView.setText(Html.fromHtml((
+                    infoTextView.setText(Html.fromHtml((
                             ("<b>"
                                     + esercente.getTipologia()
                                     + "</b> <br />"
@@ -124,38 +92,9 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                                     +" <br />"+ esercente.getNoteVarie() : ""))));
                     
                 }
-                else if (sections.get(position).equals("map")) {
-                    CachedAsyncImageView mapImage = null;
-                    
-                    textView = (TextView) v.findViewById(R.id.mapInfo);
-                    textView.setText(Html.fromHtml(
-                            (esercente.getCitta() != null ? "<b>Città</b>" + "<br />" +
-                                    esercente.getCitta() + "<br />" : "")
-                                    +
-                                    (esercente.getZona() != null ? "<b> Zona </b>" + "<br />"
-                                            + esercente.getZona()
-                                            + "<br />" : "")
-                                    +
-                                    (esercente.getIndirizzo() != null ? "<b> Indirizzo</b>"
-                                            + "<br />" + esercente.getIndirizzo() : "")));
-                    
-                    mapImage = (CachedAsyncImageView) v.findViewById(R.id.mapImage);
-                    
-                    String urlString =
-                            "http://maps.googleapis.com/maps/api/staticmap?" +
-                                    "zoom=16&size=512x240&markers=size:big|color:red|" +
-                                    esercente.getLatitude() +
-                                    "," +
-                                    esercente.getLongitude() +
-                                    "&sensor=false";
-                    mapImage.setTag(urlString);
-                    mapImage.loadImageFromURL(urlString);
-                    
-                }
                 else if (sections.get(position).equals("infoRisto")) {
                     
-                    textView = (TextView) v.findViewById(R.id.infoRow);
-                    textView.setText(Html.fromHtml((
+                    infoTextView.setText(Html.fromHtml((
                             esercente.getAmbiente() != null ?
                                     "<b> Ambiente</b>"
                                             + "<br />" +
@@ -173,41 +112,7 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                                     "<br />"
                                     + esercente.getFasciaPrezzo() + "€" : "")));
                 }
-                else if (sections.get(position).equals("tel")) {
-                    contactTextView = (TextView) v.findViewById(R.id.contactResource);
-                    kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
-                    cellKind = (TextView) v.findViewById(R.id.cellKind);
-                    contactTextView.setText(esercente.getTelefono());
-                    kindContactTextView.setText("Telefono");
-                    cellKind.setText("tel");
-                    contactImage = (ImageView) v.findViewById(R.id.contactImage);
-                    contactImage.setImageResource(R.drawable.ic_phone);
-                }
-                else if (sections.get(position).equals("mail")) {
-                    contactTextView = (TextView) v.findViewById(R.id.contactResource);
-                    kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
-                    cellKind = (TextView) v.findViewById(R.id.cellKind);
-                    contactTextView.setText(esercente.getEmail());
-                    kindContactTextView.setText("E-mail");
-                    cellKind.setText("mail");
-                    contactImage = (ImageView) v.findViewById(R.id.contactImage);
-                    contactImage.setImageResource(R.drawable.ic_mail);
-                }
-                else if (sections.get(position).equals("url")) {
-                    contactTextView = (TextView) v.findViewById(R.id.contactResource);
-                    kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
-                    cellKind = (TextView) v.findViewById(R.id.cellKind);
-                    contactTextView.setText(esercente.getUrl());
-                    kindContactTextView.setText("Sito web");
-                    cellKind.setText("web");
-                    contactImage = (ImageView) v.findViewById(R.id.contactImage);
-                    contactImage.setImageResource(R.drawable.ic_web);
-                }
-                else if (sections.get(position).equals("altre")) {
-                    Log.d("XXX", " riga altro");
-                    TextView actionTextView = (TextView) v.findViewById(R.id.action);
-                    actionTextView.setText("Altre informazioni");
-                }
+               
             }
             
             return v;
