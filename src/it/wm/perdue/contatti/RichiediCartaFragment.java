@@ -263,8 +263,8 @@ public class RichiediCartaFragment extends SherlockFragment implements
         postMap.put("phone", Utils.replacePlusInPhone(tel));
         postMap.put("email", email);
         
-        // httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
-        // postMap, TAG_NORMAL);
+         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
+         postMap, TAG_NORMAL);
         Log.d("XXX", "i dati da inviare al server sono: " + postMap);
         
         progressDialog = ProgressDialog.show(getActivity(), "", "Invio in corso...");
