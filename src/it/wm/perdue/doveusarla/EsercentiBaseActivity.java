@@ -208,8 +208,13 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         getSupportMenuInflater().inflate(R.menu.esercenti_menu, menu);
         this.menu = menu;
         // mSearchView.setOnCloseListener(this);
-        
-        menu.findItem(R.id.ww).setTitle(Utils.getPreferenceString(WHERE, "Qui vicino") 
+        //setto titolo pulsante
+        String dove = Utils.getPreferenceString(WHERE, "Qui vicino");
+        if(dove.equals("Qui"))
+            dove = "Qui vicino";
+                
+        Log.d("UUU" , "CREAZIONE MENU = "+Utils.getPreferenceString(WHERE, "Qui vicino"));
+        menu.findItem(R.id.ww).setTitle(dove 
                                         + "-" + Utils.getPreferenceString(WHEN, "Oggi"));
         
         setupSearchView(menu);
