@@ -121,7 +121,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
     public void onHTTPResponseReceived(String tag, String response) {
         // downloading--;
         
-        Log.d("XXX", "RISPOSTA = " + response);
+        Log.d("xxx", "RISPOSTA = " + response);
         
         if (tag.equals(TAG_NORMAL)) {
             // Se riceviamo un risultato non di ricerca, lo aggiungiamo sempre e
@@ -209,53 +209,36 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         
         public DettaglioEsercenteAdapter(Context context, int resource, Class<T> clazz) {
             super(context, resource, clazz);
-            Log.d("XXX", "DETTAGLIO ESERCENTE ADAPTER --> ");
+            Log.d("UUU", "DETTAGLIO ESERCENTE ADAPTER --> count = "+sections.size());
         }
         
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View v, ViewGroup parent) {
             
-            View v = convertView;
-            int resource = 0;
-            TextView textView = null;
-            TextView contactTextView = null;
-            TextView kindContactTextView = null;
-            TextView cellKind = null;
-            ImageView contactImage = null;
+            //View v = convertView;
+            int resource = getItemViewType(position);
+            Log.d("uuu","resource = "+resource);
             
-            Log.d("XXX", "get view madre position --> " + position);
-            
-            if (v == null) {
-                
-                if (sections.get(position).equals("info")) {
-                    resource = R.layout.dettaglio_info_row;
-                }
-                else if (sections.get(position).equals("map")) {
-                    resource = R.layout.map_row;
-                }
-                else if (sections.get(position).equals("tel")
-                        || sections.get(position).equals("mail") ||
-                        sections.get(position).equals("url")) {
-                    resource = R.layout.contact_row;
-                }
-                else if (sections.get(position).equals("altre")) {
-                    resource = R.layout.action_row;
-                }
-                
-                v = inflater.inflate(resource, null);
-            }
-            
+            //TODO: ragionare bene sul fatto del riciclo delle celle
+            /*Dove sono arrivato con i ragionamenti:
+             * - abbiamo diversi tipi di righe, e non sempre alcune sono presente della tabella, dipende da quali dati ha l'esercente
+             * - quando viene riichiamato getView controllo se v==null e creo una nuova view, facendo così viene popolata bene qls tipo
+             * sia la riga
+             * - se v != null, viene riciclata ---> crasha perchè ad esempio se getView deve disegnare la riga "email" ma la view riciclata era
+             * del tipo ad esempio "info" la funzione cerca in tale view gli id dei textview relativi ai contatti, ed ovviamente sono null.
+             * - quindi la view riclciata può esser di tipo differente da quella che dobbiamo disegnare!!!
+             * 
+             * vale la pena lasciare così? alla fine sono poche righe, e quante volte un utente può scrollare la lista?
+             * 
+             * **/
+             v = inflater.inflate(resource, null);
+               
             if (esercente != null) {
                 
-                // title.setText(Html.fromHtml("<b>" + esercente.getCitta() +
-                // "</b>" + "<br />" +
-                // "<small>" + esercente.getIndirizzo() + "</small>" + "<br />"
-                // +
-                // "<small>" + esercente.getInsegna() + "</small>"
-                // + "<br />" +
-                // "<small>" + esercente.getNoteVarie() + "</small>"));
+                TextView infoTextView = null;            
+
                 
                 if (sections.get(position).equals("info")) {
-                    textView = (TextView) v.findViewById(R.id.infoRow);
+                    infoTextView = (TextView) v.findViewById(R.id.infoRow);
                     
                     String giorniString = null;
                     
@@ -267,7 +250,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                         Log.d(DEBUG_TAG, "eccezione in getView: " + e.getLocalizedMessage());
                     }
                     
-                    textView.setText(Html.fromHtml((
+                    infoTextView.setText(Html.fromHtml((
                             esercente.getGiornoChiusura() != null ? "<b> Giorno di chiusura</b>"
                                     + "<br />" +
                                     esercente.getGiornoChiusura() + "<br />" : "")
@@ -280,8 +263,8 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                 else if (sections.get(position).equals("map")) {
                     CachedAsyncImageView mapImage = null;
                     
-                    textView = (TextView) v.findViewById(R.id.mapInfo);
-                    textView.setText(Html.fromHtml(
+                    infoTextView = (TextView) v.findViewById(R.id.mapInfo);
+                    infoTextView.setText(Html.fromHtml(
                             (esercente.getCitta() != null ? "<b>Città</b>" + "<br />" +
                                     esercente.getCitta() + "<br />" : "")
                                     +
@@ -304,42 +287,49 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                     mapImage.loadImageFromURL(urlString);
                     
                 }
-                else if (sections.get(position).equals("tel")) {
-                    contactTextView = (TextView) v.findViewById(R.id.contactResource);
-                    kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
-                    cellKind = (TextView) v.findViewById(R.id.cellKind);
-                    contactTextView.setText(esercente.getTelefono());
-                    kindContactTextView.setText("Telefono");
-                    cellKind.setText("tel");
-                    contactImage = (ImageView) v.findViewById(R.id.contactImage);
-                    contactImage.setImageResource(R.drawable.ic_phone);
-                }
-                else if (sections.get(position).equals("mail")) {
-                    contactTextView = (TextView) v.findViewById(R.id.contactResource);
-                    kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
-                    cellKind = (TextView) v.findViewById(R.id.cellKind);
-                    contactTextView.setText(esercente.getEmail());
-                    kindContactTextView.setText("E-mail");
-                    cellKind.setText("mail");
-                    contactImage = (ImageView) v.findViewById(R.id.contactImage);
-                    contactImage.setImageResource(R.drawable.ic_mail);
-                }
-                else if (sections.get(position).equals("url")) {
-                    contactTextView = (TextView) v.findViewById(R.id.contactResource);
-                    kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
-                    cellKind = (TextView) v.findViewById(R.id.cellKind);
-                    contactTextView.setText(esercente.getUrl());
-                    kindContactTextView.setText("Sito web");
-                    cellKind.setText("web");
-                    contactImage = (ImageView) v.findViewById(R.id.contactImage);
-                    contactImage.setImageResource(R.drawable.ic_web);
-                }
                 else if (sections.get(position).equals("altre")) {
                     TextView actionTextView = (TextView) v.findViewById(R.id.action);
                     actionTextView.setText("Altre informazioni");
                 }
+                else{
+                                        
+                    TextView contactTextView = (TextView) v.findViewById(R.id.contactResource);
+                    TextView kindContactTextView = (TextView) v.findViewById(R.id.contactKind);
+                    TextView cellKind = (TextView) v.findViewById(R.id.cellKind);
+                    ImageView contactImage = (ImageView) v.findViewById(R.id.contactImage);
+                    
+                    if (sections.get(position).equals("tel")) {
+                        contactTextView.setText(esercente.getTelefono());
+                        kindContactTextView.setText("Telefono");
+                        cellKind.setText("tel");
+                        contactImage.setImageResource(R.drawable.ic_phone);
+                    }
+                    else if (sections.get(position).equals("mail")) {
+                        contactTextView.setText(esercente.getEmail());
+                        kindContactTextView.setText("E-mail");
+                        cellKind.setText("mail");
+                        contactImage.setImageResource(R.drawable.ic_mail);
+                    }
+                    else if (sections.get(position).equals("url")) {
+                        contactTextView.setText(esercente.getUrl());
+                        kindContactTextView.setText("Sito web");
+                        cellKind.setText("web");
+                        contactImage.setImageResource(R.drawable.ic_web);
+                    }
+                }
+
             }
             return v;
+        }
+        
+        @Override
+        protected void checkFields() {
+            
+            super.checkFields();
+            if (esercente.getGiorni() != null || esercente.getGiornoChiusura() != null ||
+                    esercente.getNoteVarie() != null) {
+                sections.add(0,"info");
+            }
         }
         
         // @Override
@@ -360,13 +350,6 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         // return true;
         // }
         //
-        @Override
-        protected void checkFields() {
-            if (esercente.getGiorni() != null || esercente.getGiornoChiusura() != null ||
-                    esercente.getNoteVarie() != null) {
-                sections.add(0, "info");
-            }
-            super.checkFields();
-        }
+
     }
 }
