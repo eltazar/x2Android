@@ -94,6 +94,17 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                 if (sections.get(position).equals("info")) {
                     textView = (TextView) v.findViewById(R.id.infoRow);
                     
+                    //costruisco stringa giorni validità
+                    
+                    String giorniValidita = "<b>Giorni di validità</b><br />";
+                    if(esercente.getPranzoString() != null)
+                        giorniValidita = giorniValidita.concat( esercente.getPranzoString() + "<br />");
+                    if(esercente.getCenaString() != null)
+                        giorniValidita = giorniValidita.concat( esercente.getCenaString() + "<br />");
+                    
+                    if(giorniValidita.equals("<b>Giorni di validità</b><br />"))
+                        giorniValidita = "";
+                    
                     textView.setText(Html.fromHtml((
                             ("<b>"
                                     + esercente.getTipologia()
@@ -102,21 +113,15 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                                     esercente.getInsegna()
                                     + "<br />")
                                     +
-                                    (esercente.getPranzoString() != null ? "<b>Giorni di validità</b><br />"
-                                            +
-                                            esercente.getPranzoString() + "<br />"
-                                            : "")
-                                    +
-                                    (esercente.getCenaString() != null ? esercente.getCenaString()
-                                            + "<br />" : "")
+                                    giorniValidita
                                     +
                                     (esercente.getGiornoChiusura() != null ? "<b> Giorno di chiusura</b><br />"
                                             +
                                             esercente.getGiornoChiusura() + "<br />"
                                             : "")
                                     + (esercente.getNoteVarie() != null ? "<b> Condizioni di validità</b>"
-                                    + "<br />"
-                                    + esercente.getNoteVarie() : ""))));
+                                    
+                                    +" <br />"+ esercente.getNoteVarie() : ""))));
                     
                 }
                 else if (sections.get(position).equals("map")) {
