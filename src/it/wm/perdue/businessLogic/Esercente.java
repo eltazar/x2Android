@@ -3,10 +3,12 @@ package it.wm.perdue.businessLogic;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * @author Gabriele "Whisky" Visconti
  */
-public class Esercente implements HasID {
+public class Esercente implements HasID, Serializable{
     @SerializedName("IDesercente")
     private int      id             = -1;
     @SerializedName("Insegna_Esercente")
