@@ -231,6 +231,7 @@ public class CommentiListFragment extends SherlockListFragment implements
                 }
                 commentViewHolder.demoComment.setText(comm.getTesto());
                 
+                commentViewHolder.demoComment.setMaxLines(2);
             }
             
             return v;
