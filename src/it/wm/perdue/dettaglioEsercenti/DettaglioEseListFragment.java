@@ -87,8 +87,18 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         
         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET,
                 null, TAG_NORMAL);
-        
-        progressDialog = ProgressDialog.show(getActivity(), "", "Caricamento in corso...");
+                
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Caricamento in corso...");
+        //progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(true); 
+//        progressDialog.setOnDismissListener(new DialogInterface.OnCancelListener(){
+//           @Override
+//           public void onCancel(DialogInterface dialog)
+//           {
+//               **** cleanup.  Not needed if not cancelable ****
+//           }});
+        progressDialog.show();
     }
     
     @Override
@@ -203,6 +213,11 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                         Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    
+    protected void dismissWaitingProgressDialog(){
+        Log.d("uuu","dismissed");
+        progressDialog.dismiss();
     }
     
     protected static class DettaglioEsercenteAdapter<T extends Esercente> extends
