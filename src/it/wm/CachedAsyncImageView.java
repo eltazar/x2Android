@@ -173,7 +173,7 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
         // DownloaderTask.... ma questa è un'altra storia
         
         imageView.setImageDrawable(data);
-        long duration = 10000;
+        long duration = 7000;
         
         // Ok, questo si sarebbe potuto scrivere usando solo la classe di
         // compatibilità ObjectAnimator fornita da ActionBarSherlock... Ma... e
