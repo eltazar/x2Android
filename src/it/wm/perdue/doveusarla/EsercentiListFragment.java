@@ -33,8 +33,8 @@ public class EsercentiListFragment extends SearchEndlessListFragment
     protected String                        sorting          = "";
     protected String                        filter           = "";	
     private   String                        searchKey        = "";
-    protected double                        latitude         = 0.0;
-    protected double                        longitude        = 0.0;
+    protected static double                        latitude         = 0.0;
+    protected static double                        longitude        = 0.0;
     // Gestione dei download:
     protected static final int              PHP_ARRAY_LENGTH = 20;  
     protected HTTPAccess                    httpAccess       = null;
@@ -327,7 +327,9 @@ public class EsercentiListFragment extends SearchEndlessListFragment
                     address.setText(esercente.getIndirizzo());
                 }
                 if (distance != null) {
-                    distance.setText(String.format("%.1f km", esercente.getDistanza()));
+                    if(latitude != 0 && longitude != 0)
+                        distance.setText(String.format("a %.1f km", esercente.getDistanza()));
+                    else distance.setText(String.format("a -- km", esercente.getDistanza()));
                 }
             }
             return v;
