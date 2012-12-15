@@ -12,9 +12,9 @@ import android.util.Log;
 
 import it.wm.DownloaderTask.DownloadListener;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -22,15 +22,18 @@ import java.util.List;
  */
 public class DrawableCache implements DownloadListener {
     private static final String                 DEBUG_TAG     = "DrawableCache";
+    private static final int                    MAX_SIZE      = 100;
     private static DrawableCache                INSTANCE      = null;
     private Context                             appContext    = null;
     static final int                            CACHE_HIT     = 1;
     static final int                            CACHE_PENDING = 2;
     static final int                            CACHE_MISS    = 3;
-    private HashMap<DownloadRequest, CacheLine> cache         = null;
+    private HashMap<DrawableRequest, CacheLine> cache         = null;
+    private List<DrawableRequest>               cacheIdx      = null;
     
     private DrawableCache() {
-        cache = new HashMap<DownloadRequest, CacheLine>();
+        cache    = new HashMap<DrawableRequest, CacheLine>();
+        cacheIdx = new LinkedList<DrawableRequest>();
     }
     
     public static DrawableCache getInstance(Context context) {
@@ -60,8 +63,10 @@ public class DrawableCache implements DownloadListener {
         
     }
     
-    public Drawable getCacheLine(DownloadRequest params, DrawableCacheListener l) {
+    public Drawable getCacheLine(DownloadRequest request, int reqWidth, int reqHeight, 
+            DrawableCacheListener l) {
         Log.d(DEBUG_TAG, "**getCacheLine");
+        DrawableRequest params = new DrawableRequest(request, reqWidth, reqHeight);
         switch (getCacheLineStatus(params)) {
             case CACHE_HIT:
                 return cache.get(params).drawable;
@@ -81,6 +86,11 @@ public class DrawableCache implements DownloadListener {
                     newLine.listeners.add(l);
                 }
                 cache.put(params, newLine);
+                cacheIdx.add(params);
+                if (cacheIdx.size() > MAX_SIZE) {
+                    cache.remove(cacheIdx.remove(0));
+                }
+                Log.d(DEBUG_TAG, "Abbiamo " + cache.size() + " elementi.");
                 DownloaderTask task = new DownloaderTask();
                 task.setListener(this);
                 task.execute(params);
@@ -98,23 +108,43 @@ public class DrawableCache implements DownloadListener {
         }
     }
     
-    private Drawable convertData(byte[] data) {
+    private Drawable convertData(byte[] data, int reqWidth, int reqHeight) {
         BitmapDrawable d = null;
         if ((new String(data)).equals("Use a placeholder")) {
             // TODO: settare un placeholder.
         } else {
             BitmapFactory.Options opt = new BitmapFactory.Options();
+            
             opt.inJustDecodeBounds = true;
             BitmapFactory.decodeByteArray(data, 0, data.length, opt);
-            Log.d(DEBUG_TAG, "Image size: (" + opt.outWidth + ", " + opt.outHeight + ")");
-            // opt.inSampleSize = calculateInSampleSize(opt, displaySize.x,
-            // displaySize.y);
+            Log.d(DEBUG_TAG, "Image size: (" + opt.outWidth + ", " + opt.outHeight + ") -> (" 
+                    + reqWidth + ", " + reqHeight + ")");
+            opt.inSampleSize = calculateInSampleSize(opt, reqWidth, reqHeight);
             
-            d = new BitmapDrawable(
-                    appContext.getResources(),
-                    new ByteArrayInputStream(data));
+            opt.inJustDecodeBounds = false;
+            
+            d = new BitmapDrawable(appContext.getResources(), 
+                                   BitmapFactory.decodeByteArray(data, 0, data.length, opt));
         }
         return d;
+    }
+    
+    private static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // http://developer.android.com/training/displaying-bitmaps/load-bitmap.html
+        final int height = options.outHeight;
+        final int width  = options.outWidth;
+        int inSampleSize = 1;
+        
+        if ( (height > reqHeight || width > reqWidth)
+              && (reqWidth > 0 && reqHeight > 0)      ) {
+            if (width > height) {
+                inSampleSize = Math.round((float)height / (float)reqHeight);
+            } else {
+                inSampleSize = Math.round((float)width / (float)reqWidth);
+            }
+        }
+        return inSampleSize;
     }
     
     /* *** BEGIN: DownloaderTask.ResponseListener **************** */
@@ -122,7 +152,8 @@ public class DrawableCache implements DownloadListener {
     public void onDownloadCompleted(DownloadRequest request, byte[] responseBody) {
         Log.d(DEBUG_TAG, "**onHTTPResponseReceived");
         CacheLine line = cache.get(request);
-        line.drawable = convertData(responseBody);
+        DrawableRequest dRequest = (DrawableRequest) request;
+        line.drawable = convertData(responseBody, dRequest.reqWidth, dRequest.reqHeight);
         for (DrawableCacheListener l : line.listeners) {
             l.onCacheLineLoaded(request, line.drawable);
         }
@@ -145,8 +176,57 @@ public class DrawableCache implements DownloadListener {
     
     /* *** END: DownloaderTask.ResponseListener **************** */
     
+    private class DrawableRequest extends DownloadRequest {
+        private int reqHeight;
+        private int reqWidth;
+        
+        public DrawableRequest(String urlString, int httpMethod, HashMap<String, String> postMap,
+                int reqWidth, int reqHeight) {
+            super(urlString, httpMethod, postMap);
+            this.reqWidth = reqWidth;
+            this.reqHeight = reqHeight;
+        }
+        
+        public DrawableRequest(DownloadRequest request, int reqWidth, int reqHeight) {
+            super(request.urlString, request.httpMethod, request.postMap);
+            this.reqWidth  = reqWidth;
+            this.reqHeight = reqHeight;
+        }
+        
+        public boolean equals(Object o) {
+            if (!(o instanceof DrawableRequest)) {
+                return false;
+            }
+            if (o == this) {
+                return true;
+            }
+            
+            DrawableRequest p = (DrawableRequest) o;
+            getPostString();
+            
+            if ((urlString == p.urlString || (urlString != null && urlString.equals(p.urlString)))
+                    && (postString == p.postString || (postString != null && postString
+                            .equals(p.postString)))
+                    && (httpMethod == p.httpMethod)
+                    && (reqWidth   == p.reqWidth)
+                    && (reqHeight  == p.reqHeight)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        @Override
+        public int hashCode() {
+            int result = super.hashCode();
+            result = 37 * result + reqWidth;
+            result = 37 * result + reqHeight;
+            return result;
+        }
+    }
+    
     private class CacheLine {
-        public Drawable                 drawable = null;
+        public Drawable                    drawable = null;
         public List<DrawableCacheListener> listeners;
         
         public CacheLine() {

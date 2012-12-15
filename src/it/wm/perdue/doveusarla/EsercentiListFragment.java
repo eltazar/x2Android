@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import it.wm.CachedAsyncImageView;
 import it.wm.HTTPAccess;
@@ -229,8 +230,10 @@ public class EsercentiListFragment extends SearchEndlessListFragment
     @SuppressWarnings("rawtypes")
     public void onChangeWhereWhenFilter() {
         if (postMap == null) {
+            Toast.makeText(Utils.context, "Zompo", Toast.LENGTH_SHORT).show();
             return;
         }
+        Toast.makeText(Utils.context, "Non Zompo", Toast.LENGTH_SHORT).show();
         postMap.put("prov",   Utils.getPreferenceString("where", "Qui"));
         postMap.put("giorno", Utils.getWeekDay());
         postMap.put("filtro", this.filter);
@@ -316,7 +319,7 @@ public class EsercentiListFragment extends SearchEndlessListFragment
                 
                 if (caImageView != null) {
                     //Log.d(DEBUG_TAG, "esercente id  = " + esercente.getID());
-                    caImageView.loadImageFromURL(urlImageString);
+                    caImageView.loadScaledImageFromURL(urlImageString);
                 }
                 
                 if (title != null) {
