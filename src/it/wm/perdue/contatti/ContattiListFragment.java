@@ -147,6 +147,7 @@ public class ContattiListFragment extends SherlockListFragment {
                 case 4:
                     resource.setText(values[position]);
                     kind.setText("Facebook");
+                    contactImage.setImageResource(R.drawable.ic_facebook);
                     break;
                 default:
                     break;
