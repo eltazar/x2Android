@@ -276,7 +276,7 @@ public final class Utils {
     public static void writeEmail(String address, Context context) {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
-        i.putExtra(Intent.EXTRA_EMAIL, address);
+        i.putExtra(Intent.EXTRA_EMAIL, new String[]{address});
         i.putExtra(Intent.EXTRA_SUBJECT, "Informazioni");
         i.putExtra(Intent.EXTRA_TEXT, "");
         context.startActivity(Intent.createChooser(i, "Invia email"));
