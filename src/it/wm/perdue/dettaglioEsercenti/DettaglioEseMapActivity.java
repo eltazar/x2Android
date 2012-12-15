@@ -33,6 +33,11 @@ public class DettaglioEseMapActivity extends SherlockMapActivity implements Loca
             
             super.onCreate(savedInstanceState);
             
+            ActionBar bar = getSupportActionBar();
+            bar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
+                    | ActionBar.DISPLAY_SHOW_HOME
+                    | ActionBar.DISPLAY_SHOW_TITLE);
+            
             Esercente esercente= (Esercente)getIntent().getSerializableExtra("esercente");            
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             mapView = new MapView(this, getResources().getString(R.string.map_api_key));
@@ -54,15 +59,9 @@ public class DettaglioEseMapActivity extends SherlockMapActivity implements Loca
                 
                 itemizedOverlay.addItem(esercente);
                 mapView.getController().setCenter(new SimpleGeoPoint(esercente.getLatitude(),esercente.getLongitude()).toGeoPoint());
-            }
-          
-            ActionBar bar = getSupportActionBar();
-            bar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
-                    | ActionBar.DISPLAY_SHOW_HOME
-                    | ActionBar.DISPLAY_SHOW_TITLE);
-            
-            bar.setTitle("Mappa");
-            
+                
+                bar.setTitle(esercente.getInsegna());
+            }            
             setContentView(mapView);
         }
         
