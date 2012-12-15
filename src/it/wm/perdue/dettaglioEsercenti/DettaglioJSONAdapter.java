@@ -94,7 +94,7 @@ public class DettaglioJSONAdapter<T extends Esercente> extends
             }
             else if (sections.get(position).equals("altre")) {
                 TextView actionTextView = (TextView) v.findViewById(R.id.action);
-                actionTextView.setText("Altre informazioni");
+                actionTextView.setText(Html.fromHtml("<b>Altre informazioni</b>"));
             }
             else{
                 
