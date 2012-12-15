@@ -33,7 +33,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginTop="14dp"
-            android:paddingLeft="10dip"
+            android:paddingLeft="5dip"
             android:text="azione"
             android:textColor="#343434"
             android:textSize="15dip" />
