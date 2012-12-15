@@ -14,13 +14,13 @@ import java.util.Iterator;
  */
 public class DownloadRequest {
     @SuppressWarnings("unused")
-    private static final String     DEBUG_TAG  = "DownloadRequest";
-    public static final int         GET        = 1;
-    public static final int         POST       = 2;
-    public String                   urlString;
-    public int                      httpMethod;
-    private HashMap<String, String> postMap;
-    private String                  postString = null;
+    private static final String       DEBUG_TAG  = "DownloadRequest";
+    public static final int           GET        = 1;
+    public static final int           POST       = 2;
+    public String                     urlString;
+    public int                        httpMethod;
+    protected HashMap<String, String> postMap;
+    protected String                  postString = null;
     
     /** Creates an object with the given data. */
     public DownloadRequest(String urlString, int httpMethod, HashMap<String, String> postMap) {

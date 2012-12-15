@@ -109,6 +109,11 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
         }
     }
     
+    public void loadScaledImageFromURL(String url) {
+        Log.d(DEBUG_TAG, "loading with size: " + imageView.getWidth() + ", " + imageView.getHeight());
+        loadImageFromURL(url, imageView.getWidth(), imageView.getHeight());
+    }
+    
     public void loadImageFromURL(String url) {
         loadImageFromURL(url, -1, -1);
     }
@@ -122,7 +127,7 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
         request = new DownloadRequest(url, DownloadRequest.GET, null);
         
         DrawableCache cache = DrawableCache.getInstance(this.getContext());
-        Drawable data = cache.getCacheLine(request, this);
+        Drawable data = cache.getCacheLine(request, reqWidth, reqHeight, this);
         Log.d(DEBUG_TAG, "Loading image from: " + url.toString());
         
         if (data != null) {
@@ -161,7 +166,7 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
     
     // @Override
     public void onCacheLineLoaded(DownloadRequest request, Drawable data) {
-        if (!request.equals(this.request)) {
+        if (!this.request.equals(request)) {
             return;
         }
         // Non serve un synchronized: anche se questo metodo potrebbe venire
@@ -173,7 +178,7 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
         // DownloaderTask.... ma questa è un'altra storia
         
         imageView.setImageDrawable(data);
-        long duration = 7000;
+        long duration = 1000;
         
         // Ok, questo si sarebbe potuto scrivere usando solo la classe di
         // compatibilità ObjectAnimator fornita da ActionBarSherlock... Ma... e
