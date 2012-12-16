@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * @author Gabriele "Whisky" Visconti
  */
 public class EsercenteRistorazione extends Esercente {
+
     @SerializedName("Fasciaprezzo_Esercente")
     private String  fasciaPrezzo   = null;
     @SerializedName("Ambiente_Esercente")
@@ -43,6 +44,10 @@ public class EsercenteRistorazione extends Esercente {
     private boolean domMattina     = false;
     @SerializedName("Domenica_sera_CE")
     private boolean domSera        = false;
+    
+    public EsercenteRistorazione(String insegna, double latitude, double longitude,String indirizzo) {
+        super(insegna, latitude, longitude, indirizzo);
+    }
     
     public String getFasciaPrezzo() {
         return fasciaPrezzo;
