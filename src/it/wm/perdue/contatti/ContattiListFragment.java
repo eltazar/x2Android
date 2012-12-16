@@ -3,11 +3,13 @@ package it.wm.perdue.contatti;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -20,6 +22,8 @@ import com.actionbarsherlock.app.SherlockListFragment;
 import it.wm.CachedAsyncImageView;
 import it.wm.perdue.R;
 import it.wm.perdue.Utils;
+import it.wm.perdue.businessLogic.Esercente;
+import it.wm.perdue.dettaglioEsercenti.DettaglioEseMapActivity;
 
 public class ContattiListFragment extends SherlockListFragment {
     
@@ -85,7 +89,7 @@ public class ContattiListFragment extends SherlockListFragment {
         }
     }
     
-    private class ContactArrayAdapter extends ArrayAdapter<String> {
+    private class ContactArrayAdapter extends ArrayAdapter<String> implements OnClickListener {
         private final Context  context;
         private final String[] values;
         
@@ -109,6 +113,7 @@ public class ContattiListFragment extends SherlockListFragment {
             if (position == 0) {
                 mapImage = (CachedAsyncImageView) rowView
                         .findViewById(R.id.mapImage);
+                mapImage.setOnClickListener(this);
             }
             else {
                 resource = (TextView) rowView.findViewById(R.id.contactResource);
@@ -163,6 +168,18 @@ public class ContattiListFragment extends SherlockListFragment {
                 return R.layout.map_row;
             else
                 return R.layout.contact_row;
+        }
+
+        @Override
+        public void onClick(View v) {
+            // TODO Auto-generated method stub
+            switch(v.getId()){
+                case R.id.mapImage:
+                    Esercente esercente = new Esercente("PerDue",41.91755149999999,12.49941110,"Via Po 116, Roma");
+                    Intent intent = new Intent(v.getContext(), DettaglioEseMapActivity.class);                  
+                    intent.putExtra("esercente",esercente);
+                    v.getContext().startActivity(intent);
+            }
         }
         
     }
