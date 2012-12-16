@@ -65,7 +65,7 @@ public class AltreInfoActivity extends SherlockActivity implements HTTPAccess.Re
         switch (item.getItemId()) {
             case android.R.id.home:
                 Intent intent = NavUtils.getParentActivityIntent(this);
-                intent.putExtra(Intent.EXTRA_TEXT, MainActivity.NEWS_TAB_TAG);
+                intent.putExtra(Intent.EXTRA_TEXT, MainActivity.DOVE_USARLA_TAB_TAG);
                 NavUtils.navigateUpTo(this, intent);
                 return true;
         }
