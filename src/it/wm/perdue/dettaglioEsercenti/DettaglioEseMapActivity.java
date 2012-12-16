@@ -13,6 +13,7 @@ import com.actionbarsherlock.app.SherlockMapActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.android.maps.MapView;
+import com.google.android.maps.MyLocationOverlay;
 
 import it.wm.SimpleGeoPoint;
 import it.wm.perdue.MainActivity;
@@ -26,7 +27,7 @@ public class DettaglioEseMapActivity extends SherlockMapActivity implements Loca
         private LocationManager          locationManager = null;
 
         private EsercentiItemizedOverlay itemizedOverlay = null;
-
+        private MyLocationOverlay myLocationOverlay = null;
         
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,15 @@ public class DettaglioEseMapActivity extends SherlockMapActivity implements Loca
                 
                 bar.setTitle(esercente.getInsegna());
             }            
+            
+            // create an overlay that shows our current location
+            myLocationOverlay = new MyLocationOverlay(this, mapView);
+         
+            // add this overlay to the MapView and refresh it
+            mapView.getOverlays().add(myLocationOverlay);
+            mapView.postInvalidate();
+
+            
             setContentView(mapView);
         }
         
@@ -84,6 +94,20 @@ public class DettaglioEseMapActivity extends SherlockMapActivity implements Loca
             }
             return super.onOptionsItemSelected(item);
         }
+        
+        @Override
+        public void onResume(){
+            super.onResume();
+            myLocationOverlay.enableMyLocation();
+
+        }
+        @Override
+        protected void onPause() {
+            super.onPause();
+            // when our activity pauses, we want to remove listening for location updates
+            myLocationOverlay.disableMyLocation();
+        }
+        
 
         @Override
         protected boolean isRouteDisplayed() {
