@@ -53,8 +53,8 @@ public class DettaglioEseMapActivity extends SherlockMapActivity implements Loca
                         this,
                         getResources().getDrawable(android.R.drawable.presence_online),
                         mapView);
+                itemizedOverlay.setShowDisclosure(false);
                 itemizedOverlay.setShowClose(false);
-                itemizedOverlay.setShowDisclosure(true);
                 itemizedOverlay.setBalloonBottomOffset(10);
                 mapView.getOverlays().add(itemizedOverlay);
                 
