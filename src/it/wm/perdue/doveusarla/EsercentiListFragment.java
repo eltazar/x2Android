@@ -33,7 +33,7 @@ public class EsercentiListFragment extends SearchEndlessListFragment
     private   Boolean						areWeRestoring   = false;
     protected String                        category         = "";
     protected String                        sorting          = "";
-    protected String                        filter           = "";	
+    protected String                        filter           = "Tutti";	
     private   String                        searchKey        = "";
     protected static double                 latitude         = 0.0;
     protected static double                 longitude        = 0.0;
