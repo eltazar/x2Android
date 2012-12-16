@@ -48,6 +48,14 @@ public class Esercente implements HasID, Serializable{
     @SerializedName("Distanza")
     private double   distanza       = 0.0;
     
+    public Esercente(String insegna, double latitude, double longitude, String indirizzo) {
+        // TODO Auto-generated constructor stub
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.insegna = insegna;
+        this.indirizzo = indirizzo;
+    }
+
     public String[] getGiorni() {
         return giorni;
     }
