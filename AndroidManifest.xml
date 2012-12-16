@@ -82,7 +82,7 @@
             android:label="">
        		<meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".dettaglioEsercenti.DettaglioEsercenteBaseActivity" />
+                android:value=".MainActivity" />
         </activity>
                 <activity
             android:name=".dettaglioEsercenti.CommentiBaseActivity"
