@@ -14,6 +14,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
@@ -271,14 +272,12 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
     @Override
     public boolean onQueryTextSubmit(String query) {
         // TODO: dismettere la tastiera quando si preme "cerca" sulla tastiera
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(this.INPUT_METHOD_SERVICE); 
         
-        // Hide keyboard
-        // InputMethodManager imm = (InputMethodManager) this.getSystemService(
-        // SherlockListActivity.INPUT_METHOD_SERVICE);
-        // SearchView mSearchView = (SearchView) findViewById(R.id.abSearch);
-        // imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
-        // mSearchView.setFocusable(false);
-        // mSearchView.setFocusableInTouchMode(false);
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+
         return true;
     }
     
