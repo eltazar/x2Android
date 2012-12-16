@@ -35,8 +35,8 @@ public class EsercentiListFragment extends SearchEndlessListFragment
     protected String                        sorting          = "";
     protected String                        filter           = "";	
     private   String                        searchKey        = "";
-    protected static double                        latitude         = 0.0;
-    protected static double                        longitude        = 0.0;
+    protected static double                 latitude         = 0.0;
+    protected static double                 longitude        = 0.0;
     // Gestione dei download:
     protected static final int              PHP_ARRAY_LENGTH = 20;  
     protected HTTPAccess                    httpAccess       = null;
@@ -172,7 +172,7 @@ public class EsercentiListFragment extends SearchEndlessListFragment
             // Se riceviamo un risultato non di ricerca, lo aggiungiamo sempre e
             // comunque:
             n = ((JSONListAdapter)adapter).addFromJSON(response);
-            if (n == 0) {
+            if (n < PHP_ARRAY_LENGTH) {
                 notifyDataEnded();
             }
             setListShown(true);
