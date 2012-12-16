@@ -45,19 +45,19 @@ public class DrawableCache implements DownloadListener {
     }
     
     private int getCacheLineStatus(DownloadRequest key) {
-        Log.d(DEBUG_TAG, "**getCacheLineStatus");
+        //Log.d(DEBUG_TAG, "**getCacheLineStatus");
         CacheLine line = cache.get(key);
         if (line == null) {
-            Log.d(DEBUG_TAG, "**getCacheLineStatus: MISS");
+            //Log.d(DEBUG_TAG, "**getCacheLineStatus: MISS");
             return CACHE_MISS;
         } // line != null
           // TODO: IMPORTANTE - se data non è null listeners dovrebbe esserlo
           // SEMPRE, invece evidentemente non succede... perché???
         if (line.drawable == null && line.listeners != null) {
-            Log.d(DEBUG_TAG, "**getCacheLineStatus: PENDING");
+            //Log.d(DEBUG_TAG, "**getCacheLineStatus: PENDING");
             return CACHE_PENDING;
         } else {
-            Log.d(DEBUG_TAG, "**getCacheLineStatus: HIT");
+            //Log.d(DEBUG_TAG, "**getCacheLineStatus: HIT");
             return CACHE_HIT;
         }
         
@@ -65,7 +65,7 @@ public class DrawableCache implements DownloadListener {
     
     public Drawable getCacheLine(DownloadRequest request, int reqWidth, int reqHeight, 
             DrawableCacheListener l) {
-        Log.d(DEBUG_TAG, "**getCacheLine");
+        //Log.d(DEBUG_TAG, "**getCacheLine");
         DrawableRequest params = new DrawableRequest(request, reqWidth, reqHeight);
         switch (getCacheLineStatus(params)) {
             case CACHE_HIT:
@@ -74,7 +74,7 @@ public class DrawableCache implements DownloadListener {
             case CACHE_PENDING:
                 CacheLine line = cache.get(params);
                 if (!line.listeners.contains(l)) {
-                    Log.d(DEBUG_TAG, "**getCacheLine: aggiungo listener");
+                    //Log.d(DEBUG_TAG, "**getCacheLine: aggiungo listener");
                     line.listeners.add(l);
                 }
                 return null;
@@ -82,7 +82,7 @@ public class DrawableCache implements DownloadListener {
             case CACHE_MISS:
                 CacheLine newLine = new CacheLine();
                 if (!newLine.listeners.contains(l)) {
-                    Log.d(DEBUG_TAG, "**getCacheLine: aggiungo listener");
+                    //Log.d(DEBUG_TAG, "**getCacheLine: aggiungo listener");
                     newLine.listeners.add(l);
                 }
                 cache.put(params, newLine);
@@ -117,8 +117,8 @@ public class DrawableCache implements DownloadListener {
             
             opt.inJustDecodeBounds = true;
             BitmapFactory.decodeByteArray(data, 0, data.length, opt);
-            Log.d(DEBUG_TAG, "Image size: (" + opt.outWidth + ", " + opt.outHeight + ") -> (" 
-                    + reqWidth + ", " + reqHeight + ")");
+            //Log.d(DEBUG_TAG, "Image size: (" + opt.outWidth + ", " + opt.outHeight + ") -> (" 
+                    //+ reqWidth + ", " + reqHeight + ")");
             opt.inSampleSize = calculateInSampleSize(opt, reqWidth, reqHeight);
             
             opt.inJustDecodeBounds = false;
@@ -150,7 +150,7 @@ public class DrawableCache implements DownloadListener {
     /* *** BEGIN: DownloaderTask.ResponseListener **************** */
     @Override
     public void onDownloadCompleted(DownloadRequest request, byte[] responseBody) {
-        Log.d(DEBUG_TAG, "**onHTTPResponseReceived");
+        //Log.d(DEBUG_TAG, "**onHTTPResponseReceived");
         CacheLine line = cache.get(request);
         DrawableRequest dRequest = (DrawableRequest) request;
         line.drawable = convertData(responseBody, dRequest.reqWidth, dRequest.reqHeight);
@@ -164,7 +164,7 @@ public class DrawableCache implements DownloadListener {
     
     @Override
     public void onDownloadError(DownloadRequest request) {
-        Log.d(DEBUG_TAG, "**onHTTPerror");
+        //Log.d(DEBUG_TAG, "**onHTTPerror");
         CacheLine line = cache.get(request);
         for (DrawableCacheListener l : line.listeners) {
             l.onCacheLineError(request);

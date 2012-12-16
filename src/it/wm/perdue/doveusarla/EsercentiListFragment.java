@@ -21,7 +21,8 @@ import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.Esercente;
 import it.wm.perdue.dettaglioEsercenti.DettaglioEsercenteBaseActivity;
 
-import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 
 
@@ -40,8 +41,8 @@ public class EsercentiListFragment extends SearchEndlessListFragment
     protected static final int              PHP_ARRAY_LENGTH = 20;  
     protected HTTPAccess                    httpAccess       = null;
     protected String                        urlString        = null;
-    protected HashMap<String, String>       postMap          = null;
-    protected HashMap<String, String>		searchPostMap	 = null;
+    protected TreeMap<String, String>       postMap          = null;
+    protected TreeMap<String, String>       searchPostMap	 = null;
     
     
 
@@ -78,7 +79,8 @@ public class EsercentiListFragment extends SearchEndlessListFragment
         urlString = "http://www.cartaperdue.it/partner/v2.0/EsercentiNonRistorazione.php";
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
-        postMap = new HashMap<String, String>();
+        postMap = new TreeMap<String, String>();
+        
               
         postMap.put("request", 	"fetch");
         postMap.put("categ", 	category.toLowerCase());
@@ -88,7 +90,7 @@ public class EsercentiListFragment extends SearchEndlessListFragment
         postMap.put("long",     "" + longitude);
         postMap.put("filtro", 	filter);
         postMap.put("ordina", 	sorting);
-        searchPostMap = new HashMap<String, String>();
+        searchPostMap = new TreeMap<String, String>();
         searchPostMap.put("request", "search");
         searchPostMap.put("categ", 	 category.toLowerCase());
         searchPostMap.put("ordina",  sorting);
@@ -166,7 +168,7 @@ public class EsercentiListFragment extends SearchEndlessListFragment
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
         int n;
-        if (tag.equals(Tags.TAG_NORMAL)) {
+        if (tag.equals(Tags.TAG_NORMAL + mapToTag(postMap))) {
             // Se riceviamo un risultato non di ricerca, lo aggiungiamo sempre e
             // comunque:
             n = ((JSONListAdapter)adapter).addFromJSON(response);
@@ -185,7 +187,7 @@ public class EsercentiListFragment extends SearchEndlessListFragment
              * corrente scartando quelli di ricerche vecchie. TODO: le
              * connessioni delle ricerche vecchie andrebbero proprio fermate
              */
-            if (!isInSearchMode() || !tag.equals(Tags.TAG_SEARCH + searchKey)) {
+            if (!isInSearchMode() || !tag.equals(Tags.TAG_SEARCH + mapToTag(searchPostMap))) {
             	// Ricerca vecchia. Non facciamo niente.
             	Log.d(DEBUG_TAG, "Scarto i risultati della ricerca: " + tag
             			+ " inSearchMode: " + isInSearchMode() 
@@ -250,7 +252,7 @@ public class EsercentiListFragment extends SearchEndlessListFragment
                 urlString,
                 HTTPAccess.Method.POST,
                 postMap,
-                Tags.TAG_NORMAL);
+                Tags.TAG_NORMAL + mapToTag(postMap));
         if (downloadStarted) notifyDownloadStarted();
 	}
     
@@ -262,9 +264,28 @@ public class EsercentiListFragment extends SearchEndlessListFragment
                 urlString,
                 HTTPAccess.Method.POST,
                 searchPostMap,
-                Tags.TAG_SEARCH + searchKey);
+                Tags.TAG_SEARCH + mapToTag(searchPostMap));
         if (downloadStarted) notifySearchDownloadStarted();
 	}
+    
+    private static String mapToTag(TreeMap<String, String> map) {  
+        StringBuilder tag = new StringBuilder();
+        Entry<String, String> e = map.firstEntry();
+        tag.append("{");
+        while (e != null) {
+            String key = e.getKey();
+            if (!key.equals("from")) { 
+                tag.append(key);
+                tag.append("=");
+                tag.append(e.getValue());
+                tag.append("&");
+            }
+            e = map.higherEntry(key);
+        }
+        tag.append("}");
+        return tag.toString();
+    }
+    
 
 	@SuppressWarnings("rawtypes")
     @Override

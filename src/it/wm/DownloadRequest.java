@@ -6,8 +6,8 @@ package it.wm;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author Gabriele "Whisky" Visconti
@@ -19,11 +19,11 @@ public class DownloadRequest {
     public static final int           POST       = 2;
     public String                     urlString;
     public int                        httpMethod;
-    protected HashMap<String, String> postMap;
+    protected Map<String, String> postMap;
     protected String                  postString = null;
     
     /** Creates an object with the given data. */
-    public DownloadRequest(String urlString, int httpMethod, HashMap<String, String> postMap) {
+    public DownloadRequest(String urlString, int httpMethod, Map<String, String> postMap) {
         this.urlString = urlString;
         this.httpMethod = httpMethod;
         this.postMap = postMap;

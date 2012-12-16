@@ -47,7 +47,7 @@ class DownloaderTask extends AsyncTask<DownloadRequest, Void, byte[]> {
         // Se postMap è null viene assunto un campo dati POST vuoto.
         // Se url è null, l'AsyncTask termina richiamando la callback di
         // errore.
-        Log.d(DEBUG_TAG, "***doInBackground");
+        //Log.d(DEBUG_TAG, "***doInBackground");
         params = paramsArray[0];
         URL url;
         try {
@@ -67,7 +67,7 @@ class DownloaderTask extends AsyncTask<DownloadRequest, Void, byte[]> {
             if (params.httpMethod == DownloadRequest.POST) {
                 // Setting POST data:
                 String postString = params.getPostString();
-                Log.d(DEBUG_TAG, "Post string is: " + postString);
+                //Log.d(DEBUG_TAG, "Post string is: " + postString);
                 conn.setDoOutput(true);
                 conn.setRequestMethod("POST");
                 conn.setFixedLengthStreamingMode(postString.getBytes().length);
@@ -97,15 +97,15 @@ class DownloaderTask extends AsyncTask<DownloadRequest, Void, byte[]> {
     }
     
     public void onPostExecute(byte[] result) {
-        Log.d(DEBUG_TAG, "***onPostExecute");
+        //Log.d(DEBUG_TAG, "***onPostExecute");
         if (listener == null) {
             return;
         }
         if (result != null) {
-            Log.d(DEBUG_TAG, "***onPostExecute: success");
+            //Log.d(DEBUG_TAG, "***onPostExecute: success");
             listener.onDownloadCompleted(params, result);
         } else {
-            Log.d(DEBUG_TAG, "***onPostExecute: fail");
+            //Log.d(DEBUG_TAG, "***onPostExecute: fail");
             listener.onDownloadError(params);
         }
     }
@@ -115,7 +115,7 @@ class DownloaderTask extends AsyncTask<DownloadRequest, Void, byte[]> {
      * <code>HttpURLConnection</code> object
      */
     private byte[] fetchResponse() throws IOException {
-        Log.d(DEBUG_TAG, "***fetchResponse");
+        //Log.d(DEBUG_TAG, "***fetchResponse");
         InputStream inputStream = conn.getInputStream();
         // Log.d(DEBUG_TAG, "Headers in the HTTP response: \n" +
         // conn.getHeaderFields().toString());
@@ -146,7 +146,7 @@ class DownloaderTask extends AsyncTask<DownloadRequest, Void, byte[]> {
         }
         
         outBuffer.flush();
-        Log.d(DEBUG_TAG, "***fetchResponse: [" + outBuffer.toString() + "]");
+        //Log.d(DEBUG_TAG, "***fetchResponse: [" + outBuffer.toString() + "]");
         return outBuffer.toByteArray();
     }
     
