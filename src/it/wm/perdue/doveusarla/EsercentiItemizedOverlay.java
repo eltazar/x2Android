@@ -7,7 +7,6 @@ package it.wm.perdue.doveusarla;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
@@ -62,9 +61,9 @@ public class EsercentiItemizedOverlay extends BalloonItemizedOverlay<OverlayItem
     
     @Override
     protected boolean onBalloonTap(int index, OverlayItem item) {
-        Toast.makeText(context, "" + ((EsercenteOverlayItem) item).getID() +
-                "/" + overlays.size() + "/" + ids.size(), Toast.LENGTH_LONG)
-                .show();
+//        Toast.makeText(context, "" + ((EsercenteOverlayItem) item).getID() +
+//                "/" + overlays.size() + "/" + ids.size(), Toast.LENGTH_LONG)
+//                .show();
         return true;
     }
     

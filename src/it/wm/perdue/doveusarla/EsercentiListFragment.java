@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import it.wm.CachedAsyncImageView;
 import it.wm.HTTPAccess;
@@ -171,6 +170,7 @@ public class EsercentiListFragment extends SearchEndlessListFragment
         if (tag.equals(Tags.TAG_NORMAL + mapToTag(postMap))) {
             // Se riceviamo un risultato non di ricerca, lo aggiungiamo sempre e
             // comunque:
+            Log.d("eee"," JSON = "+response);
             n = ((JSONListAdapter)adapter).addFromJSON(response);
             if (n < PHP_ARRAY_LENGTH) {
                 notifyDataEnded();
@@ -232,10 +232,10 @@ public class EsercentiListFragment extends SearchEndlessListFragment
     @SuppressWarnings("rawtypes")
     public void onChangeWhereWhenFilter() {
         if (postMap == null) {
-            Toast.makeText(Utils.context, "Zompo", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(Utils.context, "Zompo", Toast.LENGTH_SHORT).show();
             return;
         }
-        Toast.makeText(Utils.context, "Non Zompo", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(Utils.context, "Non Zompo", Toast.LENGTH_SHORT).show();
         postMap.put("prov",   Utils.getPreferenceString("where", "Qui"));
         postMap.put("giorno", Utils.getWeekDay());
         postMap.put("filtro", this.filter);
