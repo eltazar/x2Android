@@ -231,10 +231,10 @@ public class EsercentiListFragment extends SearchEndlessListFragment
     
     @SuppressWarnings("rawtypes")
     public void onChangeWhereWhenFilter() {
-        if (postMap == null) {
-            //Toast.makeText(Utils.context, "Zompo", Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        if (postMap == null) {
+//            //Toast.makeText(Utils.context, "Zompo", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
         //Toast.makeText(Utils.context, "Non Zompo", Toast.LENGTH_SHORT).show();
         postMap.put("prov",   Utils.getPreferenceString("where", "Qui"));
         postMap.put("giorno", Utils.getWeekDay());

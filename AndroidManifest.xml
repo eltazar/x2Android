@@ -39,7 +39,8 @@
         <activity
             android:name=".doveusarla.EsercentiBaseActivity"
             android:label=""
-       		android:uiOptions="splitActionBarWhenNarrow">
+       		android:uiOptions="splitActionBarWhenNarrow"
+       		android:screenOrientation="portrait">
        		<meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
