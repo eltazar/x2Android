@@ -7,6 +7,7 @@ package it.wm;
 import android.util.Log;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <code>HTTPAccess</code> provides an intuitive and simplified API to access
@@ -61,7 +62,7 @@ public class HTTPAccess implements DownloaderTask.DownloadListener {
      *            connection status won't be notified.
      */
     public Boolean startHTTPConnection(String urlString, Method method,
-            HashMap<String, String> postMap, String tag) {
+            Map<String, String> postMap, String tag) {
         int httpMethod;
         if (method == Method.POST) {
             httpMethod = DownloadRequest.POST;
@@ -77,8 +78,10 @@ public class HTTPAccess implements DownloaderTask.DownloadListener {
             DownloaderTask task = new DownloaderTask();
             task.setListener(this);
             task.execute(params);
+            Log.d(DEBUG_TAG, "Starting download");
             return true;
         }
+        Log.d(DEBUG_TAG, "Download ALREADY started");
         return false;
     }
     

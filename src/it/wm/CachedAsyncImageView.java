@@ -51,11 +51,11 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
     }
     
     private void initialize() {
-        Log.d(DEBUG_TAG, "Inizializing");
+        //Log.d(DEBUG_TAG, "Inizializing");
         imageView = new ImageView(getContext());
-        Log.d(DEBUG_TAG, "imageView is: " + imageView);
+        //Log.d(DEBUG_TAG, "imageView is: " + imageView);
         progressBar = new ProgressBar(getContext());
-        Log.d(DEBUG_TAG, "progressBar is: " + progressBar);
+        //Log.d(DEBUG_TAG, "progressBar is: " + progressBar);
         progressBar.setIndeterminate(true);
         this.addView(imageView);
         this.addView(progressBar);
@@ -97,7 +97,7 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
      */
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        Log.d(DEBUG_TAG, "Detached!");
+        //Log.d(DEBUG_TAG, "Detached!");
         DrawableCache.getInstance(this.getContext()).removeListener(request, this);
         if (fadeIn != null) {
             fadeIn.end();
@@ -110,7 +110,7 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
     }
     
     public void loadScaledImageFromURL(String url) {
-        Log.d(DEBUG_TAG, "loading with size: " + imageView.getWidth() + ", " + imageView.getHeight());
+        //Log.d(DEBUG_TAG, "loading with size: " + imageView.getWidth() + ", " + imageView.getHeight());
         loadImageFromURL(url, imageView.getWidth(), imageView.getHeight());
     }
     
@@ -128,10 +128,10 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
         
         DrawableCache cache = DrawableCache.getInstance(this.getContext());
         Drawable data = cache.getCacheLine(request, reqWidth, reqHeight, this);
-        Log.d(DEBUG_TAG, "Loading image from: " + url.toString());
+        //Log.d(DEBUG_TAG, "Loading image from: " + url.toString());
         
         if (data != null) {
-            Log.d(DEBUG_TAG, "Cache hit!");
+            //Log.d(DEBUG_TAG, "Cache hit!");
             
             imageView.setImageDrawable(data);
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
@@ -149,7 +149,7 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
              * sta cosa, e se stiamo leakando oggetti :/
              */
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-                Log.d(DEBUG_TAG, "Fading in instantly");
+                //Log.d(DEBUG_TAG, "Fading in instantly");
                 Animation fadeInInstantly = new AlphaAnimation(0.999f, 1.0f);
                 fadeInInstantly.setDuration(1l);
                 fadeInInstantly.setFillAfter(true);
@@ -213,7 +213,7 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
     }
     
     private void crossFadeBeforeHoneycomb(long duration) {
-        Log.d(DEBUG_TAG, "Animazioni Base");
+        //Log.d(DEBUG_TAG, "Animazioni Base");
         Animation cFadeIn = new AlphaAnimation(0.0f, 1.0f);
         Animation cFadeOut = new AlphaAnimation(1.0f, 0.0f);
         cFadeIn.setDuration(duration);
@@ -239,7 +239,7 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
     
     @TargetApi(11)
     private void crossFadeFromHoneycomb(long duration) {
-        Log.d(DEBUG_TAG, "Animazioni HoneyComb");
+        //Log.d(DEBUG_TAG, "Animazioni HoneyComb");
         progressBar.setAlpha(1.0f);
         progressBar.setVisibility(VISIBLE);
         fadeIn = android.animation.ObjectAnimator.ofFloat(imageView, "alpha", 0.0f, 1.0f);
@@ -257,7 +257,7 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
             
             @Override
             public void onAnimationEnd(android.animation.Animator animation) {
-                Log.d(DEBUG_TAG, "Honeycomb animation ended");
+                //Log.d(DEBUG_TAG, "Honeycomb animation ended");
                 progressBar.setVisibility(INVISIBLE);
             }
             
