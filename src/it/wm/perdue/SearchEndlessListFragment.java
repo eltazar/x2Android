@@ -4,7 +4,6 @@
 package it.wm.perdue;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListAdapter;
@@ -76,7 +75,7 @@ public abstract class SearchEndlessListFragment extends EndlessListFragment {
             boolean loadMore =
                     firstVisibleItem + visibleItemCount >= totalItemCount - visibleItemCount;
             if (loadMore && (searchDownloading == 0) && !searchNoMoreData) {
-                Log.d(DEBUG_TAG, "onScroll Downloading from: " + searchAdapter.getCount());
+                //Log.d(DEBUG_TAG, "onScroll Downloading from: " + searchAdapter.getCount());
                 downloadSearchRows(searchAdapter.getCount());
             }
         }
@@ -90,12 +89,12 @@ public abstract class SearchEndlessListFragment extends EndlessListFragment {
     
     protected void notifySearchDownloadStarted() {
         searchDownloading++;
-        Log.d(DEBUG_TAG, "Donwloading +: " + searchDownloading);
+        //Log.d(DEBUG_TAG, "Donwloading +: " + searchDownloading);
     }
     
     protected void notifySearchDownloadEnded() {
        searchDownloading--;
-        Log.d(DEBUG_TAG, "Donwloading -: " + searchDownloading);
+        //Log.d(DEBUG_TAG, "Donwloading -: " + searchDownloading);
     }
     
     protected void saveSearchData(String data) {

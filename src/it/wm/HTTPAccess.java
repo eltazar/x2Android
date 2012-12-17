@@ -71,7 +71,7 @@ public class HTTPAccess implements DownloaderTask.DownloadListener {
         }
         
         DownloadRequest params = new DownloadRequest(urlString, httpMethod, postMap);
-        Log.d(DEBUG_TAG, "postMap is: " + postMap);
+        //Log.d(DEBUG_TAG, "postMap is: " + postMap);
         tag = (tag == null ? urlString : tag);
         if (tagMap.put(params, tag) == null) {
             // Eseguiamo la richiesta solo se non è già in corso
@@ -81,14 +81,14 @@ public class HTTPAccess implements DownloaderTask.DownloadListener {
             Log.d(DEBUG_TAG, "Starting download");
             return true;
         }
-        Log.d(DEBUG_TAG, "Download ALREADY started");
+        //Log.d(DEBUG_TAG, "Download ALREADY started");
         return false;
     }
     
     /* *** BEGIN: DownloaderTask.ResponseListener **************** */
     @Override
     public void onDownloadCompleted(DownloadRequest request, byte[] responseBody) {
-        Log.d(DEBUG_TAG, "onDownloadCompleted");
+        //Log.d(DEBUG_TAG, "onDownloadCompleted");
         String tag = tagMap.remove(request);
         if (listener != null) {
             listener.onHTTPResponseReceived(tag, new String(responseBody));

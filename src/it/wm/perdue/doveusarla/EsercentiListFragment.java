@@ -52,8 +52,8 @@ public class EsercentiListFragment extends SearchEndlessListFragment
         args.putString(Tags.ARGS_CATEGORY, categ.toLowerCase());
         args.putString(Tags.ARGS_SORTING, sort.toLowerCase());
         fragment.setArguments(args);
-        Log.d(DEBUG_TAG, "NEW INSTANCE --> SORTING = " + fragment.sorting + " category = "
-                + fragment.category);
+//        Log.d(DEBUG_TAG, "NEW INSTANCE --> SORTING = " + fragment.sorting + " category = "
+//                + fragment.category);
         
         return fragment;
     }
@@ -104,7 +104,7 @@ public class EsercentiListFragment extends SearchEndlessListFragment
     @Override    
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        Log.d(DEBUG_TAG, "ON CREATED VIEW --> SORTING = " + sorting + " category = " + category);
+       // Log.d(DEBUG_TAG, "ON CREATED VIEW --> SORTING = " + sorting + " category = " + category);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
     
@@ -140,7 +140,7 @@ public class EsercentiListFragment extends SearchEndlessListFragment
     @SuppressWarnings("rawtypes")
     protected void setDataForQuery(String data) {
     	String newSearchKey = data.replace(" ", "-");
-        Log.d(DEBUG_TAG, "setDataForQuery = " + data);
+       // Log.d(DEBUG_TAG, "setDataForQuery = " + data);
         if (data.equals("")) {
             setNormalMode();
         } else {
@@ -170,7 +170,7 @@ public class EsercentiListFragment extends SearchEndlessListFragment
         if (tag.equals(Tags.TAG_NORMAL + mapToTag(postMap))) {
             // Se riceviamo un risultato non di ricerca, lo aggiungiamo sempre e
             // comunque:
-            Log.d("eee"," JSON = "+response);
+            //Log.d("eee"," JSON = "+response);
             n = ((JSONListAdapter)adapter).addFromJSON(response);
             if (n < PHP_ARRAY_LENGTH) {
                 notifyDataEnded();
@@ -220,7 +220,7 @@ public class EsercentiListFragment extends SearchEndlessListFragment
     
     public void onListItemClick(ListView l, View v, int position, long id) {
         Esercente ese = (Esercente) l.getAdapter().getItem(position);
-        Log.d("XXX", "cliccato item = " + ese.getID());
+        //Log.d("XXX", "cliccato item = " + ese.getID());
         
         Intent intent = new Intent(getActivity(), DettaglioEsercenteBaseActivity.class);
         intent.putExtra(DettaglioEsercenteBaseActivity.Tags.ID,       "" + ese.getID());
@@ -231,10 +231,10 @@ public class EsercentiListFragment extends SearchEndlessListFragment
     
     @SuppressWarnings("rawtypes")
     public void onChangeWhereWhenFilter() {
-//        if (postMap == null) {
-//            //Toast.makeText(Utils.context, "Zompo", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
+        if (postMap == null) {
+            //Toast.makeText(Utils.context, "Zompo", Toast.LENGTH_SHORT).show();
+            return;
+        }
         //Toast.makeText(Utils.context, "Non Zompo", Toast.LENGTH_SHORT).show();
         postMap.put("prov",   Utils.getPreferenceString("where", "Qui"));
         postMap.put("giorno", Utils.getWeekDay());

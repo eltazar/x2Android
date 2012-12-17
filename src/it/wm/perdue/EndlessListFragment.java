@@ -6,7 +6,6 @@ package it.wm.perdue;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
@@ -41,15 +40,15 @@ public abstract class EndlessListFragment extends SherlockListFragment
     			.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     	footerView = inflater.inflate(R.layout.endless_list_footer, null);
     	if (footerView == null) {
-    		Log.d(DEBUG_TAG, "footerView è null");
+    		//Log.d(DEBUG_TAG, "footerView è null");
     	} else 
-    		Log.d(DEBUG_TAG, "footerView non è null");
+    		//Log.d(DEBUG_TAG, "footerView non è null");
     	
     	if (savedInstanceState != null) {
             listState  = savedInstanceState.getParcelable(		Tags.LIST_STATE);
             dataToSave = savedInstanceState.getStringArrayList(	Tags.DATA_TO_SAVE);
             noMoreData = savedInstanceState.getBoolean(			Tags.NO_MORE_DATA);
-            Log.d(DEBUG_TAG, "dataToSave è: " + dataToSave);
+            //Log.d(DEBUG_TAG, "dataToSave è: " + dataToSave);
         }
         
         if (dataToSave == null) dataToSave = new ArrayList<String>();
@@ -141,12 +140,12 @@ public abstract class EndlessListFragment extends SherlockListFragment
     
     protected void notifyDownloadStarted() {
         downloading++;
-        Log.d(DEBUG_TAG, "Donwloading +: " + downloading);
+       // Log.d(DEBUG_TAG, "Donwloading +: " + downloading);
     }
     
     protected void notifyDownloadEnded() {
         downloading--;
-        Log.d(DEBUG_TAG, "Donwloading -: " + downloading);
+       // Log.d(DEBUG_TAG, "Donwloading -: " + downloading);
     }
     
     protected void saveData(String data) {

@@ -71,7 +71,7 @@ public class NewsDetailActivity extends SherlockActivity implements HTTPAccess.R
          * share
          */
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
-        Log.d(DEBUG_TAG, item.toString());
+        //Log.d(DEBUG_TAG, item.toString());
         
         /** Getting the target intent */
         Intent intent = getDefaultShareIntent();

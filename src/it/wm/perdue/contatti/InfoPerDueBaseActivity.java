@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.webkit.WebView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -37,7 +36,7 @@ public class InfoPerDueBaseActivity extends SherlockFragmentActivity {
         if (extras != null) {
             request = extras.getString("request");
         }
-        Log.d("YYY", "REQUEST = " + request);
+        //Log.d("YYY", "REQUEST = " + request);
         
         if (savedInstanceState != null)
             return;

@@ -132,7 +132,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
     public void onHTTPResponseReceived(String tag, String response) {
         // downloading--;
         
-        Log.d("xxx", "RISPOSTA = " + response);
+        //Log.d("xxx", "RISPOSTA = " + response);
         
         if (tag.equals(TAG_NORMAL)) {
             // Se riceviamo un risultato non di ricerca, lo aggiungiamo sempre e
@@ -146,7 +146,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
     public void onHTTPerror(String tag) {
         // TODO: aggiungere tasto TAP TO REFRESH
         
-        Log.d(DEBUG_TAG, "Errore nel download");
+        //Log.d(DEBUG_TAG, "Errore nel download");
         // downloading--;
         // Log.d(DEBUG_TAG, "Donwloading " + downloading);
         progressDialog.dismiss();
@@ -176,8 +176,8 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             startActivity(intent);
         }
         else if (cellKind != null && cellKind.equals("mail")) {
-            Log.d("AAA", " CELLA MAIL-->" + ((TextView) v.findViewById(R.id.contactResource))
-                    .getText().toString());
+            //Log.d("AAA", " CELLA MAIL-->" + ((TextView) v.findViewById(R.id.contactResource))
+                   // .getText().toString());
             
             try {
                 Utils.writeEmail(((TextView) v.findViewById(R.id.contactResource))
@@ -189,22 +189,22 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         }
         else if (cellKind != null && cellKind.equals("tel")) {
             
-            Log.d("AAA", " CELLA TEL-->" + ((TextView) v.findViewById(R.id.contactResource))
-                    .getText().toString());
+//            Log.d("AAA", " CELLA TEL-->" + ((TextView) v.findViewById(R.id.contactResource))
+//                    .getText().toString());
             
             try {
                 Utils.callNumber(((TextView) v.findViewById(R.id.contactResource))
                         .getText().toString(), getActivity());
             } catch (ActivityNotFoundException e) {
-                Log.e("helloandroid dialing example", "Call failed", e);
+                //Log.e("helloandroid dialing example", "Call failed", e);
                 Toast.makeText(getActivity(),
                         "Spiacenti, non è possibile chiamare il numero selezionato.",
                         Toast.LENGTH_SHORT).show();
             }
         }
         else if (cellKind != null && cellKind.equals("web")) {
-            Log.d("AAA", " CELLA web -> " + ((TextView) v.findViewById(R.id.contactResource))
-                    .getText().toString());
+//            Log.d("AAA", " CELLA web -> " + ((TextView) v.findViewById(R.id.contactResource))
+//                    .getText().toString());
             try {
                 Utils.openBrowser(((TextView) v.findViewById(R.id.contactResource))
                         .getText().toString(), getActivity());
@@ -216,7 +216,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
     }
     
     protected void dismissWaitingProgressDialog(){
-        Log.d("uuu","dismissed");
+        //Log.d("uuu","dismissed");
         progressDialog.dismiss();
     }
     
@@ -225,7 +225,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         
         public DettaglioEsercenteAdapter(Context context, int resource, Class<T> clazz) {
             super(context, resource, clazz);
-            Log.d("UUU", "DETTAGLIO ESERCENTE ADAPTER --> count = "+sections.size());
+          //  Log.d("UUU", "DETTAGLIO ESERCENTE ADAPTER --> count = "+sections.size());
         }
         
         public View getView(int position, View v, ViewGroup parent) {
