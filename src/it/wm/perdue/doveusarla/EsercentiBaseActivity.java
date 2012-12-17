@@ -154,7 +154,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
                     f.setLongitude(location.getLongitude());
                 }
             }
-            locationManager.requestLocationUpdates(providerId, 5, 5000, locationListener);
+            locationManager.requestLocationUpdates(providerId, 5000, 5000, locationListener);
         }
     }
     
