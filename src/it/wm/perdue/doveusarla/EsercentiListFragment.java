@@ -20,6 +20,7 @@ import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.Esercente;
 import it.wm.perdue.dettaglioEsercenti.DettaglioEsercenteBaseActivity;
 
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -167,7 +168,8 @@ public class EsercentiListFragment extends SearchEndlessListFragment
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
         int n;
-        if (tag.equals(Tags.TAG_NORMAL + mapToTag(postMap))) {
+        
+        if (tag.equals(Tags.TAG_NORMAL + mapToTagString(postMap))) {
             // Se riceviamo un risultato non di ricerca, lo aggiungiamo sempre e
             // comunque:
             //Log.d("eee"," JSON = "+response);
@@ -187,7 +189,7 @@ public class EsercentiListFragment extends SearchEndlessListFragment
              * corrente scartando quelli di ricerche vecchie. TODO: le
              * connessioni delle ricerche vecchie andrebbero proprio fermate
              */
-            if (!isInSearchMode() || !tag.equals(Tags.TAG_SEARCH + mapToTag(searchPostMap))) {
+            if (!isInSearchMode() || !tag.equals(Tags.TAG_SEARCH + mapToTagString(searchPostMap))) {
             	// Ricerca vecchia. Non facciamo niente.
             	Log.d(DEBUG_TAG, "Scarto i risultati della ricerca: " + tag
             			+ " inSearchMode: " + isInSearchMode() 
@@ -247,12 +249,14 @@ public class EsercentiListFragment extends SearchEndlessListFragment
 
     @Override
 	protected void downloadRows(int from) {
+                
     	postMap.put("from", "" + from);
+
         Boolean downloadStarted = httpAccess.startHTTPConnection(
                 urlString,
                 HTTPAccess.Method.POST,
                 postMap,
-                Tags.TAG_NORMAL + mapToTag(postMap));
+                Tags.TAG_NORMAL + mapToTagString(postMap));
         if (downloadStarted) notifyDownloadStarted();
 	}
     
@@ -260,18 +264,33 @@ public class EsercentiListFragment extends SearchEndlessListFragment
 	protected void downloadSearchRows(int from) {
         searchPostMap.put("from", "" + from);
         searchPostMap.put("chiave", searchKey);
+     
         Boolean downloadStarted = httpAccess.startHTTPConnection(
                 urlString,
                 HTTPAccess.Method.POST,
                 searchPostMap,
-                Tags.TAG_SEARCH + mapToTag(searchPostMap));
+                Tags.TAG_SEARCH + mapToTagString(searchPostMap));
         if (downloadStarted) notifySearchDownloadStarted();
 	}
+    
+    private String mapToTagString(TreeMap<String, String> map){
+        String mapToTagString = "";
+
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.GINGERBREAD){
+            mapToTagString = mapToTagPreGinger(map);
+        }
+        else{
+            mapToTagString = mapToTag(map);
+        }
+       
+        return mapToTagString;
+    }
     
     private static String mapToTag(TreeMap<String, String> map) {  
         StringBuilder tag = new StringBuilder();
         Entry<String, String> e = map.firstEntry();
         tag.append("{");
+
         while (e != null) {
             String key = e.getKey();
             if (!key.equals("from")) { 
@@ -283,8 +302,31 @@ public class EsercentiListFragment extends SearchEndlessListFragment
             e = map.higherEntry(key);
         }
         tag.append("}");
+        //Log.d("uuu","tag = "+tag.toString());
         return tag.toString();
     }
+    
+    private static String mapToTagPreGinger(TreeMap<String, String> map) {  
+        StringBuilder tag = new StringBuilder();
+        tag.append("{");
+        Iterator<Entry<String, String>> iterator = map.entrySet().iterator();
+        Entry<String, String> ee = null;
+
+        while (iterator.hasNext()) {
+            ee = iterator.next();
+            String key = ee.getKey();
+            if (!key.equals("from")) { 
+                tag.append(key);
+                tag.append("=");
+                tag.append(ee.getValue());
+                tag.append("&");
+            }
+        }
+        tag.append("}");
+        //Log.d("uuu","tag 2= "+tag.toString());
+        return tag.toString();
+    }
+    
     
 
 	@SuppressWarnings("rawtypes")
