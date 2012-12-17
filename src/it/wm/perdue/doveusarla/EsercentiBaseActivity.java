@@ -86,7 +86,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	Log.d(DEBUG_TAG, "onCreate");
+    	//Log.d(DEBUG_TAG, "onCreate");
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.esercenti_base_activity);
@@ -180,11 +180,11 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         // ricevuti nuovi dati gps aggiorno le coordinate del fragment e lancio
         // la query
         
-        Log.d("AA", "UPDATE LOCATION DATA");
+        //Log.d("AA", "UPDATE LOCATION DATA");
         
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
-        Log.d("VVV", " base activity LAT = " + latitude + " LONG =" + longitude);
+        //Log.d("VVV", " base activity LAT = " + latitude + " LONG =" + longitude);
         for (int i = 0; i < pagerAdapter.getCount(); i++) {
             EsercentiListFragment f = (EsercentiListFragment)
                     pagerAdapter.getItem(i);
@@ -215,7 +215,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         if(dove.equals("Qui"))
             dove = "Qui vicino";
                 
-        Log.d("UUU" , "CREAZIONE MENU = "+Utils.getPreferenceString(WHERE, "Qui vicino"));
+        //Log.d("UUU" , "CREAZIONE MENU = "+Utils.getPreferenceString(WHERE, "Qui vicino"));
         menu.findItem(R.id.ww).setTitle(dove 
                                         + "-" + Utils.getPreferenceString(WHEN, "Oggi"));
         
@@ -241,7 +241,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
     }
     
     private void setupSearchView(Menu menu) {
-    	Log.d(DEBUG_TAG, "setupSearchView");
+    	//Log.d(DEBUG_TAG, "setupSearchView");
         SearchView mSearchView = (SearchView) menu.findItem(R.id.abSearch)
                 .getActionView();
         mSearchView.setOnQueryTextListener(this);
@@ -258,7 +258,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
             }
             
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                Log.d(DEBUG_TAG, "onMenuItemActionCollapse");
+                //Log.d(DEBUG_TAG, "onMenuItemActionCollapse");
                 inSearch = false;
                 onQueryTextChange("");
                 return true;
@@ -283,7 +283,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
     
     @Override
     public boolean onQueryTextChange(String newText) {
-        Log.d(DEBUG_TAG, "Query text changed: " + newText);
+       // Log.d(DEBUG_TAG, "Query text changed: " + newText);
         for (int i = 0; i < pagerAdapter.getCount(); i++) {
             EsercentiListFragment f = (EsercentiListFragment) pagerAdapter.getItem(i);
             f.setDataForQuery(newText);
@@ -350,7 +350,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         public EsercentiPagerAdapter(FragmentManager fm, String category) {
             super(fm);
             this.category = category;
-            Log.d(DEBUG_TAG, "category " + category);
+            //Log.d(DEBUG_TAG, "category " + category);
             if (category.equals("Ristoranti") || category.equals("PubseBar")) {
                 CONTENT.add("Prezzo");
                 mCount++;

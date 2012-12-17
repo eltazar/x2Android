@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.telephony.PhoneNumberUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -126,7 +125,7 @@ public class RichiediCartaFragment extends SherlockFragment implements
     public void onHTTPResponseReceived(String tag, String response) {
         // TODO Auto-generated method stub
         
-        Log.d("XXX", "RisPosta -> " + response);
+        //Log.d("XXX", "RisPosta -> " + response);
         progressDialog.cancel();
         CharSequence text = "Richiesta inviata!";
         Toast toast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
@@ -136,7 +135,7 @@ public class RichiediCartaFragment extends SherlockFragment implements
     @Override
     public void onHTTPerror(String tag) {
         // TODO Auto-generated method stub
-        Log.d("XXX", "ERRORE INVIO ->" + tag);
+        //Log.d("XXX", "ERRORE INVIO ->" + tag);
         progressDialog.cancel();
         CharSequence text = "C'è stato un problema, riprova!";
         Toast toast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
@@ -149,7 +148,7 @@ public class RichiediCartaFragment extends SherlockFragment implements
         
         switch (v.getId()) {
             case R.id.sendBtn:
-                Log.d("XXX", "SEND BTN");
+                //Log.d("XXX", "SEND BTN");
                 if (validateFields() == false) {
                     // mostro avviso errore
                     CharSequence text = "Per favore completa i campi richiesti correttamente";
@@ -161,7 +160,7 @@ public class RichiediCartaFragment extends SherlockFragment implements
                 }
                 break;
             case R.id.surname:
-                Log.d("XXX", "COGNOME EDIT TEXT");
+               // Log.d("XXX", "COGNOME EDIT TEXT");
                 break;
             case R.id.email:
                 break;
@@ -184,7 +183,7 @@ public class RichiediCartaFragment extends SherlockFragment implements
         boolean isValid = true;
         
         if (name.length() == 0) {
-            Log.d("XXX", "name -> " + name + " invalido");
+            //Log.d("XXX", "name -> " + name + " invalido");
             // nameEditText.setHint("Nome");
             nameEditText.setText("");
             nameEditText.setHintTextColor(Color.RED);
@@ -194,7 +193,7 @@ public class RichiediCartaFragment extends SherlockFragment implements
         
         if (surname.length() == 0) {
             // setto rosso il field
-            Log.d("XXX", "surname-> " + surname + " invalido");
+            //Log.d("XXX", "surname-> " + surname + " invalido");
             // surnameEditText.setHint("Cognome");
             surnameEditText.setText("");
             surnameEditText.setHintTextColor(Color.RED);
@@ -204,7 +203,7 @@ public class RichiediCartaFragment extends SherlockFragment implements
         
         if (email.length() == 0 || !Utils.checkEmail(email)) {
             // setto rosso il field
-            Log.d("XXX", "mail -> " + email + " invalido");
+           // Log.d("XXX", "mail -> " + email + " invalido");
             // mailEditText.setHint("E-mail");
             // mailEditText.setText("");
             mailEditText.setHintTextColor(Color.RED);
@@ -214,7 +213,7 @@ public class RichiediCartaFragment extends SherlockFragment implements
         
         if (tel.length() == 0 || !PhoneNumberUtils.isGlobalPhoneNumber(tel)) {
             // setto rosso il field
-            Log.d("XXX", "tel -> " + tel + " invalido");
+            //Log.d("XXX", "tel -> " + tel + " invalido");
             // telEditText.setHint("Telefono");
             // telEditText.setText("");
             telEditText.setHintTextColor(Color.RED);
@@ -223,7 +222,7 @@ public class RichiediCartaFragment extends SherlockFragment implements
         }
         
         if (card.length() == 0 || card.equals("Scegli carta PerDue")) {
-            Log.d("XXX", "card -> " + card + " invalido");
+           // Log.d("XXX", "card -> " + card + " invalido");
             ((TextView) cardSpinner.getChildAt(0)).setTextColor(Color.RED);
             isValid = false;
         }
@@ -245,7 +244,7 @@ public class RichiediCartaFragment extends SherlockFragment implements
         // TODO Auto-generated method stub
         
         if (hasFocus) {
-            Log.d("XXX", "has focus");
+            //Log.d("XXX", "has focus");
             EditText field = (EditText) v;
             field.setHintTextColor(Color.GRAY);
             field.setTextColor(Color.BLACK);
@@ -265,7 +264,7 @@ public class RichiediCartaFragment extends SherlockFragment implements
         
          httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
          postMap, TAG_NORMAL);
-        Log.d("XXX", "i dati da inviare al server sono: " + postMap);
+        //Log.d("XXX", "i dati da inviare al server sono: " + postMap);
         
         progressDialog = ProgressDialog.show(getActivity(), "", "Invio in corso...");
         

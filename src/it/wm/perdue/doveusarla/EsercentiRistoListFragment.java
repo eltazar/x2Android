@@ -4,7 +4,6 @@ package it.wm.perdue.doveusarla;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -25,8 +24,8 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
         args.putString(Tags.ARGS_CATEGORY, categ.toLowerCase());
         args.putString(Tags.ARGS_SORTING,  sort.toLowerCase());
         fragment.setArguments(args);
-        Log.d("***************", "NEW INSTANCE --> SORTING = " + fragment.sorting + " category = "
-                + fragment.category);
+//        Log.d("***************", "NEW INSTANCE --> SORTING = " + fragment.sorting + " category = "
+//                + fragment.category);
         return fragment;
     }
     
@@ -34,7 +33,7 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         urlString = "http://www.cartaperdue.it/partner/v2.0/EsercentiRistorazione.php";
-        Log.d(DEBUG_TAG, "url string = " + urlString);
+       // Log.d(DEBUG_TAG, "url string = " + urlString);
     }
     
     @Override
@@ -53,7 +52,7 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
     
     public void onChangeFilter(String f) {
         this.filter = f;
-        Log.d(DEBUG_TAG, "cambiato filtro dentro risto = " + this.filter);
+        //Log.d(DEBUG_TAG, "cambiato filtro dentro risto = " + this.filter);
         onChangeWhereWhenFilter();
     }
     
@@ -73,11 +72,11 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
         public EsercenteRistoJSONListAdapter(Context context, int resource,
                 Class<EsercenteRistorazione[]> clazz, String sorting) {
             super(context, resource, clazz);
-            Log.d(DEBUG_TAG, "RISTO ADAPTER ISTANZIATO");
+          //  Log.d(DEBUG_TAG, "RISTO ADAPTER ISTANZIATO");
         }
         
         public View getView(int position, View convertView, ViewGroup parent) {
-            Log.d(DEBUG_TAG, "GET VIEW DI RISTO LIST");
+          // Log.d(DEBUG_TAG, "GET VIEW DI RISTO LIST");
             
             View v = convertView;
             if (v == null) {
@@ -98,7 +97,7 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
                         + esercente.getID();
                 
                 if (caImageView != null) {
-                    Log.d(DEBUG_TAG, "esercente id  = " + esercente.getID());
+                    //Log.d(DEBUG_TAG, "esercente id  = " + esercente.getID());
                     caImageView.loadImageFromURL(urlImageString);
                 }
                 

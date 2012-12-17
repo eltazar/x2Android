@@ -40,7 +40,7 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
         adapter = new DettaglioEsercenteRistoAdapter(
                 getActivity(),
                 R.layout.esercente_row, EsercenteRistorazione.class);
-        Log.d("XXX", "ON CREATE ADAPTER RISTO = " + adapter);
+        //Log.d("XXX", "ON CREATE ADAPTER RISTO = " + adapter);
     }
     
     private static class DettaglioEsercenteRistoAdapter extends
@@ -49,7 +49,7 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
         public DettaglioEsercenteRistoAdapter(Context context, int resource,
                 Class<EsercenteRistorazione> clazz) {
             super(context, resource, clazz);
-            Log.d("XXX", "DETTAGLIO RISTO ADAPTER");
+            //Log.d("XXX", "DETTAGLIO RISTO ADAPTER");
         }
         
         @Override
@@ -124,7 +124,7 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
             
             super.checkFields();
             
-            Log.d("XXX", "*********** checkfield figlia");
+            //Log.d("XXX", "*********** checkfield figlia");
             if (esercente.getAmbiente() != null
                     || esercente.getSottoTipologia() !=
                     null ||

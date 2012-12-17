@@ -8,7 +8,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -99,7 +98,7 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
                     public void onClick(DialogInterface dialog, int id) {
                         // salvo le impostazioni selezionate se la selezione non
                         // è vuota
-                        Log.d("uu", " ### WHERE ->  : " + where + " WHEN -> " + when);
+                        //Log.d("uu", " ### WHERE ->  : " + where + " WHEN -> " + when);
                         if (!where.equals(""))
                             Utils.setPreferenceString(WHERE, where);
                         else
@@ -143,10 +142,10 @@ public class DoveQuandoDialog extends SherlockDialogFragment implements OnItemCl
                 if(position == 0)
                     where = "Qui";
                 else where = cities[position];
-                Log.d("XX", "LISTA WHERE -> oggetto : " + where);
+                //Log.d("XX", "LISTA WHERE -> oggetto : " + where);
                 break;
             case R.id.when:
-                Log.d("XX", "LISTA WHEN -> oggetto : " + days[position]);
+                //Log.d("XX", "LISTA WHEN -> oggetto : " + days[position]);
                 when = days[position];
                 break;
             default:

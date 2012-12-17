@@ -2,7 +2,6 @@
 package it.wm.perdue;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ArrayAdapter;
 
@@ -31,7 +30,7 @@ public class JSONListAdapter<T extends HasID> extends ArrayAdapter<T> {
     public int addFromJSON(String jsonString) throws NullPointerException {
         jsonString = Utils.formatJSON(jsonString);
         
-        Log.d("JSONListAdapter", "JSONSTRING = " + jsonString);
+        //Log.d("JSONListAdapter", "JSONSTRING = " + jsonString);
         /*
          * new AsyncTask<String, Void, T[]>() {
          * @Override protected T[] doInBackground(String... params) {
@@ -50,7 +49,7 @@ public class JSONListAdapter<T extends HasID> extends ArrayAdapter<T> {
             objects = gson.fromJson(jsonString, clazz);
         } catch (JsonSyntaxException e) {
             // In teoria se siamo qui, significa che è arrivato un array vuoto,
-            Log.d("JSONListAdapter", "Ho rilevato un array vuoto");
+            //Log.d("JSONListAdapter", "Ho rilevato un array vuoto");
             e.printStackTrace();
             objects = gson.fromJson("[]", clazz);
         }

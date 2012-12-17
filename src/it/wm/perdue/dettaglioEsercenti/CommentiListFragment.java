@@ -122,7 +122,7 @@ public class CommentiListFragment extends SherlockListFragment implements
         
         TextView row = (TextView) v.findViewById(R.id.commentoDemo);
         // lastTouchedRowTextView = row;
-        Log.d("CCC", " TEXT VIEW pointer = " + row);
+        //Log.d("CCC", " TEXT VIEW pointer = " + row);
         
         row.setMaxLines(30);
     }
@@ -137,7 +137,7 @@ public class CommentiListFragment extends SherlockListFragment implements
         }
         setListShown(true);
         downloading--;
-        Log.d(DEBUG_TAG, "Donwloading " + downloading);
+        //Log.d(DEBUG_TAG, "Donwloading " + downloading);
         
         if (adapter.isEmpty()) {
             CharSequence text = "Spiacenti, nessun commento disponibile";
@@ -149,9 +149,9 @@ public class CommentiListFragment extends SherlockListFragment implements
     
     @Override
     public void onHTTPerror(String tag) {
-        Log.d(DEBUG_TAG, "Errore nel download");
+       // Log.d(DEBUG_TAG, "Errore nel download");
         downloading--;
-        Log.d(DEBUG_TAG, "Donwloading " + downloading);
+       // Log.d(DEBUG_TAG, "Donwloading " + downloading);
     }
     
     /* *** END: HTTPAccess.ResponseListener ******************* */
@@ -168,11 +168,11 @@ public class CommentiListFragment extends SherlockListFragment implements
         boolean loadMore =
                 firstVisibleItem + visibleItemCount >= totalItemCount - visibleItemCount;
         if (loadMore && downloading == 0 && !noMoreData) {
-            Log.d(DEBUG_TAG, "Donwload from: " + adapter.getCount());
+          //  Log.d(DEBUG_TAG, "Donwload from: " + adapter.getCount());
             String urlString = String.format(urlStringFormat, eseId, adapter.getCount());
             httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET, null, null);
             downloading++;
-            Log.d(DEBUG_TAG, "Donwloading " + downloading);
+           // Log.d(DEBUG_TAG, "Donwloading " + downloading);
         }
         
         // try {

@@ -4,7 +4,6 @@ package it.wm.perdue.dettaglioEsercenti;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.webkit.WebView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -47,7 +46,7 @@ public class AltreInfoActivity extends SherlockActivity implements HTTPAccess.Re
         // httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET,
         // null, null);
         
-        Log.d("XXX", "ESERECENTE ID = " + eseId);
+        //Log.d("XXX", "ESERECENTE ID = " + eseId);
 
         webView.postUrl(urlString, EncodingUtils.getBytes("idesercente="+eseId+"&appOs=android", "BASE64"));     
     }

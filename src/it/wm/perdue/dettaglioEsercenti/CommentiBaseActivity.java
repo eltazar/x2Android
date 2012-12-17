@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -87,7 +86,7 @@ public class CommentiBaseActivity extends SherlockFragmentActivity {
                 NavUtils.navigateUpTo(this, intent);
                 return true;
             case R.id.commenti:
-                Log.d("AAA", "cliccato pulsante commenti");
+                //Log.d("AAA", "cliccato pulsante commenti");
                 return true;
         }
         return super.onOptionsItemSelected(item);

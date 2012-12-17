@@ -4,7 +4,6 @@ package it.wm.perdue.dettaglioEsercenti;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -56,7 +55,7 @@ public class DettaglioJSONAdapter<T extends Esercente> extends
         
         //View v = convertView;
         int resource = getItemViewType(position);
-        Log.d("uuu","resource = "+resource);
+        //Log.d("uuu","resource = "+resource);
         
         
         v = inflater.inflate(resource, null);
@@ -130,7 +129,7 @@ public class DettaglioJSONAdapter<T extends Esercente> extends
     
     @Override
     public int getCount() {
-        Log.d("XXX", "COUNT = " + sections.size());
+        //Log.d("XXX", "COUNT = " + sections.size());
         return sections.size();
     }
     
@@ -168,7 +167,7 @@ public class DettaglioJSONAdapter<T extends Esercente> extends
             sections.add("url");
         }
         
-        Log.d("XXX", "fine checkfield madre");
+        //Log.d("XXX", "fine checkfield madre");
         
     }
     
