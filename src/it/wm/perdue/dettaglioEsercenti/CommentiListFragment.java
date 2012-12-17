@@ -124,7 +124,7 @@ public class CommentiListFragment extends SherlockListFragment implements
         // lastTouchedRowTextView = row;
         //Log.d("CCC", " TEXT VIEW pointer = " + row);
         
-        row.setMaxLines(30);
+        row.setMaxLines(Tags.MAX_LINES);
     }
     
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
@@ -245,6 +245,7 @@ public class CommentiListFragment extends SherlockListFragment implements
     
     public static class Tags {
         public static final String ID = "id";
+        public static final int MAX_LINES = 200;
     }
     
 }
