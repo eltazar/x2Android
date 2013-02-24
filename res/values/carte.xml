@@ -2,8 +2,8 @@
 <resources>
     <string-array name="carte_array">
         <item>Scegli carta PerDue</item>
-        <item>Carta Semestrale 20€</item>
-        <item>Carta Annuale 36€</item>
-        <item>Carta Biennale 55€</item>
+        <item>Carta Semestrale 24€</item>
+        <item>Carta Annuale 39€</item>
+        <item>Carta Biennale 59€</item>
     </string-array>
 </resources>
