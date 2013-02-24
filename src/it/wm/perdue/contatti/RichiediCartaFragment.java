@@ -271,13 +271,13 @@ public class RichiediCartaFragment extends SherlockFragment implements
     }
     
     private String getCardString() {
-        if (card.subSequence(6, card.length()).equals("Semestrale 20€")) {
+        if (card.subSequence(6, card.length()).equals("Semestrale 24€")) {
             card = "Semestrale";
         }
-        else if (card.subSequence(6, card.length()).equals("Annuale 36€")) {
+        else if (card.subSequence(6, card.length()).equals("Annuale 39€")) {
             card = "Annuale";
         }
-        else if (card.subSequence(6, card.length()).equals("Biennale 55€")) {
+        else if (card.subSequence(6, card.length()).equals("Biennale 59€")) {
             card = "Biennale";
         }
         return card;
