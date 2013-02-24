@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class DrawableCache implements DownloadListener {
     private static final String                 DEBUG_TAG     = "DrawableCache";
-    private static final int                    MAX_SIZE      = 100;
+    private static final int                    MAX_SIZE      = 45;
     private static DrawableCache                INSTANCE      = null;
     private Context                             appContext    = null;
     static final int                            CACHE_HIT     = 1;
