@@ -211,7 +211,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         this.menu = menu;
         // mSearchView.setOnCloseListener(this);
         //setto titolo pulsante
-        String dove = Utils.getPreferenceString(WHERE, "Qui vicino");
+        String dove = Utils.getPreferenceString(WHERE, "Qui");
         if(dove.equals("Qui"))
             dove = "Qui vicino";
                 
@@ -313,7 +313,7 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
         MenuItem wwMenuItem = menu.findItem(R.id.ww);
         // wwMenuItem.setTitle(wwMap.get("label"));
         
-        String dove = Utils.getPreferenceString(WHERE, "Qui vicino");
+        String dove = Utils.getPreferenceString(WHERE, "Qui");
                 
         if (dove.equals("Qui"))
             dove = "Qui vicino";
