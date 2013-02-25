@@ -86,8 +86,13 @@ class DownloaderTask extends AsyncTask<DownloadRequest, Void, byte[]> {
             // Log.d(DEBUG_TAG, "Content Type: " + conn.getContentType());
             // Log.d(DEBUG_TAG, "The response is: " + responseCode);
             
-            return fetchResponse();
-        } catch (IOException e) {
+            return fetchResponse();            
+        } 
+        catch(OutOfMemoryError e){
+            Log.d(DEBUG_TAG,"out of memory erorr: "+e.getLocalizedMessage());
+            return null;
+        }
+        catch (IOException e) {
             Log.d(DEBUG_TAG, "Unable to connect to " + url.toString() + ": " + e.getMessage());
             e.printStackTrace();
             return null;
