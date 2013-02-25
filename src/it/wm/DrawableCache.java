@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class DrawableCache implements DownloadListener {
     private static final String                 DEBUG_TAG     = "DrawableCache";
-    private static final int                    MAX_SIZE      = 45;
+    private static final int                    MAX_SIZE      = 15;
     private static DrawableCache                INSTANCE      = null;
     private Context                             appContext    = null;
     static final int                            CACHE_HIT     = 1;
@@ -113,18 +113,24 @@ public class DrawableCache implements DownloadListener {
         if ((new String(data)).equals("Use a placeholder")) {
             // TODO: settare un placeholder.
         } else {
+            
             BitmapFactory.Options opt = new BitmapFactory.Options();
             
             opt.inJustDecodeBounds = true;
+            opt.inPurgeable = true;
             BitmapFactory.decodeByteArray(data, 0, data.length, opt);
             //Log.d(DEBUG_TAG, "Image size: (" + opt.outWidth + ", " + opt.outHeight + ") -> (" 
-                    //+ reqWidth + ", " + reqHeight + ")");
+            //+ reqWidth + ", " + reqHeight + ")");
             opt.inSampleSize = calculateInSampleSize(opt, reqWidth, reqHeight);
             
             opt.inJustDecodeBounds = false;
-            
-            d = new BitmapDrawable(appContext.getResources(), 
-                                   BitmapFactory.decodeByteArray(data, 0, data.length, opt));
+            try{
+                d = new BitmapDrawable(appContext.getResources(), 
+                        BitmapFactory.decodeByteArray(data, 0, data.length, opt));                
+            }
+            catch(OutOfMemoryError e){
+                Log.d(DEBUG_TAG,"errore memoria esaurita"+e.getLocalizedMessage());
+            }
         }
         return d;
     }
@@ -150,6 +156,8 @@ public class DrawableCache implements DownloadListener {
     /* *** BEGIN: DownloaderTask.ResponseListener **************** */
     @Override
     public void onDownloadCompleted(DownloadRequest request, byte[] responseBody) {
+        
+        try{
         //Log.d(DEBUG_TAG, "**onHTTPResponseReceived");
         CacheLine line = cache.get(request);
         DrawableRequest dRequest = (DrawableRequest) request;
@@ -159,7 +167,10 @@ public class DrawableCache implements DownloadListener {
         }
         line.listeners.clear();
         line.listeners = null;
-        
+        }
+        catch(NullPointerException e){
+            Log.d(DEBUG_TAG,"null pointer in onDownloadCompleted");
+        }
     }
     
     @Override
