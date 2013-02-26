@@ -99,6 +99,13 @@ public final class Utils {
         return builder.toString();
     }
     
+    public static String couponFormatJSON(CharSequence c) {
+        String json;
+        json = stripEsercente(c);
+        json = stripFinalFalse(json);
+        return json;
+    }
+    
     public static String formatJSON(CharSequence c) {
         String json;
         json = stripEsercente(c);
