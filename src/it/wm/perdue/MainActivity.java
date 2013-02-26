@@ -19,12 +19,14 @@ import com.actionbarsherlock.view.MenuItem;
 
 import it.wm.perdue.contatti.InfoPerDueBaseActivity;
 import it.wm.perdue.contatti.RichiediCartaFragment;
+import it.wm.perdue.coupon.ProvaCouponTimer;
 import it.wm.perdue.doveusarla.DoveUsarlaFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends SherlockFragmentActivity implements TabListener {
+    public static final String  COUPON_TAB_TAG = "coupon";
     public static final String  DOVE_USARLA_TAB_TAG = "doveusarla";
     public static final String  NEWS_TAB_TAG        = "news";
     public static final String  RICHIEDI_TAB_TAG    = "richiedi";
@@ -39,9 +41,11 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
         Utils.setContext(this.getApplicationContext());
         
         tabList = new ArrayList<TabDescriptor>();
+        tabList.add(new TabDescriptor(COUPON_TAB_TAG, ProvaCouponTimer.class, "Coupon"));
         tabList.add(new TabDescriptor(DOVE_USARLA_TAB_TAG, DoveUsarlaFragment.class, "Dove Usarla"));
         tabList.add(new TabDescriptor(NEWS_TAB_TAG, NewsListFragment.class, "News"));
         tabList.add(new TabDescriptor(RICHIEDI_TAB_TAG, RichiediCartaFragment.class, "Richiedi"));
+        
         
         ActionBar bar = getSupportActionBar();
         bar.setDisplayOptions(ActionBar.DISPLAY_USE_LOGO
