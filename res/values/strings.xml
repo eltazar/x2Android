@@ -9,4 +9,5 @@
 	<string name="map_api_key">0MUOOylmBmamGNJzuw1ZVkBSp-zopF0XaAvX42g</string>
 	<string name="json"></string>
 	<string name="advise">Per richiedere la Guida ai Vantaggi + Carta PerDue compila il form e invialo al nostro staff. Sarai ricontattato entro un giorno lavorativo</string>
+	<string name="login_string">Per acquistare devi effettuare il login od essere registrato a perdue.it</string>
 </resources>
