@@ -53,6 +53,10 @@ public final class Utils {
     private static String stripEsercente(CharSequence c) {
         StringBuilder builder = new StringBuilder(c.toString().trim());
         
+        if(builder.length() >= 10 && builder.substring(0, 10).equals("{\"login\":[") ){
+            builder.delete(0, 10);
+            builder.deleteCharAt(builder.length() - 1);
+        }
         if (builder.length() >= 14 && builder.substring(0, 14).equals("{\"Esercente\":[")) {
             builder.delete(0, 13);
             builder.deleteCharAt(builder.length() - 1);
@@ -77,12 +81,19 @@ public final class Utils {
         return builder.toString();
     }
     
-    private static String stripFinalFalse(CharSequence c) {
+    private static String stripFinalFalse(CharSequence c, boolean isReplace) {
         StringBuilder builder = new StringBuilder(c);
         int start = builder.length() - ",false]".length();
         int end = builder.length();
-        if (start >= 0 && builder.substring(start, end).equals(",false]")) {
-            builder.replace(start, end, "]");
+        if(isReplace){
+            if (start >= 0 && builder.substring(start, end).equals(",false]")) {
+                builder.replace(start, end, "]");
+            }
+        }
+        else{
+            if (start >= 0 && builder.substring(start, end).equals(",false]")) {
+                builder.replace(start, end, "");
+            }
         }
         return builder.toString();
     }
@@ -99,18 +110,25 @@ public final class Utils {
         return builder.toString();
     }
     
-    public static String couponFormatJSON(CharSequence c) {
+    public static String formatJSONwithoutBool(CharSequence c) {
         String json;
         json = stripEsercente(c);
-        json = stripFinalFalse(json);
+        json = stripFinalFalse(json,true);
         return json;
     }
     
     public static String formatJSON(CharSequence c) {
         String json;
         json = stripEsercente(c);
-        json = stripFinalFalse(json);
+        json = stripFinalFalse(json,true);
         json = formatBooleans(json);
+        return json;
+    }
+    
+    public static String formatJSONlogin(CharSequence c) {
+        String json;
+        json = stripEsercente(c);
+        json = stripFinalFalse(json,false);
         return json;
     }
     
