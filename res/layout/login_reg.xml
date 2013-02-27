@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/richiedi_carta"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="201dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        android:padding="30dip" >
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="E-mail"
+            android:text="marius0610@hotmail.it"
+            android:inputType="textEmailAddress"
+            android:paddingTop="3dp" />
+
+        <EditText
+            android:id="@+id/psw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/email"
+            android:ems="10"
+            android:hint="Password"
+                        android:text="DHSE3LHS"
+			android:inputType="textPassword"
+            android:paddingTop="3dp" />
+
+        <Button
+            android:id="@+id/loginBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView1"
+            android:text="Login" />
+
+        <ScrollView
+            android:id="@+id/scrollView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/psw"
+            android:layout_below="@+id/psw"
+            android:gravity="right"
+            android:paddingTop="10dp"
+            android:text="@string/login_string"
+            android:textSize="11sp" />
+        
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/loginBtn"
+            android:layout_marginTop="15dp"
+            android:background="#D8D8D8" />
+
+        <Button
+            android:id="@+id/retrievePswBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/loginBtn"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="35dp"
+            android:text="Recupera password" />
+            
+        <Button
+            android:id="@+id/signInbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+			android:layout_marginTop="5dp"
+            android:layout_below="@+id/retrievePswBtn"
+            android:text="Registrati a PerDue" />       
+
+    </RelativeLayout>
+
+</ScrollView>
