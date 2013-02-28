@@ -10,14 +10,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import it.wm.HTTPAccess;
 import it.wm.perdue.R;
+import it.wm.perdue.Utils;
+import it.wm.perdue.businessLogic.Coupon;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 public class ProvaCouponTimer extends SherlockFragment implements
@@ -27,12 +32,13 @@ public class ProvaCouponTimer extends SherlockFragment implements
     
     // Gestione dei download:
     private HTTPAccess          httpAccess      = null;
-    
+    private String              urlString = null;
   
     private TextView            timer = null;
-    private long                 secondsLeft;
     private CountDownTimer countDownTimer = null;
+    private Coupon coupon = null;
     
+    private CouponJSONAdapter<? extends Coupon> adapter = null;
     // onAttach
     @Override
     public void onAttach(Activity activity) {
@@ -57,11 +63,15 @@ public class ProvaCouponTimer extends SherlockFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.timer, container, false);
         
+        
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
         timer = (TextView) view.findViewById(R.id.timer);
         
-        timer.setText("ciaooo");
+        timer.setText("CountDownTimer");
+        adapter = new CouponJSONAdapter<Coupon>(
+                getActivity(),
+                R.layout.esercente_row, Coupon.class);
         
         return view;
     }
@@ -71,33 +81,46 @@ public class ProvaCouponTimer extends SherlockFragment implements
         super.onResume();
         Log.d("TIMER", "on resume");
         
-        //2013-02-27 22:59:00
-        //Date(2013, 02,27, 22, 59, 00);
+        long millisTot = 0;
+        
+        //urlString = "http://www.cartaperdue.it/partner/v2.0/TipoEsercente.php";
+        TreeMap<String, String>       postMap = new TreeMap<String, String>();
+        postMap.put("idEsercente",  "1235");
+        urlString = "http://www.cartaperdue.it/partner/android/offerta2.php?id=" +714 /*IDCOUPON*/;
+        //urlString = "http://www.cartaperdue.it/partner/android/coupon2.php?prov=" + "Roma";
+        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET, null, null);
+        //httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
         Date now = new Date();
         DateFormat formatter = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
+       
         try {
-            Date scad = formatter.parse("2013-02-27 22:59:00");
+            Date scad = formatter.parse("2013-02-28 23:59:00");
             String scadT = formatter.format(scad);
             Log.d("TIMER","data di scad ---> "+scadT);
-            long minutes = scad.getTime() - now.getTime();
-            secondsLeft = TimeUnit.MILLISECONDS.toSeconds(minutes);
+            Log.d("TIMER", "data now --->"+formatter.format(now));
+            millisTot = scad.getTime() - now.getTime();
+            Log.d("Timer","millisecondti minutes = "+millisTot);
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        String s = formatter.format(now);
-        Log.d("TIMER","data di oggi "+s);
-        //setDateTime(secondsLeft);
-        
-        //countDownTimer.cancel();
-        countDownTimer = new CountDownTimer(secondsLeft, 1000) {
 
+        //su ios facevo così, qui non so se serve... 
+        if(countDownTimer != null){
+            countDownTimer.cancel();
+        }
+        
+        //creo il timer appena la view torna visibile
+        countDownTimer = new CountDownTimer(millisTot, 1000) {
+            int count = 0;
             public void onTick(long millisUntilFinished) {
-                countDown();
+                //Log.d("COUNT","COUNT = "+(count++));
+                //Log.d("Timer","millisUntilFinished = "+millisUntilFinished);
+                countDown(millisUntilFinished);
             }
 
             public void onFinish() {
-                timer.setText("done!");
+                timer.setText("Tempo scaduto2");
             }
          }.start();
     }
@@ -106,14 +129,15 @@ public class ProvaCouponTimer extends SherlockFragment implements
     public void onStop (){
         super.onStop();
         Log.d("TIMER","ON STOP");
+        //annullo il timer quando la view non è più visibile
         countDownTimer.cancel();
     }
     
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
         // TODO Auto-generated method stub
-        
-    
+        Log.d("TIMER", " RISPOSTA = "+response);
+        adapter.addFromJSON(response);
     }
     
     @Override
@@ -123,12 +147,13 @@ public class ProvaCouponTimer extends SherlockFragment implements
      
     }
  
-    private void countDown(){
+    private void countDown(long millisUntilFinished){
         long days;
-        //NSLog(@"RICHIAMATO COUNT DOWN");
         long minutes;
         long seconds;
         long hours;
+        long secondsLeft = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished);
+        
         if (secondsLeft > 0) {
             secondsLeft = secondsLeft - 1;
             days= secondsLeft / (3600*24);
@@ -140,11 +165,36 @@ public class ProvaCouponTimer extends SherlockFragment implements
         } 
         else {
             secondsLeft = 0;
-            timer.setText("tempo scaduto");
+            timer.setText("tempo scaduto1");
+            //annullo il timer quando scade il countDown
             countDownTimer.cancel();
         }
         
     }
+    
+    public void addFromJSON(String jsonString) {
+        jsonString = Utils.formatJSON(jsonString);
+        jsonString = jsonString.substring(1, jsonString.length() - 1);
+        //jsonString = jsonString.substring(1, jsonString.length() - 1);
+        //jsonString = Utils.stripEsercente(jsonString);
+        Log.d("Timer","stringa strippata ----->"+jsonString);
+        Gson gson = Utils.getGson();
+        try {
+            this.coupon = gson.fromJson(jsonString, Coupon.class);
+            Log.d("TIMER","oggetto coupon =  "+coupon.getDescrizione());
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    //query fatta solo con la provincia è offerta del giorno
+    //query fatte con id del coupon sono generiche
+    
+    /*
+     * se è coupon del giorno, va rifatta la query ogni volta che si raggiunge la view relativo ad esso 
+     * (ad esempio, da foreground->background->fore, oppure coupon del giorno-> dove usarla->coupon del giorno
+     * se coupon normale non c'è bisogno di rifare la query come sopra
+     * */
     
     /*
      * da "offerta_periodo_al" ottengo la data di validità del coupon, cioè fino al giorno x.
