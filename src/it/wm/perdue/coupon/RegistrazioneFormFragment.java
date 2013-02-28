@@ -115,6 +115,10 @@ public class RegistrazioneFormFragment extends SherlockFragment implements
             //Log.d("login", "stripped -> " + strippedString);
             LoginData loginData = gson.fromJson(strippedString, LoginData.class);
             Log.d("login","RICEVUTO OGGETTO = "+loginData.getIdCustomer());
+            if(loginData.getIdCustomer() != -1){
+                //loggato
+                Log.d("login","loggato");
+            }
         }
         
         progressDialog.cancel();   
