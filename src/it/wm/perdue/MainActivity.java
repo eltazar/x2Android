@@ -19,7 +19,8 @@ import com.actionbarsherlock.view.MenuItem;
 
 import it.wm.perdue.contatti.InfoPerDueBaseActivity;
 import it.wm.perdue.contatti.RichiediCartaFragment;
-import it.wm.perdue.coupon.ProvaCouponTimer;
+import it.wm.perdue.coupon.BaseFormActivity;
+import it.wm.perdue.coupon.CouponListFragment;
 import it.wm.perdue.doveusarla.DoveUsarlaFragment;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
         Utils.setContext(this.getApplicationContext());
         
         tabList = new ArrayList<TabDescriptor>();
-        tabList.add(new TabDescriptor(COUPON_TAB_TAG, ProvaCouponTimer.class, "Coupon"));
+        tabList.add(new TabDescriptor(COUPON_TAB_TAG, CouponListFragment.class, "Coupon"));
         tabList.add(new TabDescriptor(DOVE_USARLA_TAB_TAG, DoveUsarlaFragment.class, "Dove Usarla"));
         tabList.add(new TabDescriptor(NEWS_TAB_TAG, NewsListFragment.class, "News"));
         tabList.add(new TabDescriptor(RICHIEDI_TAB_TAG, RichiediCartaFragment.class, "Richiedi"));
@@ -99,10 +100,12 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
                 // NavUtils.navigateUpFromSameTask(this);
                 return true;
             case R.id.infoPerDue:
-                intent = new Intent(this, InfoPerDueBaseActivity.class);
-                intent.putExtra("request", "info");
+//                intent = new Intent(this, InfoPerDueBaseActivity.class);
+//                intent.putExtra("request", "info");
+//                startActivity(intent);
+                intent = new Intent(this, BaseFormActivity.class);
+                //intent.putExtra("request", "info");
                 startActivity(intent);
-                
                 return true;
             case R.id.contactInfo:
                 intent = new Intent(this, InfoPerDueBaseActivity.class);
