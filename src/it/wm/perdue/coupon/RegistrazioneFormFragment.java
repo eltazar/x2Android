@@ -229,43 +229,5 @@ public class RegistrazioneFormFragment extends SherlockFragment implements
         
         progressDialog = ProgressDialog.show(getActivity(), "", "Invio in corso...");
         
-    }
-    
-    /*
-     if(array.count == 2){
-            NSLog(@"UTENTE ESISTE");
-            idUtente = [[[array objectAtIndex:0] objectForKey:@"idcustomer"] intValue];
-            NSLog(@" ID CUSTOMER LOGIN = %d",idUtente);
-            
-            //salvo i dati per il login
-            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            
-            [prefs removeObjectForKey:@"_idUtente"];
-            [prefs setObject:[NSNumber numberWithInt:idUtente] forKey:@"_idUtente"];
-            [prefs removeObjectForKey:@"_nomeUtente"];
-            [prefs setObject:[[array objectAtIndex:0] objectForKey:@"nome_contatto"] forKey:@"_nomeUtente"];
-            [prefs removeObjectForKey:@"_cognome"];
-            [prefs setObject:[[array objectAtIndex:0] objectForKey:@"cognome_contatto"] forKey:@"_cognome"];
-            [prefs removeObjectForKey:@"_email"];
-            [prefs setObject:self.user forKey:@"_email"];
-            [prefs synchronize];
-            
-            if(delegate && [delegate respondsToSelector:@selector(didLogin:)])
-                [delegate didLogin:idUtente];
-            
-        }
-        else{
-            NSLog(@"PSW SBAGLIATA ");
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Spiacenti" message:@"L'utente o la password non esistono. Inserisci i dati login corretti e riprova" delegate:self cancelButtonTitle:@"Chiudi" otherButtonTitles:nil, nil];
-            [alert show];
-            [alert release];
-        }
-    }
-     * 
-     * 
-     * 
-     * 
-     * */
-    
-    
+    }    
 }
