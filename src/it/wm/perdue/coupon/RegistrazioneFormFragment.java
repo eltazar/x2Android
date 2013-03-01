@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -85,41 +86,60 @@ public class RegistrazioneFormFragment extends SherlockFragment implements
         Button sendBtn = (Button) view.findViewById(R.id.loginBtn);
         sendBtn.setOnClickListener(this);
         
+        Button retrieveBtn = (Button) view.findViewById(R.id.retrievePswBtn);
+        retrieveBtn.setOnClickListener(this);
+        
         mailEditText = (EditText) view.findViewById(R.id.email);
         pswEditText = (EditText) view.findViewById(R.id.psw);
         
         mailEditText.setOnFocusChangeListener(this);
         pswEditText.setOnFocusChangeListener(this);
-        
         return view;
     }
     
+    
+    /*HTTPAccess.ResponseListener
+     * */
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
         // TODO Auto-generated method stub
         
         Log.d("login", "RisPosta -> " + response);
         CharSequence text = "";
-        
-        //se utente non esiste
-        if(response.length() == 17 && response.endsWith("{\"login\":[false]}")){
-            Log.d("login","mail o psw login errati");
-            text = "Username o password errati, riprova";
-            Toast toast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
-            toast.show();
-        }
-        else{
-            //altrimenti parso il json e controllo
-            Gson gson = Utils.getGson();
-            String strippedString = Utils.formatJSONlogin(response);
-            //Log.d("login", "stripped -> " + strippedString);
-            LoginData loginData = gson.fromJson(strippedString, LoginData.class);
-            Log.d("login","RICEVUTO OGGETTO = "+loginData.getIdCustomer());
-            if(loginData.getIdCustomer() != -1){
-                //loggato
-                Log.d("login","loggato");
+        Toast toast= null;
+
+        if(tag.equals(TAG_LOGIN)){
+            //se utente non esiste
+            if(response.length() == 17 && response.endsWith("{\"login\":[false]}")){
+                Log.d("login","mail o psw login errati");
+                text = "Username o password errati, riprova";
+                toast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+            else{
+                //altrimenti parso il json e controllo
+                Gson gson = Utils.getGson();
+                String strippedString = Utils.formatJSONlogin(response);
+                //Log.d("login", "stripped -> " + strippedString);
+                LoginData loginData = gson.fromJson(strippedString, LoginData.class);
+                Log.d("login","RICEVUTO OGGETTO = "+loginData.getIdCustomer());
+                if(loginData.getIdCustomer() != -1){
+                    //loggato
+                    Log.d("login","loggato");
+                }
             }
         }
+        else if(tag.equals(TAG_RETRIEVE)){
+            if(response.length()==6 && response.equals("psw_ok")){
+                text = "Password inviata all'indirizzo e-mail indiacato";
+            }
+            else{
+            text = "E-mail non valida o non registrata, riprova";
+            }
+            toast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
+            toast.show();
+        }
+        
         
         progressDialog.cancel();   
     }
@@ -133,7 +153,11 @@ public class RegistrazioneFormFragment extends SherlockFragment implements
         Toast toast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
         toast.show();
     }
+    /*HTTPAccess.ResponseListener END
+     * */
     
+    /*OnClickListener
+     * */
     @Override
     public void onClick(View v) {
         // TODO Auto-generated method stub
@@ -141,60 +165,27 @@ public class RegistrazioneFormFragment extends SherlockFragment implements
         switch (v.getId()) {
             case R.id.loginBtn:
                 //Log.d("XXX", "SEND BTN");
-                if (validateFields() == false) {
+                if (validateLoginFields() == false) {
                     // mostro avviso errore
-                    CharSequence text = "Per favore completa i campi richiesti correttamente";
-                    Toast toast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
-                    toast.show();
+                    showErrorMessage();
                 }
                 else {
-                    sendRequestToServer();
+                    sendRequestLogin();
                 }
                 break;
-            case R.id.surname:
-               // Log.d("XXX", "COGNOME EDIT TEXT");
-                break;
-            case R.id.email:
-                break;
-            case R.id.tel:
+            case R.id.retrievePswBtn:
+                showRetrieveDialog();
                 break;
             default:
                 break;
         }
         
     }
+    /*OnClickListener END
+     * */
     
-    private boolean validateFields() {
-        
-        psw = pswEditText.getText().toString().replace(" ", "");
-        email = mailEditText.getText().toString().replace(" ", "");
-        
-        boolean isValid = true;
-        
-        if (psw.length() == 0) {
-            // setto rosso il field
-            //Log.d("XXX", "surname-> " + surname + " invalido");
-            // surnameEditText.setHint("Cognome");
-            pswEditText.setText("");
-            pswEditText.setHintTextColor(Color.RED);
-            // surnameEditText.setTextColor(Color.RED);
-            isValid = false;
-        }
-        
-        if (email.length() == 0 || !Utils.checkEmail(email)) {
-            // setto rosso il field
-           // Log.d("XXX", "mail -> " + email + " invalido");
-            // mailEditText.setHint("E-mail");
-            // mailEditText.setText("");
-            mailEditText.setHintTextColor(Color.RED);
-            mailEditText.setTextColor(Color.RED);
-            isValid = false;
-        }
-        
-        return isValid;
-        
-    }
-    
+     /*OnEditorActionListener, OnFocusChangeListener
+      * */
     @Override
     public boolean onEditorAction(TextView v, int arg1, KeyEvent arg2) {
         // TODO Auto-generated method stub
@@ -214,8 +205,13 @@ public class RegistrazioneFormFragment extends SherlockFragment implements
             field.setTextColor(Color.BLACK);
         }
     }
+    /*OnEditorActionListener, OnFocusChangeListener END
+     * */
     
-    private void sendRequestToServer() {
+    
+    /*Metodi per richieste di rete
+     * */
+    private void sendRequestLogin() {
         
         String urlString = "https://cartaperdue.it/partner/v2.0/RichiediCarta.php";
         
@@ -229,5 +225,57 @@ public class RegistrazioneFormFragment extends SherlockFragment implements
         
         progressDialog = ProgressDialog.show(getActivity(), "", "Invio in corso...");
         
-    }    
+    }   
+   
+    public void sendRetrieveRequest(String retrieveString){
+        Log.d("coupon","richiesta recupero psw inviata");
+        String urlString = "http://www.cartaperdue.it/partner/recuperaPsw.php";
+        HashMap<String, String> postMap = new HashMap<String, String>();
+        postMap.put("usr", retrieveString);
+        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
+                postMap, TAG_RETRIEVE);
+        
+        progressDialog = ProgressDialog.show(getActivity(), "", "Invio in corso...");
+    }
+    /*Metodi per richieste di rete END
+     * */
+    
+    /*Metodi privati
+     * */
+    //mostra il dialog per il recupero della psw
+    private void showRetrieveDialog() {
+        // Create an instance of the dialog fragment and show it
+        DialogFragment dialog = new RetrievePswDialog();
+        dialog.show(getSherlockActivity().getSupportFragmentManager(), "RetrievePswDialog");
+    }
+    
+    private void showErrorMessage(){
+        CharSequence text = "Per favore completa i campi richiesti correttamente";
+        Toast toast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
+        toast.show();
+    }
+    
+    //controlla i dati di login
+    private boolean validateLoginFields() {
+        
+        psw = pswEditText.getText().toString().replace(" ", "");
+        email = mailEditText.getText().toString().replace(" ", "");
+        
+        boolean isValid = true;
+        
+        if (psw.length() == 0) {
+            pswEditText.setText("");
+            pswEditText.setHintTextColor(Color.RED);
+            isValid = false;
+        }
+        
+        if (email.length() == 0 || !Utils.checkEmail(email)) {
+            mailEditText.setHintTextColor(Color.RED);
+            mailEditText.setTextColor(Color.RED);
+            isValid = false;
+        }
+        
+        return isValid;
+    }
+
 }
