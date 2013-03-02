@@ -28,16 +28,14 @@ import it.wm.perdue.businessLogic.LoginData;
 
 import java.util.HashMap;
 
-public class RegistrazioneFormFragment extends SherlockFragment implements
+public class LoginFormFragment extends SherlockFragment implements
         HTTPAccess.ResponseListener, OnClickListener, OnEditorActionListener, OnFocusChangeListener {
     
     private static final String TAG_LOGIN      = "login";
     private static final String TAG_RETRIEVE      = "retrieve";
-    private static final String TAG_SIGNUP      = "signup";
     
     // Gestione dei download:
     private HTTPAccess          httpAccess      = null;
-    private String              loginUrlString = null;
     // fields
     private String              email           = "";
     private String              psw             = "";
@@ -47,18 +45,28 @@ public class RegistrazioneFormFragment extends SherlockFragment implements
     private EditText            pswEditText    = null;
 
     private ProgressDialog      progressDialog;
+    private OnLoginFormListener formListener = null;
     
-    
-    public static RegistrazioneFormFragment newInstance() {
-        RegistrazioneFormFragment fragment = new RegistrazioneFormFragment();
+    public static LoginFormFragment newInstance() {
+        LoginFormFragment fragment = new LoginFormFragment();
         return fragment;
+    }
+    
+    public interface OnLoginFormListener{
+        public void onRegButtonClicked();
     }
     
     // onAttach
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        
+        try {
+            formListener = (OnLoginFormListener) activity;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, throw exception
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnLoginFormListener");
+        }
     }
     
     // onCreate
@@ -71,8 +79,6 @@ public class RegistrazioneFormFragment extends SherlockFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        
-        loginUrlString = "https://cartaperdue.it/partner/login.php";
     }
     
     // onCreateView
@@ -88,6 +94,8 @@ public class RegistrazioneFormFragment extends SherlockFragment implements
         
         Button retrieveBtn = (Button) view.findViewById(R.id.retrievePswBtn);
         retrieveBtn.setOnClickListener(this);
+        Button signUpBtn = (Button) view.findViewById(R.id.signInbtn);
+        signUpBtn.setOnClickListener(this);
         
         mailEditText = (EditText) view.findViewById(R.id.email);
         pswEditText = (EditText) view.findViewById(R.id.psw);
@@ -176,6 +184,9 @@ public class RegistrazioneFormFragment extends SherlockFragment implements
             case R.id.retrievePswBtn:
                 showRetrieveDialog();
                 break;
+            case R.id.signInbtn:
+                regBntClicked();
+                break;
             default:
                 break;
         }
@@ -213,13 +224,13 @@ public class RegistrazioneFormFragment extends SherlockFragment implements
      * */
     private void sendRequestLogin() {
         
-        String urlString = "https://cartaperdue.it/partner/v2.0/RichiediCarta.php";
+        String urlString = "https://cartaperdue.it/partner/login.php";
         
         HashMap<String, String> postMap = new HashMap<String, String>();
         postMap.put("usr", email);
         postMap.put("psw", psw);
         
-         httpAccess.startHTTPConnection(loginUrlString, HTTPAccess.Method.POST,
+         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
          postMap, TAG_LOGIN);
         Log.d("XXX", "i dati da inviare al server sono: " + postMap);
         
@@ -276,6 +287,10 @@ public class RegistrazioneFormFragment extends SherlockFragment implements
         }
         
         return isValid;
+    }
+    
+    private void regBntClicked(){
+        formListener.onRegButtonClicked();
     }
 
 }
