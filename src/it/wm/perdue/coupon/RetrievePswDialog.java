@@ -72,6 +72,12 @@ public class RetrievePswDialog extends SherlockDialogFragment {
         
         retrieveEditText = (EditText)v.findViewById(R.id.retrieveField);
         
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+            v.setBackgroundColor(Color.WHITE);
+            //per inserire come titolo una custom view, dato che quella di default è nera
+            //http://stackoverflow.com/questions/12811977/set-the-title-background-color-of-alert-dialog-without-making-a-custome-dialog
+        }
+        
         return builder.create();
     }
     
