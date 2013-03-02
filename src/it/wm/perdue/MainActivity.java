@@ -17,9 +17,9 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
+import it.wm.perdue.Forms.BaseFormActivity;
+import it.wm.perdue.Forms.RichiediCartaFragment;
 import it.wm.perdue.contatti.InfoPerDueBaseActivity;
-import it.wm.perdue.contatti.RichiediCartaFragment;
-import it.wm.perdue.coupon.BaseFormActivity;
 import it.wm.perdue.coupon.CouponListFragment;
 import it.wm.perdue.doveusarla.DoveUsarlaFragment;
 
