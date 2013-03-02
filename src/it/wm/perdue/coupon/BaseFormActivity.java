@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -18,13 +17,16 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import it.wm.HTTPAccess;
+import it.wm.perdue.contatti.UserFormFragment;
+import it.wm.perdue.coupon.LoginFormFragment.OnLoginFormListener;
 import it.wm.perdue.coupon.RetrievePswDialog.RetrievePswListener;
 
 public class BaseFormActivity extends SherlockFragmentActivity implements
-        HTTPAccess.ResponseListener, OnClickListener, OnEditorActionListener, OnFocusChangeListener, RetrievePswListener {
+        HTTPAccess.ResponseListener, OnLoginFormListener, OnEditorActionListener, OnFocusChangeListener, RetrievePswListener {
     
     private static final String DEBUG_TAG  = "BaseFormActivity";
     private static final String LOGIN_FRAG_TAG = "loginFragment";
+    private static final String SIGNUP_FRAG_TAG = "signupFragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,7 +36,11 @@ public class BaseFormActivity extends SherlockFragmentActivity implements
         if (extras != null) {
                       
         }
-        
+    }
+    
+    @Override
+    public void onResume(){
+        super.onResume();
         ActionBar bar = getSupportActionBar();
         bar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
                 | ActionBar.DISPLAY_SHOW_HOME
@@ -44,10 +50,7 @@ public class BaseFormActivity extends SherlockFragmentActivity implements
         
         Fragment f = null;
         
-        if (savedInstanceState != null)
-            return;
-        
-        f = RegistrazioneFormFragment.newInstance();
+        f = LoginFormFragment.newInstance();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction =
                 fragmentManager.beginTransaction();
@@ -68,12 +71,6 @@ public class BaseFormActivity extends SherlockFragmentActivity implements
     }
 
     @Override
-    public void onClick(View arg0) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
     public void onHTTPResponseReceived(String tag, String response) {
         // TODO Auto-generated method stub
         
@@ -90,7 +87,7 @@ public class BaseFormActivity extends SherlockFragmentActivity implements
     @Override
     public void onDialogPositiveClick(SherlockDialogFragment dialog, String retrieveString) {
         Log.d("retrieve","cliccato avanti su dialog");    
-        RegistrazioneFormFragment loginFragment = (RegistrazioneFormFragment) getSupportFragmentManager().findFragmentByTag(LOGIN_FRAG_TAG);
+        LoginFormFragment loginFragment = (LoginFormFragment) getSupportFragmentManager().findFragmentByTag(LOGIN_FRAG_TAG);
         try{
             loginFragment.sendRetrieveRequest(retrieveString);
         }
@@ -104,5 +101,21 @@ public class BaseFormActivity extends SherlockFragmentActivity implements
         Log.d("retrieve","cliccato annulla su dialog");               
     }
     /*RetrievePswListener END
+     * */
+
+    /*OnLoginFormListener
+     * */
+    @Override
+    public void onRegButtonClicked() {
+        //lancia fragment di registrazione
+        Fragment f = UserFormFragment.newInstance();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction =
+                fragmentManager.beginTransaction();
+        fragmentTransaction.replace(android.R.id.content,f, SIGNUP_FRAG_TAG);
+        fragmentTransaction.commit();
+        getSupportActionBar().setTitle("Registrazione");
+    }
+    /*OnLoginFormListener END
      * */
 }
