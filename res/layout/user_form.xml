@@ -58,6 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tel"
+            android:layout_alignRight="@+id/tel"
             android:gravity="right"
             android:paddingTop="10dp"
             android:text="@string/reg_string"
@@ -67,7 +68,7 @@
             android:id="@+id/sendBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@+id/textView1"
+            android:layout_alignRight="@+id/tel"
             android:layout_below="@+id/textView1"
             android:text="Registra" />
 
