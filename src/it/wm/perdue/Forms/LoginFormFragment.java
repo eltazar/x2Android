@@ -34,6 +34,9 @@ public class LoginFormFragment extends SherlockFragment implements
     private static final String TAG_LOGIN      = "login";
     private static final String TAG_RETRIEVE      = "retrieve";
     
+    private static final String TAG_MAIL       ="mail";
+    private static final String TAG_PSW       ="psw";
+
     // Gestione dei download:
     private HTTPAccess          httpAccess      = null;
     // fields
@@ -79,6 +82,18 @@ public class LoginFormFragment extends SherlockFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState !=null){
+            Log.d("login","entrato -> "+savedInstanceState.getString(TAG_MAIL));
+            email = savedInstanceState.getString(TAG_MAIL);
+            psw = savedInstanceState.getString(TAG_PSW);
+        }
+    }
+    
+    @Override
+    public void onResume(){
+        super.onResume();
+        mailEditText.setText(email);
+        pswEditText.setText(psw);       
     }
     
     // onCreateView
@@ -102,9 +117,17 @@ public class LoginFormFragment extends SherlockFragment implements
         
         mailEditText.setOnFocusChangeListener(this);
         pswEditText.setOnFocusChangeListener(this);
+        
         return view;
     }
     
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        
+        outState.putString(TAG_MAIL,mailEditText.getText().toString());
+        outState.putString(TAG_PSW,pswEditText.getText().toString());
+        super.onSaveInstanceState(outState);
+    }    
     
     /*HTTPAccess.ResponseListener
      * */

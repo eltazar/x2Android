@@ -32,16 +32,20 @@ import java.util.HashMap;
     public class UserFormFragment extends SherlockFragment implements
             HTTPAccess.ResponseListener, OnClickListener, OnEditorActionListener, OnFocusChangeListener {
         
-        protected static final String TAG_NORMAL      = "normal";
+        protected static final String TAG_NORMAL    = "normal";
+        protected static final String TAG_MAIL        ="mail";
+        protected static final String TAG_NAME        ="name";
+        protected static final String TAG_SURNAME     ="surname";
+        protected static final String TAG_TEL         ="tel";
         
         // Gestione dei download:
         protected HTTPAccess          httpAccess      = null;
         
         // fields
-        protected String              name            = "";
-        protected String              surname         = "";
-        protected String              email           = "";
-        protected String              tel             = "";
+        protected String              name            = null;
+        protected String              surname         = null;
+        protected String              email           = null;
+        protected String              tel             = null;
         
         // views
         protected EditText            nameEditText    = null;
@@ -72,6 +76,21 @@ import java.util.HashMap;
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
+            if(savedInstanceState !=null){
+                email = savedInstanceState.getString(TAG_MAIL);
+                name = savedInstanceState.getString(TAG_NAME);
+                surname = savedInstanceState.getString(TAG_SURNAME);
+                tel = savedInstanceState.getString(TAG_TEL);
+            }
+        }
+        
+        @Override
+        public void onResume(){
+            super.onResume();
+            mailEditText.setText(email);
+            nameEditText.setText(name);    
+            surnameEditText.setText(surname);    
+            telEditText.setText(tel);    
         }
         
         // onCreateView
@@ -83,9 +102,18 @@ import java.util.HashMap;
             httpAccess.setResponseListener(this);
             
             setupView(view);
-            
+    
             return view;
         }
+        
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            outState.putString(TAG_MAIL,mailEditText.getText().toString());
+            outState.putString(TAG_NAME,nameEditText.getText().toString());
+            outState.putString(TAG_SURNAME,surnameEditText.getText().toString());
+            outState.putString(TAG_TEL,telEditText.getText().toString());
+            super.onSaveInstanceState(outState);
+        }   
         
         @Override
         public void onHTTPResponseReceived(String tag, String response) {
@@ -111,7 +139,7 @@ import java.util.HashMap;
         protected void setupView(View view){
             Button sendBtn = (Button) view.findViewById(R.id.sendBtn);
             sendBtn.setOnClickListener(this);
-            
+            Log.d("reg","setup view");
             nameEditText = (EditText) view.findViewById(R.id.name);
             surnameEditText = (EditText) view.findViewById(R.id.surname);
             mailEditText = (EditText) view.findViewById(R.id.email);
