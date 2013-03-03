@@ -27,6 +27,9 @@ import java.util.HashMap;
 public class RichiediCartaFragment extends UserFormFragment implements
         HTTPAccess.ResponseListener, OnClickListener, OnEditorActionListener, OnFocusChangeListener {
     
+    protected static final String TAG_CARD     ="card";
+
+    private int                 cardPosition = -1;
     private String              card = null;
     private Spinner             cardSpinner     = null;
         
@@ -47,8 +50,22 @@ public class RichiediCartaFragment extends UserFormFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState !=null){
+            cardPosition = savedInstanceState.getInt(TAG_CARD);
+        }
     }
     
+    @Override
+    public void onResume(){
+        super.onResume();
+        cardSpinner.setSelection(cardPosition);
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(TAG_CARD,cardSpinner.getSelectedItemPosition());
+        super.onSaveInstanceState(outState);
+    }
     // onCreateView
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -110,7 +127,6 @@ public class RichiediCartaFragment extends UserFormFragment implements
     
     @Override
     public boolean onEditorAction(TextView v, int arg1, KeyEvent arg2) {
-        // TODO Auto-generated method stub
         // Log.d("XXX", "EDIT TEXT EDIT");
         
         return false;
@@ -118,7 +134,6 @@ public class RichiediCartaFragment extends UserFormFragment implements
     
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
-        // TODO Auto-generated method stub
         
         if (hasFocus) {
             //Log.d("XXX", "has focus");

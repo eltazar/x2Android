@@ -24,37 +24,62 @@ public class BaseFormActivity extends SherlockFragmentActivity implements
         HTTPAccess.ResponseListener, OnLoginFormListener, OnEditorActionListener, OnFocusChangeListener, RetrievePswListener {
     
     private static final String DEBUG_TAG  = "BaseFormActivity";
+    private static final String FRAGMENT_TAG = "fragmentTag";
     private static final String LOGIN_FRAG_TAG = "loginFragment";
     private static final String SIGNUP_FRAG_TAG = "signupFragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-                
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-                      
+        
+        ActionBar bar = getSupportActionBar();
+        bar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
+                | ActionBar.DISPLAY_SHOW_HOME
+                | ActionBar.DISPLAY_SHOW_TITLE);
+        bar.setTitle("Login");    
+        
+        Fragment f = null;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction =
+                fragmentManager.beginTransaction();
+        
+        //recupero precedente stato se esiste, altrimenti creo il fragment di login
+        if(savedInstanceState != null){
+        
+            String fragmentTag = savedInstanceState.getString(FRAGMENT_TAG);
+            if(fragmentTag != null && fragmentTag.equals(SIGNUP_FRAG_TAG)){
+                //NOTA: non c'è bisogno di creare un altra volta il fragment quando il display viene ruotato, basta solo evitare
+                //che venga creato a priori un fragment fuori dall'if. Per questo c'è l'else
+                bar.setTitle("Registrazione");
+            }
+        }else{        
+            f = LoginFormFragment.newInstance();
+            fragmentTransaction.replace(android.R.id.content,f, LOGIN_FRAG_TAG);//.add(android.R.id.content, f);
         }
+        
+        fragmentTransaction.commit();
     }
     
     @Override
     public void onResume(){
         super.onResume();
-        ActionBar bar = getSupportActionBar();
-        bar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
-                | ActionBar.DISPLAY_SHOW_HOME
-                | ActionBar.DISPLAY_SHOW_TITLE);
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current state
+        LoginFormFragment loginFragment = (LoginFormFragment) getSupportFragmentManager().findFragmentByTag(LOGIN_FRAG_TAG);
+        UserFormFragment userFormFragment = (UserFormFragment) getSupportFragmentManager().findFragmentByTag(SIGNUP_FRAG_TAG);
+        if(loginFragment != null && loginFragment.isVisible()){
+            //salva fragment tag
+            savedInstanceState.putString(FRAGMENT_TAG, LOGIN_FRAG_TAG);
+        }
+        else if(userFormFragment != null && userFormFragment.isVisible()){
+            //salva fragment tag
+            savedInstanceState.putString(FRAGMENT_TAG, SIGNUP_FRAG_TAG);
+        }
         
-        bar.setTitle("Login");
-        
-        Fragment f = null;
-        
-        f = LoginFormFragment.newInstance();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction =
-                fragmentManager.beginTransaction();
-        fragmentTransaction.add(android.R.id.content,f, LOGIN_FRAG_TAG);//.add(android.R.id.content, f);
-        fragmentTransaction.commit();
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
