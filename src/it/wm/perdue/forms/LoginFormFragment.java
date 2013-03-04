@@ -1,4 +1,4 @@
-package it.wm.perdue.Forms;
+package it.wm.perdue.forms;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
