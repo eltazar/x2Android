@@ -17,11 +17,11 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-import it.wm.perdue.Forms.BaseFormActivity;
-import it.wm.perdue.Forms.RichiediCartaFragment;
 import it.wm.perdue.contatti.InfoPerDueBaseActivity;
-import it.wm.perdue.coupon.CouponListFragment;
+import it.wm.perdue.coupon.CheckoutListFragment;
 import it.wm.perdue.doveusarla.DoveUsarlaFragment;
+import it.wm.perdue.forms.BaseFormActivity;
+import it.wm.perdue.forms.RichiediCartaFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
         Utils.setContext(this.getApplicationContext());
         
         tabList = new ArrayList<TabDescriptor>();
-        tabList.add(new TabDescriptor(COUPON_TAB_TAG, CouponListFragment.class, "Coupon"));
+        tabList.add(new TabDescriptor(COUPON_TAB_TAG, CheckoutListFragment.class, "Coupon"));
         tabList.add(new TabDescriptor(DOVE_USARLA_TAB_TAG, DoveUsarlaFragment.class, "Dove Usarla"));
         tabList.add(new TabDescriptor(NEWS_TAB_TAG, NewsListFragment.class, "News"));
         tabList.add(new TabDescriptor(RICHIEDI_TAB_TAG, RichiediCartaFragment.class, "Richiedi"));

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_alignLeft="@+id/checkoutAmount"
+        android:layout_alignRight="@+id/checkoutTotal"
+        android:layout_below="@+id/checkoutPrice"
+        android:layout_marginTop="5dp"
+        android:background="#D8D8D8" />
+
+        <TextView
+            android:id="@+id/checkoutTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/checkoutPrice"
+            android:layout_below="@+id/checkoutPrice"
+            android:layout_marginTop="5dp"
+            android:text="Totale"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <EditText
+            android:id="@+id/checkoutAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/checkoutTitle"
+            android:layout_centerHorizontal="true"
+            android:ems="10"
+            android:gravity="center_vertical|right"
+            android:hint="Quantità"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            android:lines="1" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/checkoutAmount"
+            android:layout_alignBottom="@+id/checkoutAmount"
+            android:layout_alignRight="@+id/checkoutAmount"
+            android:text=" x"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/checkoutPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/checkoutAmount"
+            android:layout_below="@+id/checkoutAmount"
+            android:text="Prezzo"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    </RelativeLayout>
