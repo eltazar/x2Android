@@ -1,5 +1,5 @@
 
-package it.wm.perdue.Forms;
+package it.wm.perdue.forms;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,8 +17,8 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import it.wm.HTTPAccess;
-import it.wm.perdue.Forms.LoginFormFragment.OnLoginFormListener;
-import it.wm.perdue.Forms.RetrievePswDialog.RetrievePswListener;
+import it.wm.perdue.forms.LoginFormFragment.OnLoginFormListener;
+import it.wm.perdue.forms.RetrievePswDialog.RetrievePswListener;
 
 public class BaseFormActivity extends SherlockFragmentActivity implements
         HTTPAccess.ResponseListener, OnLoginFormListener, OnEditorActionListener, OnFocusChangeListener, RetrievePswListener {
