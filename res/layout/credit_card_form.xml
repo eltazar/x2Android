@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="right" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        android:padding="30dip" >
+        
+        <EditText
+            android:id="@+id/creditNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Numero carta"
+            android:inputType="number" >
+
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/cvv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/creditNumber"
+            android:ems="10"
+            android:hint="CVV"
+            android:inputType="number"
+            android:paddingTop="3dp" />
+
+        <EditText
+            android:id="@+id/month"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cvv"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Mese"
+            android:inputType="number"
+            android:paddingTop="3dp" />
+        
+         <EditText
+             android:id="@+id/year"
+             android:layout_width="50dp"
+             android:layout_height="wrap_content"
+             android:layout_alignBaseline="@id/month"
+             android:layout_alignRight="@+id/owner"
+             android:layout_toRightOf="@id/month"
+             android:ems="10"
+             android:hint="Anno"
+             android:layout_weight="1"
+             
+             android:inputType="number" />
+
+        <EditText
+            android:id="@+id/owner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/month"
+            android:ems="10"
+            android:hint="Titolare"
+            android:paddingTop="3dp" />
+
+        <Button
+            android:id="@+id/saveCardBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/owner"
+            android:layout_below="@+id/owner"
+            android:text="Fatto" />
+
+        <ScrollView
+            android:id="@+id/scrollView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </ScrollView>
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/saveCardBtn"
+            android:layout_below="@+id/saveCardBtn"
+            android:layout_marginTop="20dp"
+            android:text="I tuoi dati sono al sicuro, come?" />
+
+
+
+    </RelativeLayout>
+
+</ScrollView>
