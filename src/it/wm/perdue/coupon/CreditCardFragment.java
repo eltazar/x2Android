@@ -10,8 +10,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -23,11 +28,7 @@ import it.wm.perdue.businessLogic.CreditCard;
 
 public class CreditCardFragment extends SherlockFragment implements OnClickListener, OnEditorActionListener, OnFocusChangeListener {
     
-    private static final String TAG_LOGIN      = "login";
-    private static final String TAG_RETRIEVE      = "retrieve";
-    
-    private static final String TAG_MAIL       = "mail";
-    private static final String TAG_PSW       = "psw";
+    private static final String TAG_CREDIT_CARD      = "login";
 
     // views
     private EditText            numberEditText    = null;
@@ -35,6 +36,7 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
     private EditText            monthEditText    = null;
     private EditText            yearEditText    = null;
     private EditText            ownerEditText    = null;
+    private Spinner             spinnerInstitute = null;
     
     private CreditCard          creditCard = null;
     
@@ -72,18 +74,34 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //if(savedInstanceState !=null){
-        //    Log.d("login","entrato -> "+savedInstanceState.getString(TAG_MAIL));
-        //    email = savedInstanceState.getString(TAG_MAIL);
-        //    psw = savedInstanceState.getString(TAG_PSW);
-        //}
+        if(savedInstanceState != null){
+            creditCard = (CreditCard)savedInstanceState.getParcelable(TAG_CREDIT_CARD);
+            Log.d("check","leggo vecchio stato ->"+creditCard.toString());
+        }
     }
+    
+    @Override
+    public void onSaveInstanceState(Bundle outState) {        
+        //salvo stato della carta di credito 
+        saveIntoModel();
+        outState.putParcelable(TAG_CREDIT_CARD, creditCard);
+        Log.d("check","salvo vecchio stato ->"+creditCard.toString());
+        super.onSaveInstanceState(outState);
+    }   
     
     @Override
     public void onResume(){
         super.onResume();
-        //mailEditText.setText(email);
-        //pswEditText.setText(psw);       
+        if(creditCard != null){
+            Log.d("check","setto valori del vecchio stato->"+creditCard.toString());
+
+            numberEditText.setText(creditCard.getNumber());
+            cvvEditText.setText(creditCard.getCvv());
+            ownerEditText.setText(creditCard.getOwner());
+            monthEditText.setText((creditCard.getMonth()>0)?(""+creditCard.getMonth()):"");
+            yearEditText.setText((creditCard.getYear()>0)?(""+creditCard.getYear()):"");
+            spinnerInstitute.setSelection(creditCard.getInstitute());
+        }
     }
     
     // onCreateView
@@ -96,31 +114,44 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
     
         numberEditText = (EditText) view.findViewById(R.id.creditNumber);
         numberEditText.setOnFocusChangeListener(this);
+        numberEditText.setOnEditorActionListener(this);
 
         cvvEditText = (EditText) view.findViewById(R.id.cvv);
         cvvEditText.setOnFocusChangeListener(this);
+        cvvEditText.setOnEditorActionListener(this);
 
         monthEditText = (EditText) view.findViewById(R.id.month);
         monthEditText.setOnFocusChangeListener(this);
+        monthEditText.setOnEditorActionListener(this);
 
         yearEditText = (EditText) view.findViewById(R.id.year);
         yearEditText.setOnFocusChangeListener(this);
+        yearEditText.setOnEditorActionListener(this);
 
         ownerEditText = (EditText) view.findViewById(R.id.owner);
         ownerEditText.setOnFocusChangeListener(this);
+        ownerEditText.setOnEditorActionListener(this);
 
+        spinnerInstitute = (Spinner) view.findViewById(R.id.spinnerInstitute);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.creditCards, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerInstitute.setAdapter(adapter);
+        spinnerInstitute.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                creditCard.setInstitute(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                creditCard.setInstitute(0);            }
+        });
+        
         creditCard = new CreditCard();
         return view;
-    }
-    
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        
-        //outState.putString(TAG_MAIL,mailEditText.getText().toString());
-        //outState.putString(TAG_PSW,pswEditText.getText().toString());
-        super.onSaveInstanceState(outState);
-    }    
-    
+    } 
+
     /*OnClickListener
      * */
     @Override
@@ -150,21 +181,29 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
     /*OnEditorActionListener, OnFocusChangeListener
      * */
     @Override
-    public boolean onEditorAction(TextView v, int arg1, KeyEvent arg2) {
-        // TODO Auto-generated method stub
-        
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent arg2) {
+        String input = v.getText().toString();
+        Log.d("check","CHIAMATO ONEDITORACTION DONE = "+input);
+
+        if(actionId == EditorInfo.IME_ACTION_DONE)
+        {
+            input= v.getText().toString();
+            //Log.d("check","CHIAMATO ONEDITORACTION DONE = "+input);
+            //MyActivity.calculate(input);
+        }        
         return false;
     }
     
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
-        if (hasFocus) {
-            EditText field = (EditText) v;      
+        if (hasFocus) {          
+            EditText field = (EditText) v;
             Log.d("XXX", "has focus");
             field.setHintTextColor(Color.GRAY);
             field.setTextColor(Color.BLACK);
         }
     }
+
     /*OnEditorActionListener, OnFocusChangeListener END
      * */
     
@@ -177,7 +216,7 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
         creditCard.setNumber(numberEditText.getText().toString().replace(" ", ""));
         creditCard.setCvv(cvvEditText.getText().toString().replace(" ", ""));
         creditCard.setOwner(ownerEditText.getText().toString().replace(" ", ""));
-
+        creditCard.setInstitute(spinnerInstitute.getSelectedItemPosition());
         if(yearEditText.getText().toString().equals("")){
             creditCard.setYear(-1);
         }
@@ -199,7 +238,12 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
         boolean isValid = true;
         
         //controllo se il modello è valido
-
+        
+        if (creditCard.getInstitute() == 0) {
+           // Log.d("XXX", "card -> " + card + " invalido");
+            ((TextView) spinnerInstitute.getChildAt(0)).setTextColor(Color.RED);
+            isValid = false;
+        }
         if (creditCard.getNumber().length() == 0){ 
             setErrorText(numberEditText);
             isValid = false;
