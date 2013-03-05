@@ -93,7 +93,10 @@ public class LoginFormFragment extends SherlockFragment implements
     public void onResume(){
         super.onResume();
         mailEditText.setText(email);
-        pswEditText.setText(psw);       
+        pswEditText.setText(psw);   
+        
+        //DEBUG:
+        Log.d("login","isLoggato--->"+Utils.getSavedLoginData().toString());
     }
     
     // onCreateView
@@ -157,6 +160,8 @@ public class LoginFormFragment extends SherlockFragment implements
                 if(loginData.getIdCustomer() != -1){
                     //loggato
                     Log.d("login","loggato");
+                    loginData.setEmail(email);
+                    Utils.saveLoginData(loginData);
                 }
             }
         }
