@@ -25,6 +25,7 @@
             android:layout_below="@id/spinnerInstitute"
             android:ems="10"
             android:hint="Numero carta"
+            android:maxLength="16"
             android:inputType="number" 
             android:imeOptions="actionDone"
             >
@@ -39,6 +40,7 @@
             android:layout_below="@id/creditNumber"
             android:ems="10"
             android:hint="CVV"
+            android:maxLength="4"
             android:inputType="number"
             android:paddingTop="3dp"
             android:imeOptions="actionDone" />
