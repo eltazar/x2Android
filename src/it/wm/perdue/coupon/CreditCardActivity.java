@@ -22,8 +22,7 @@ public class CreditCardActivity extends SherlockFragmentActivity implements OnCr
         super.onCreate(savedInstanceState);
         
         ActionBar bar = getSupportActionBar();
-        bar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
-                | ActionBar.DISPLAY_SHOW_HOME
+        bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME
                 | ActionBar.DISPLAY_SHOW_TITLE);
         bar.setTitle("Carta di credito");    
         
