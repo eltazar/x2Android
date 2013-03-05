@@ -307,4 +307,11 @@ public final class Utils {
         context.startActivity(Intent.createChooser(i, "Invia email"));
     }
     
+    public static boolean isNumeric(String str)
+    {          
+      String s = str.replace(" ", "");
+      //match a number with optional '-' and decimal.
+      return s.matches("-?\\d+(\\.\\d+)?"); 
+    }
+    
 }
