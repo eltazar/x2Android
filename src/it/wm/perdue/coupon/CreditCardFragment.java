@@ -156,12 +156,9 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
     /*OnClickListener
      * */
     @Override
-    public void onClick(View v) {
-        // TODO Auto-generated method stub
-        
+    public void onClick(View v) {        
         switch (v.getId()) {
             case R.id.saveCardBtn:
-                //Log.d("XXX", "SEND BTN");
                 saveIntoModel();
                 if (validateFields() == false) {
                     // mostro avviso errore
@@ -242,7 +239,6 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
         //controllo se il modello è valido
         
         if (creditCard.getInstitute() == 0) {
-           // Log.d("XXX", "card -> " + card + " invalido");
             ((TextView) spinnerInstitute.getChildAt(0)).setTextColor(Color.RED);
             isValid = false;
         }
