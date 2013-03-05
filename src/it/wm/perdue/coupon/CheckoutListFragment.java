@@ -10,15 +10,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
 
 import it.wm.HTTPAccess;
 import it.wm.perdue.R;
+import it.wm.perdue.businessLogic.CreditCard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,24 +29,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CheckoutListFragment extends SherlockListFragment implements
-    HTTPAccess.ResponseListener {
+    HTTPAccess.ResponseListener{
 
     public static final Integer[] rowKinds     = {
         R.layout.coupon_title_row,R.layout.checkout_row,R.layout.user_data_row,R.layout.button_row
                                          };
     
     private Map<String,Object> dataModel =  null;
-    
-    //private CreditCard creditCard = null;
-    
+        
     public void createDataModel(int userId, String... couponInfo){
         dataModel.put("userId", userId);
-        //0->idCoupon, 1->titolo, 2->prezzo
-        dataModel.put("couponInfo", (new ArrayList<String>(Arrays.asList(couponInfo))));
-        dataModel.put("creditCard", "12345678");
-        
-        Log.d("check","data model = "+dataModel);
+        //0->idCoupon, 1->titolo, 2->prezzo, 3->credit cards
+        dataModel.put("couponInfo", (new ArrayList<String>(Arrays.asList(couponInfo))));        
+        //Log.d("check","data model = "+dataModel);
     }
+    
     public void insertIntoDataModel(Object o){
         //per aggiungere qlc
     }
@@ -58,26 +58,35 @@ public class CheckoutListFragment extends SherlockListFragment implements
         super.onActivityCreated(savedInstanceState);
         ListView listView = getListView();
         //listView.setDividerHeight(5);
-        Log.d("check","on activity created");
     }
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("check","onCreate");
         dataModel =  new HashMap<String,Object>();
         createDataModel(1234,"0000","vacanza in montagna","120.54");
         ListAdapter listAdapter = new BuyListAdapter(getActivity(), R.layout.coupon_title_row, rowKinds, dataModel);
         setListAdapter(listAdapter);
     }
     
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+      super.onActivityResult(requestCode, resultCode, data);
+      if (requestCode == 0 && resultCode == SherlockActivity.RESULT_OK && data != null){
+          Log.d("check","CheckoutList: ricevuto carta salvata -> "+((CreditCard)data.getExtras().get("creditCard")).toString());
+          //ho ricevuto la carta di credito creata, la salvo nel model
+          dataModel.put("creditCard", data.getExtras().get("creditCard"));
+          //aggiorno la listView
+          ((BaseAdapter) getListView().getAdapter()).notifyDataSetChanged();
+      }
+    }
+    
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Log.d("check","riga cliccata n--> "+position);
-        Intent intent = new Intent(getSherlockActivity(),CreditCardActivity.class);
-        startActivity(intent);
         if(position == 3){
-            //bottone acquista cliccato
-            
+            //riga carta di credito
+            Intent intent = new Intent(getSherlockActivity(),CreditCardActivity.class);
+            //TODO: se già esiste mandare la carta di credito precedente
+            startActivityForResult( intent, 0);
         }
     }
     
@@ -86,13 +95,11 @@ public class CheckoutListFragment extends SherlockListFragment implements
      * */
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
-        // TODO Auto-generated method stub
         
     }
 
     @Override
     public void onHTTPerror(String tag) {
-        // TODO Auto-generated method stub
         
     }
     /*
@@ -200,7 +207,10 @@ public class CheckoutListFragment extends SherlockListFragment implements
                 }
                 if(data != null){
                     //qui recuperare oggetto carta di credito e stampare numero
-                    data.setText(dataModel.get("creditCard").toString());
+                    CreditCard c = (CreditCard) dataModel.get("creditCard");
+                    if(c != null && c.getNumber() != null)
+                        data.setText(c.getNumber());
+                    else data.setText("Inserisci carta di credito");
                 }
             }
         }
@@ -249,6 +259,4 @@ public class CheckoutListFragment extends SherlockListFragment implements
             }
         }
     }
-
-
 }
