@@ -13,6 +13,14 @@ public class LoginData implements Serializable {
     private String    nomeContatto           = null;
     @SerializedName("cognome_contatto")
     private String    cognomeContatto           = null;
+    private String    email           = null;
+    
+    public LoginData(String name,String surname, String email, int id){
+        idCustomer = id;
+        nomeContatto = name;
+        cognomeContatto = surname;
+        this.email = email;
+    }
     
     public int getIdCustomer(){
         return idCustomer;
@@ -22,6 +30,17 @@ public class LoginData implements Serializable {
     }
     public String getCognomeContatto(){
         return cognomeContatto;
+    }
+    public String getEmail(){
+        return email;
+    }
+    
+    public void setEmail(String e){
+        email = e;
+    }
+    
+    public String toString(){
+        return "LOGIN DATA = "+nomeContatto+" "+cognomeContatto+" "+email+" "+idCustomer;
     }
 
 }
