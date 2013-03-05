@@ -4,19 +4,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.View.OnFocusChangeListener;
-import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-import it.wm.HTTPAccess;
-
-public class CreditCardActivity extends SherlockFragmentActivity implements
-        HTTPAccess.ResponseListener, OnEditorActionListener, OnFocusChangeListener {
+public class CreditCardActivity extends SherlockFragmentActivity{
     
     private static final String DEBUG_TAG  = "CreditcardActivity";
 
@@ -30,12 +22,16 @@ public class CreditCardActivity extends SherlockFragmentActivity implements
                 | ActionBar.DISPLAY_SHOW_TITLE);
         bar.setTitle("Carta di credito");    
         
-        Fragment f = CreditCardFragment.newInstance();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction =
-                fragmentManager.beginTransaction();
-        fragmentTransaction.replace(android.R.id.content,f, "creditCardFragment");
-        fragmentTransaction.commit();
+        //se prima volta istanzio il fragment, 
+        //altrimenti era già stato istanziato e bisogna quindi ripristinare lo stato
+        if(savedInstanceState == null){
+            Fragment f = CreditCardFragment.newInstance();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction =
+                    fragmentManager.beginTransaction();
+            fragmentTransaction.replace(android.R.id.content,f, "creditCardFragment");
+            fragmentTransaction.commit();
+        }
     }
     
     @Override
@@ -46,29 +42,5 @@ public class CreditCardActivity extends SherlockFragmentActivity implements
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onFocusChange(View arg0, boolean arg1) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public void onHTTPResponseReceived(String tag, String response) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void onHTTPerror(String tag) {
-        // TODO Auto-generated method stub
-        
     }
 }
