@@ -21,7 +21,9 @@ import com.actionbarsherlock.app.SherlockListFragment;
 
 import it.wm.HTTPAccess;
 import it.wm.perdue.R;
+import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.CreditCard;
+import it.wm.perdue.businessLogic.LoginData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,8 +41,9 @@ public class CheckoutListFragment extends SherlockListFragment implements
         
     public void createDataModel(int userId, String... couponInfo){
         dataModel.put("userId", userId);
-        //0->idCoupon, 1->titolo, 2->prezzo, 3->credit cards
-        dataModel.put("couponInfo", (new ArrayList<String>(Arrays.asList(couponInfo))));        
+        //idCoupon, titolo, prezzo, credit cards, loginData
+        dataModel.put("couponInfo", (new ArrayList<String>(Arrays.asList(couponInfo))));  
+        dataModel.put("loginData", Utils.getSavedLoginData());
         //Log.d("check","data model = "+dataModel);
     }
     
@@ -57,7 +60,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         ListView listView = getListView();
-        //listView.setDividerHeight(5);
+        listView.setDividerHeight(2);
     }
     
     @Override
@@ -198,7 +201,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
                     dataType.setText("Utente");
                 }
                 if(data != null){
-                    data.setText(dataModel.get("userId").toString());
+                    data.setText(((LoginData) dataModel.get("loginData")).getEmail());
                 }
             }
             else{
@@ -224,7 +227,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
             if(price != null){
                 ArrayList<String> couponInfo = (ArrayList<String>) dataModel.get("couponInfo");
                 Log.d("check","array = "+couponInfo);
-                price.setText(couponInfo.get(2));
+                price.setText(couponInfo.get(2)+"€");
             }
             if(amount != null){
                 amount.addTextChangedListener(new TextWatcher() {
@@ -246,7 +249,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
                         
                         try{
                             double input = Double.parseDouble(s.toString());
-                            double pr = Double.parseDouble(price.getText().toString());
+                            double pr = Double.parseDouble(price.getText().toString().replace("€", ""));
                             output = input*pr;
                         }
                         catch(NumberFormatException e){
