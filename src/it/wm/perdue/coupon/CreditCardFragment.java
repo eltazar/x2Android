@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import it.wm.perdue.R;
+import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.CreditCard;
 
 public class CreditCardFragment extends SherlockFragment implements OnClickListener, OnEditorActionListener, OnFocusChangeListener {
@@ -160,13 +161,14 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
         switch (v.getId()) {
             case R.id.saveCardBtn:
                 saveIntoModel();
-                if (validateFields() == false) {
-                    // mostro avviso errore
-                    showErrorMessage();
-                }
-                else {
+                String result = validateFields();
+                if ( result.equals("ok")) {
                     //ritorno oggetto carta di credito al padre
                     formListener.onCreditCardDoneButtonClicked(creditCard);
+                }
+                else {
+                    // mostro avviso errore
+                    showErrorMessage(result);
                 }
                 break;
             default:
@@ -232,39 +234,81 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
     }
     
     //controlla i dati della carta di credito
-    private boolean validateFields() {
+    private String validateFields() {
           
-        boolean isValid = true;
+        String resultString  = "ok";
         
         //controllo se il modello è valido
         
         if (creditCard.getInstitute() == 0) {
             ((TextView) spinnerInstitute.getChildAt(0)).setTextColor(Color.RED);
-            isValid = false;
-        }
-        if (creditCard.getNumber().length() == 0){ 
-            setErrorText(numberEditText);
-            isValid = false;
-        }
-        if(creditCard.getCvv().length() == 0){
-            setErrorText(cvvEditText);
-            isValid = false;
+            resultString = "Inserisci correttamente i campi richiesti";
         }
         if(creditCard.getOwner().length() == 0){
             setErrorText(ownerEditText);
-            isValid = false;
+            resultString = "Inserisci correttamente i campi richiesti";
         }
         if(creditCard.getMonth() < 1 || creditCard.getMonth() > 12){
             setErrorText(monthEditText);
-            isValid = false;
+            resultString = "Inserisci correttamente i campi richiesti";
         }
         if(creditCard.getYear() < 2013 || creditCard.getYear() > 2050){
             setErrorText(yearEditText);
-            isValid = false;
+            resultString = "Inserisci correttamente i campi richiesti";
         }
         
-        //TODO: controllare numero di cifre della carta di credito e del cvv
-        return isValid;
+        /*Controllo numero della carta di credito*/
+        if (creditCard.getNumber().length() == 0){ 
+            setErrorText(numberEditText);
+            resultString = "Inserisci correttamente i campi richiesti";
+        }  
+        else{
+          //se la carta di credito è effettivamente un numero, conto le cifre
+            if(Utils.isNumeric(creditCard.getNumber())){
+                //se american express
+                if(creditCard.getInstitute() == 1 && creditCard.getNumber().length() != 15){
+                    resultString = "La carta di credito selezionata deve avere 15 cifre";
+                    setErrorText(numberEditText);
+                }
+                if(creditCard.getInstitute() > 1 && creditCard.getNumber().length() != 16){
+                    resultString = "La carta di credito selezionata deve avere 16 cifre";
+                    setErrorText(numberEditText);
+                }
+            }
+            else{
+                resultString = "Il numero di carta di credito deve contenere solo cifre";
+                setErrorText(numberEditText);
+            }
+        }
+        /*controllo num carta credito: END*/
+        
+        /*Controllo cvv*/
+        if(creditCard.getCvv().length() == 0){
+            setErrorText(cvvEditText);
+            resultString = "Inserisci correttamente i campi richiesti";
+
+        }
+        else{
+            //se cvv è numero, controllo lunghezza
+            if(Utils.isNumeric(creditCard.getCvv())){
+              //se american express
+                if(creditCard.getInstitute() == 1 && creditCard.getCvv().length() != 4){
+                    resultString = "Il CVV deve avere 4 cifre";
+                    setErrorText(cvvEditText);
+                }
+                if(creditCard.getInstitute() > 1 && creditCard.getCvv().length() != 3){
+                    resultString = "Il CVV deve avere 3 cifre";
+                    setErrorText(cvvEditText);
+                }
+            }
+            else{
+                resultString = "Il CVV deve contenere solo cifre";
+                setErrorText(cvvEditText);
+            }
+        }
+        /*Controllo cvv: END*/
+        
+        return resultString;
     }
     
     private void setErrorText(EditText e){
@@ -272,8 +316,7 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
         e.setHintTextColor(Color.RED);
     }
     
-    private void showErrorMessage(){
-        CharSequence text = "Per favore completa i campi richiesti correttamente";
+    private void showErrorMessage(String text){
         Toast toast = Toast.makeText(getSherlockActivity(), text, Toast.LENGTH_SHORT);
         toast.show();
     }
