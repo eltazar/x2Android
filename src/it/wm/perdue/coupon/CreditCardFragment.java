@@ -40,28 +40,29 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
     
     private CreditCard          creditCard = null;
     
-    //private OnLoginFormListener formListener = null;
-    //
+    private OnCreditCardFormListener formListener = null;
+    
     public static CreditCardFragment newInstance() {
         CreditCardFragment fragment = new CreditCardFragment();
     return fragment;
     }
     
-    //public interface OnLoginFormListener{
-    //public void onRegButtonClicked();
-    //}
+    public interface OnCreditCardFormListener{
+        public void onCreditCardDoneButtonClicked(CreditCard c);
+        public void onCreditCardCancelButtonClicked();
+    }
     
     // onAttach
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        //try {
-        //    formListener = (OnLoginFormListener) activity;
-        //} catch (ClassCastException e) {
-        //    // The activity doesn't implement the interface, throw exception
-        //    throw new ClassCastException(activity.toString()
-        //            + " must implement OnLoginFormListener");
-        //}
+        try {
+            formListener = (OnCreditCardFormListener) activity;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, throw exception
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnCreditCardFormListener");
+        }
     }
     
     // onCreate
@@ -168,6 +169,7 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
                 }
                 else {
                     //ritorno oggetto carta di credito al padre
+                    formListener.onCreditCardDoneButtonClicked(creditCard);
                 }
                 break;
             default:
