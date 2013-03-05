@@ -12,13 +12,22 @@
         android:orientation="vertical"
         android:padding="30dip" >
         
+        <Spinner
+            android:id="@+id/spinnerInstitute"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" 
+            />
+        
         <EditText
             android:id="@+id/creditNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/spinnerInstitute"
             android:ems="10"
             android:hint="Numero carta"
-            android:inputType="number" >
+            android:inputType="number" 
+            android:imeOptions="actionDone"
+            >
 
             <requestFocus />
         </EditText>
@@ -31,7 +40,8 @@
             android:ems="10"
             android:hint="CVV"
             android:inputType="number"
-            android:paddingTop="3dp" />
+            android:paddingTop="3dp"
+            android:imeOptions="actionDone" />
 
         <EditText
             android:id="@+id/month"
@@ -41,8 +51,10 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="Mese"
+            android:maxLength="2"
             android:inputType="number"
-            android:paddingTop="3dp" />
+            android:paddingTop="3dp"
+            android:imeOptions="actionDone" />
         
          <EditText
              android:id="@+id/year"
@@ -53,9 +65,10 @@
              android:layout_toRightOf="@id/month"
              android:ems="10"
              android:hint="Anno"
+             android:maxLength="4"
              android:layout_weight="1"
-             
-             android:inputType="number" />
+             android:inputType="number" 
+             android:imeOptions="actionDone"/>
 
         <EditText
             android:id="@+id/owner"
@@ -64,6 +77,10 @@
             android:layout_below="@id/month"
             android:ems="10"
             android:hint="Titolare"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:lines="1"
+            android:maxLines="1"
             android:paddingTop="3dp" />
 
         <Button
