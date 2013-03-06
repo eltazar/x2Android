@@ -20,8 +20,8 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
 
 import it.wm.HTTPAccess;
+import it.wm.perdue.LoggingHandler;
 import it.wm.perdue.R;
-import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.CreditCard;
 import it.wm.perdue.businessLogic.LoginData;
 
@@ -43,7 +43,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
         dataModel.put("userId", userId);
         //idCoupon, titolo, prezzo, credit cards, loginData
         dataModel.put("couponInfo", (new ArrayList<String>(Arrays.asList(couponInfo))));  
-        dataModel.put("loginData", Utils.getSavedLoginData());
+        dataModel.put("loginData", LoggingHandler.getSavedLoginData());
         //Log.d("check","data model = "+dataModel);
     }
     

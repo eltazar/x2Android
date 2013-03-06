@@ -22,6 +22,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
 
 import it.wm.HTTPAccess;
+import it.wm.perdue.LoggingHandler;
 import it.wm.perdue.R;
 import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.LoginData;
@@ -96,7 +97,7 @@ public class LoginFormFragment extends SherlockFragment implements
         pswEditText.setText(psw);   
         
         //DEBUG:
-        Log.d("login","isLoggato--->"+Utils.getSavedLoginData().toString());
+        Log.d("login","isLoggato---> "+(LoggingHandler.isLogged()?"yes":"no"));
     }
     
     // onCreateView
@@ -161,7 +162,7 @@ public class LoginFormFragment extends SherlockFragment implements
                     //loggato
                     Log.d("login","loggato");
                     loginData.setEmail(email);
-                    Utils.saveLoginData(loginData);
+                    LoggingHandler.onDidLogin(loginData);
                 }
             }
         }
@@ -290,7 +291,7 @@ public class LoginFormFragment extends SherlockFragment implements
     
     private void showErrorMessage(){
         CharSequence text = "Per favore completa i campi richiesti correttamente";
-        Toast toast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(getSherlockActivity(), text, Toast.LENGTH_SHORT);
         toast.show();
     }
     
