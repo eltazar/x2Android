@@ -19,8 +19,6 @@ import com.google.android.maps.GeoPoint;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import it.wm.perdue.businessLogic.LoginData;
-
 import java.util.Calendar;
 import java.util.regex.Pattern;
 
@@ -314,19 +312,5 @@ public final class Utils {
       String s = str.replace(" ", "");
       //match a number with optional '-' and decimal.
       return s.matches("-?\\d+(\\.\\d+)?"); 
-    }
-    
-    public static void saveLoginData(LoginData l){
-        Utils.setPreferenceString("userName",l.getNomeContatto());
-        Utils.setPreferenceString("userSurname",l.getCognomeContatto());
-        Utils.setPreferenceString("userMail",l.getEmail());
-        Utils.setPreferenceString("userId",l.getIdCustomer()+"");
-    }
-    
-    public static LoginData getSavedLoginData(){
-        return new LoginData(getPreferenceString("userName",""),
-                getPreferenceString("userSurname",""),getPreferenceString("userMail",""),
-                Integer.parseInt(getPreferenceString("userId","-1")));
-    }
-    
+    }    
 }
