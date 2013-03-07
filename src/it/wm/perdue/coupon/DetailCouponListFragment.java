@@ -1,13 +1,15 @@
 package it.wm.perdue.coupon;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
@@ -17,11 +19,13 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockListFragment;
 
 import it.wm.HTTPAccess;
+import it.wm.perdue.LoggingHandler;
 import it.wm.perdue.R;
 import it.wm.perdue.businessLogic.Coupon;
+import it.wm.perdue.forms.BaseFormActivity;
 
 public class DetailCouponListFragment extends SherlockListFragment implements
-        HTTPAccess.ResponseListener {
+        HTTPAccess.ResponseListener, OnClickListener {
     private static final String                         DEBUG_TAG  = "CouponListFragment";
     protected static final String                       TAG_NORMAL = "normal";
     
@@ -36,9 +40,13 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     
     //dati esercente
     protected String                                    eseId      = null;
-
     private Button                                      buyButton = null;
+    private OnCouponActionListener                      listener = null;
     
+    
+    public interface OnCouponActionListener{
+        public void onDidCheckout();
+    }
     
     public static DetailCouponListFragment newInstance(String eseId) {
         DetailCouponListFragment fragment = new DetailCouponListFragment();
@@ -50,35 +58,43 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     }
     
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            listener = (OnCouponActionListener) activity;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, throw exception
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnCouponActionListener");
+        }
+    }
+    
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        Log.d("coupon","onCreate");
+        Log.d("couponList","onCreate");
         
         Bundle args = getArguments();
         //eseId = args.getString(ESE_ID);
         
-        httpAccess = new HTTPAccess();
-        httpAccess.setResponseListener(this);
-        urlString = "http://www.cartaperdue.it/partner/v2.0/DettaglioEsercenteCompleto.php?id="
-                + eseId;
-        
-        onCreateAdapters();
     }
     
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.d("coupon","onActivityCreated");
+        Log.d("couponList","onActivityCreated");
+        
+        onCreateAdapters();
+        setListAdapter(adapter);
 
-        ListView lv = getListView();
-        LayoutInflater inflater = (LayoutInflater) getActivity()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        httpAccess = new HTTPAccess();
+        httpAccess.setResponseListener(this);
+        urlString = "http://www.cartaperdue.it/partner/v2.0/DettaglioEsercenteCompleto.php?id="
+                + eseId;
         
         String urlImageString = "http://www.cartaperdue.it/partner/v2.0/ImmagineEsercente.php?id="
                 + eseId;
-        
-        setListAdapter(adapter);
         
         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET,
                 null, TAG_NORMAL);
@@ -93,19 +109,20 @@ public class DetailCouponListFragment extends SherlockListFragment implements
 //           {
 //               **** cleanup.  Not needed if not cancelable ****
 //           }});
-        
+
         progressDialog.show();
     }
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("coupon","onCreateView");
+        Log.d("couponList","onCreateView");
 
         View view = inflater.inflate(R.layout.coupon, container, false);
       buyButton = (Button) view.findViewById(R.id.buyButton);
       buyButton.setOnClickListener(this);
       TextView tv = (TextView) view.findViewById(R.id.summaryTextView);
       tv.setText("CIAOOOOO");
+      
         return view;
     }
     
@@ -125,7 +142,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d("coupon","onDestroyView");
+        Log.d("couponList","onDestroyView");
 
         // setListAdapter(null);
         httpAccess.setResponseListener(null);
@@ -134,12 +151,12 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     public void onResume(){
         super.onResume();
   
-        Log.d("coupon","onResume");
+        Log.d("couponList","onResume");
     }
     
     public void onStop(){
         super.onStop();
-        Log.d("coupon","onStop");
+        Log.d("couponList","onStop");
     }
     
     
@@ -156,10 +173,10 @@ public class DetailCouponListFragment extends SherlockListFragment implements
         //http://stackoverflow.com/questions/10024739/how-to-determine-when-fragment-becomes-visible-in-viewpager
         
         if (isVisibleToUser == true) { 
-            Log.d("coupon","fragment è visibile");
+            Log.d("couponList","fragment è visibile");
         }
         else {
-            Log.d("coupon","fragment non è visibile");
+            Log.d("couponList","fragment non è visibile");
 
         }
         
@@ -170,7 +187,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     public void onHTTPResponseReceived(String tag, String response) {
         // downloading--;
         
-        //Log.d("xxx", "RISPOSTA = " + response);
+        Log.d("couponList", "RISPOSTA = " + response);
         buyButton.setEnabled(true);
         
         if (tag.equals(TAG_NORMAL)) {
@@ -196,9 +213,6 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     
     /* *** END: HTTPAccess.ResponseListener ******************* */
     
-    // TODO: sistemare sto schifo che sto facendo per la fretta. soprattutto
-    // sistemare come capire chi è la cella cliccata
-    // dato che il nostro model non è mai lo stesso
     public void onListItemClick(ListView l, View v, int position, long id) {
         
     }
@@ -206,6 +220,22 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     protected void dismissWaitingProgressDialog(){
         //Log.d("uuu","dismissed");
         progressDialog.dismiss();
+    }
+
+    @Override
+    public void onClick(View v) {
+        //buy button pressed
+        if(LoggingHandler.isLogged()){
+            //mostra Checkout
+            Log.d("couponList","mostra checkout");
+            listener.onDidCheckout();
+        }
+        else{
+            //mostra login
+            Log.d("couponList","mostra login");
+            Intent i = new Intent(getSherlockActivity(),BaseFormActivity.class);
+            startActivity(i);
+        }
     }
     
     /*
