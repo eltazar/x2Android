@@ -131,7 +131,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
+	    <activity
+            android:name=".coupon.CouponsBaseActivity"
+            android:label=""
+       		android:uiOptions="splitActionBarWhenNarrow">
+       		<meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
     </application>
 
 </manifest>
