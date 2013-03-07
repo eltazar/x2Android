@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -44,8 +45,16 @@ public class CheckoutListFragment extends SherlockListFragment implements
     
     private Map<String,Object> dataModel =  null;
         
+    /*DATA MODEL KEYS
+     * logindData -> dati di login dell'utente
+     * couponInfo -> temporaneo, info di base del coupon
+     * creditCard -> la carta di credito
+     * amount -> il numero di coupon da acquistare
+     * totalPrice -> prezzo totale del carrello
+     **/
+    
     public void createDataModel(int userId, String... couponInfo){
-        dataModel.put("userId", userId);
+        //dataModel.put("userId", userId);
         //idCoupon, titolo, prezzo, credit cards, loginData
         dataModel.put("couponInfo", (new ArrayList<String>(Arrays.asList(couponInfo))));  
         dataModel.put("loginData", LoggingHandler.getSavedLoginData());
@@ -66,21 +75,53 @@ public class CheckoutListFragment extends SherlockListFragment implements
         super.onActivityCreated(savedInstanceState);
         ListView listView = getListView();
         listView.setDividerHeight(2);
+        //ricostruisco dataModel
+        if(savedInstanceState != null){
+            dataModel.put("couponInfo", savedInstanceState.getStringArrayList("coupon"));
+            dataModel.put("creditCard",savedInstanceState.getParcelable("card"));
+            dataModel.put("loginData", LoggingHandler.getSavedLoginData());
+            dataModel.put("amount", savedInstanceState.getString("amount"));
+            dataModel.put("totalPrice", savedInstanceState.getString("totalPrice"));
+        }
+        else{
+            //creo model con dati in input del fragment
+            createDataModel(1234,"0000","vacanza in montagna","120.54");
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public void onSaveInstanceState(Bundle outState) {        
+        //salvo info coupon
+        outState.putStringArrayList("coupon", (ArrayList<String>) dataModel.get("couponInfo"));
+        //salvo carta di credito
+        outState.putParcelable("card", (Parcelable) dataModel.get("creditCard"));
+        //login lo recupero dalle preferenza
+        //salvo amount e totalPrice
+        outState.putString("amount", (String) dataModel.get("amount"));
+        outState.putString("totalPrice",  (String) dataModel.get("totalPrice"));        
+        super.onSaveInstanceState(outState);
     }
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dataModel =  new HashMap<String,Object>();
-        createDataModel(1234,"0000","vacanza in montagna","120.54");
         ListAdapter listAdapter = new BuyListAdapter(getActivity(), R.layout.coupon_title_row, rowKinds, dataModel);
         setListAdapter(listAdapter);
+        urlString = "https://cartaperdue.it/partner/acquistoCoupon.php";
+        postMap = new TreeMap<String,String>();
     }
     
     @Override
     public void onDestroy(){
         super.onDestroy();
+        //distruggo carta di credito ogni volta che esco, e il data model in generale
         dataModel.put("creditCard",null);
+        dataModel.put("loginData", null); //superfluo? ---> in teoria vengono riscritti alla creazione del fragment
+        dataModel.put("couponInfo", null);//superfluo?
+        dataModel.put("amount", null);
+        dataModel.put("totalPrice", null);
     }
     
     @Override
@@ -274,6 +315,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
                     dataType.setText("Utente");
                 }
                 if(data != null){
+                    //recupera i dati dal model relativi al login, se presenti
                     data.setText(((LoginData) dataModel.get("loginData")).getEmail());
                 }
             }
@@ -282,7 +324,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
                     dataType.setText("Carta di credito");
                 }
                 if(data != null){
-                    //qui recuperare oggetto carta di credito e stampare numero
+                    // recupera i dati dal model relativi alla carta di credito, se presenti
                     CreditCard c = (CreditCard) dataModel.get("creditCard");
                     if(c != null && c.getNumber() != null)
                         data.setText(c.getNumber());
@@ -297,12 +339,24 @@ public class CheckoutListFragment extends SherlockListFragment implements
             price = (TextView)v.findViewById(R.id.checkoutPrice);
             total = (TextView)v.findViewById(R.id.checkoutTotal);
             
+            //setto se presente il valore precedente del model
             if(price != null){
                 ArrayList<String> couponInfo = (ArrayList<String>) dataModel.get("couponInfo");
                 Log.d("check","array = "+couponInfo);
                 price.setText(couponInfo.get(2)+"€");
             }
+            if(total != null && dataModel.get("totalPrice")!= null){
+                total.setText(dataModel.get("totalPrice")+"€");
+            }
+            /**/
+            
             if(amount != null){
+                
+                if(dataModel.get("amount")!=null){
+                    //setto se presente il valore precedente del model
+                    amount.setText(dataModel.get("amount")+"");
+                }
+                
                 amount.addTextChangedListener(new TextWatcher() {
                     
                     public void afterTextChanged(Editable s) {
@@ -320,21 +374,24 @@ public class CheckoutListFragment extends SherlockListFragment implements
                         catch(NumberFormatException e){
                             amountItems = 0;
                         }
-                        total.setText(calculateTotal(s)+"€");
+                        //aggiorno dataModel con amount convertito in stringa
+                        dataModel.put("amount", amountItems+"");
+                        total.setText(String.format("%.2f", calculateTotal())+"€");
                     }
                     
-                    private double calculateTotal(CharSequence s){
+                    private double calculateTotal(){
                         double output = 0.0;
                         
                         try{
-                            double input = Double.parseDouble(s.toString());
                             double pr = Double.parseDouble(price.getText().toString().replace("€", ""));
-                            output = input*pr;
+                            output = amountItems*pr;
                         }
                         catch(NumberFormatException e){
                             Log.d("checkout","number format exception");
                             output = 0.0;
                         }
+                        //aggiorno dataModel con prezzo totale convertito in stringa
+                        dataModel.put("totalPrice", output+"");
                         return output;
                     }
                 });
