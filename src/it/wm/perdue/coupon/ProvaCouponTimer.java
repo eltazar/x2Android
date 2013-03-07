@@ -1,12 +1,15 @@
 package it.wm.perdue.coupon;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -26,7 +29,7 @@ import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 public class ProvaCouponTimer extends SherlockFragment implements
-        HTTPAccess.ResponseListener {
+        HTTPAccess.ResponseListener, OnClickListener {
     
     private static final String TAG_NORMAL      = "normal";
     
@@ -62,7 +65,8 @@ public class ProvaCouponTimer extends SherlockFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.timer, container, false);
-        
+        Button button = (Button) view.findViewById(R.id.stub);
+        button.setOnClickListener(this);
         
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
@@ -86,8 +90,8 @@ public class ProvaCouponTimer extends SherlockFragment implements
         //urlString = "http://www.cartaperdue.it/partner/v2.0/TipoEsercente.php";
         TreeMap<String, String>       postMap = new TreeMap<String, String>();
         postMap.put("idEsercente",  "1235");
-        urlString = "http://www.cartaperdue.it/partner/android/offerta2.php?id=" +714 /*IDCOUPON*/;
-        //urlString = "http://www.cartaperdue.it/partner/android/coupon2.php?prov=" + "Roma";
+        //urlString = "http://www.cartaperdue.it/partner/android/offerta2.php?id=" +714 /*IDCOUPON*/;
+        urlString = "http://www.cartaperdue.it/partner/android/coupon2.php?prov=" + "Roma";
         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET, null, null);
         //httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
         Date now = new Date();
@@ -185,6 +189,12 @@ public class ProvaCouponTimer extends SherlockFragment implements
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent i = new Intent(getSherlockActivity(),DetailCouponBaseActivity.class);
+        startActivity(i);
     }
     
     //query fatta solo con la provincia è offerta del giorno
