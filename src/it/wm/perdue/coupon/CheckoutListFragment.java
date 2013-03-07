@@ -188,10 +188,11 @@ public class CheckoutListFragment extends SherlockListFragment implements
     }
     
     private static class BuyListAdapter extends ArrayAdapter<Integer> {
+    private class BuyListAdapter extends ArrayAdapter<Integer> {
         private Context   context    = null;
         private Integer[] rows     = null;
-        private static TextView total = null;
-        private static TextView price = null;
+        private TextView total = null;
+        private TextView price = null;
         private Map<String,Object> dataModel = null;
         private int amountItems = 0;
         
