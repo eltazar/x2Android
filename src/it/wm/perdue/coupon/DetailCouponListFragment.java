@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -35,6 +37,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     //dati esercente
     protected String                                    eseId      = null;
 
+    private Button                                      buyButton = null;
     
     
     public static DetailCouponListFragment newInstance(String eseId) {
@@ -99,6 +102,10 @@ public class DetailCouponListFragment extends SherlockListFragment implements
         Log.d("coupon","onCreateView");
 
         View view = inflater.inflate(R.layout.coupon, container, false);
+      buyButton = (Button) view.findViewById(R.id.buyButton);
+      buyButton.setOnClickListener(this);
+      TextView tv = (TextView) view.findViewById(R.id.summaryTextView);
+      tv.setText("CIAOOOOO");
         return view;
     }
     
@@ -164,6 +171,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
         // downloading--;
         
         //Log.d("xxx", "RISPOSTA = " + response);
+        buyButton.setEnabled(true);
         
         if (tag.equals(TAG_NORMAL)) {
             // Se riceviamo un risultato non di ricerca, lo aggiungiamo sempre e
