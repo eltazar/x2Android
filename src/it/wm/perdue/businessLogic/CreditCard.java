@@ -50,6 +50,29 @@ public class CreditCard implements Parcelable{
         year = y;
     }
     
+    public String getInstituteString(){
+        String i = "";
+        
+        switch(institute){
+            case 1:
+                i = "American Express";
+                break;
+            case 2:
+                i = "Maestro";
+                break;
+            case 3:
+                i = "Mastercard";
+                break;
+            case 4:
+                i = "Postepay";
+                break;
+            case 5:
+                i = "Visa";
+                break;
+        }
+        return i;
+    }
+    
     public String toString(){
         return "CARTA DI CREDITO: n = "+number+" cvv = "+cvv+" owner = "+owner+" month"+month
                 +" year = "+year+" institute = "+institute;
