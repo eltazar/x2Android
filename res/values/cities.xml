@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="cities_coupon">
+        <item >Roma</item>
+        <item >Agrigento</item>
+        <item >Alessandria</item>
+        <item >Ancona</item>
+        <item >Aosta</item>
+        <item >Arezzo</item>
+        <item >Ascoli Piceno</item>
+        <item >Ancona</item>
+        <item >Aosta</item>
+        <item >Arezzo</item>
+        <item >Andria</item>
+        <item >Barletta Andria Trani</item>
+        <item >Belluno</item>
+        <item >Benevento</item>
+        <item >Bergamo</item>
+        <item >Biella</item>
+        <item >Bologna</item>
+        <item >Bolzano</item>
+        <item >Brescia</item>
+        <item >Brindisi</item>
+        <item >Cagliari</item>
+        <item >Caltanissetta</item>
+        <item >Campobasso</item>
+        <item >Carbonia Iglesias</item>
+        <item >Caserta</item>
+        <item >Catania</item>
+        <item >Catanzaro</item>
+        <item >Chieti</item>
+        <item >Como</item>
+        <item >Cosenza</item>
+        <item >Cremona</item>
+        <item >Crotone</item>
+        <item >Cuneo</item>
+        <item >Enna</item>
+        <item >Fermo</item>
+        <item >Ferrara</item>
+        <item >Firenze</item>
+        <item >Foggia</item>
+        <item >Forlì - Cesena</item>
+        <item >Frosinone</item>
+        <item >Genova</item>
+        <item >Gorizia</item>
+        <item >Grosseto</item>
+        <item >Imperia</item>
+        <item >Isernia</item>
+         <item >L\'Aquila</item>
+        <item >La Spezia</item>
+        <item >Latina</item>
+        <item >Lecce</item>
+        <item >Lecco</item>
+        <item >Livorno</item>
+        <item >Lodi</item>
+        <item >Lucca</item>
+        <item >Macerata</item>
+        <item >Mantova</item>
+        <item >Massa Carrara</item>
+        <item >Matera</item>
+        <item >Medio Campidano</item>
+    </string-array>
+</resources>
+
+<!--   
+                       @"Messina", @"Milano", @"Modena", @"Monza Brianza", @"Napoli",
+                       @"Novara", @"Nuoro", @"Ogliastra", @"Olbia Tempio", @"Oristano",
+                       @"Padova", @"Palermo", @"Parma", @"Pavia", @"Perugia", @"Pesaro",
+                       @"Pescara", @"Piacenza", @"Pisa", @"Pistoia", @"Pordenone",
+                       @"Potenza", @"Prato", @"Ragusa", @"Ravenna", @"Reggio Calabria",
+                       @"Reggio Emilia", @"Rieti", @"Rimini", @"Roma", @"Rovigo", 
+                       @"Salerno", @"Sassari", @"Savona", @"Siena", @"Siracusa",
+                       @"Sondrio", @"Taranto", @"Teramo", @"Terni", @"Torino",
+                       @"Trapani", @"Trento", @"Treviso", @"Trieste", @"Udine",
+                       @"Varese", @"Venezia", @"Verbania", @"Vercelli", @"Verona",
+                       @"Vibo Valentia", @"Vicenza", @"Viterbo" -->
