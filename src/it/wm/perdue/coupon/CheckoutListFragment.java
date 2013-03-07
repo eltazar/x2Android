@@ -2,6 +2,7 @@ package it.wm.perdue.coupon;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -49,7 +50,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
     private Map<String,String>                          postMap = null;
     private HTTPAccess                                httpAccess = null;
     private static final String                       TAG_NORMAL = "normal";
-
+    private ProgressDialog                            progressDialog = null;
     /*DATA MODEL KEYS
      * logindData -> dati di login dell'utente
      * couponInfo -> temporaneo, info di base del coupon
@@ -163,16 +164,38 @@ public class CheckoutListFragment extends SherlockListFragment implements
      * */
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
-        
+        if(progressDialog != null) hideProgressDialog();
+        if(response.equals("Ok")){
+            showAlert("Complimenti","La tua richiesta verrà processata dai nostri sistemi e a breve riceverai una mail di conferma.\n Condividi subito questa offerta!");
+        }
+        else{
+            showAlert("Spiacenti","Non è stato possibile processare la tua richiesta, riprovare!");
+        }
     }
 
     @Override
     public void onHTTPerror(String tag) {
-        
+        if(progressDialog != null) hideProgressDialog();
+        showAlert("Spiacenti","Non è stato possibile processare la tua richiesta, riprovare!");
     }
     /*
      * HttpAccessListener END
      * */
+    
+    private void showAlert(String title, String message){
+        AlertDialog.Builder builder = new Builder(getSherlockActivity());
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.create().show();
+    }
+    
+    private void showProgressDialog(){
+        progressDialog = ProgressDialog.show(getSherlockActivity(),"Acquisto in corso" ,
+                "Attendere il termine della procedura", true);
+    }
+    private void hideProgressDialog(){
+        progressDialog.dismiss();
+    }
     
     protected void launchBuyAlert(Context c){
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
@@ -216,6 +239,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
 //        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
 //                postMap, TAG_NORMAL);
         
+        showProgressDialog();
         Log.d("postMapAcquisto","postmap ---> "+postMap);
     }
     
