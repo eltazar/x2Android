@@ -1,6 +1,10 @@
 package it.wm.perdue.coupon;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -73,6 +78,12 @@ public class CheckoutListFragment extends SherlockListFragment implements
     }
     
     @Override
+    public void onDestroy(){
+        super.onDestroy();
+        dataModel.put("creditCard",null);
+    }
+    
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
       super.onActivityResult(requestCode, resultCode, data);
       if (requestCode == 0 && resultCode == SherlockActivity.RESULT_OK && data != null){
@@ -113,13 +124,36 @@ public class CheckoutListFragment extends SherlockListFragment implements
      * HttpAccessListener END
      * */
     
+    protected static void launchBuyAlert(Context c){
+        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+        builder.setTitle("Conferma");
+        builder.setMessage("Confermare l'acquisto?");
+        builder.setPositiveButton("Conferma", new OnClickListener() {
+            
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.d("checkout","acquisto confermato");
+            }
+        });
+        builder.setNegativeButton("Annulla", new OnClickListener() {
+            
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.d("checkout","acquisto annullato");
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+    
     private static class BuyListAdapter extends ArrayAdapter<Integer> {
         private Context   context    = null;
         private Integer[] rows     = null;
         private static TextView total = null;
         private static TextView price = null;
         private Map<String,Object> dataModel = null;
-
+        private int amountItems = 0;
+        
         public BuyListAdapter(Context context, int resourceId, Integer[] rows, Map<String,Object> dataModel) {
             super(context, resourceId, rows);
             this.context = context;
@@ -182,6 +216,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
                     break;
                 case 4:
                     //setto compito del button
+                    setButtonProperties(v);
                     break;
                 default: break;
             }
@@ -196,6 +231,40 @@ public class CheckoutListFragment extends SherlockListFragment implements
             return rows.length+1;
         }
 
+        private void setButtonProperties(View v){
+            Button buyButton = (Button) v.findViewById(R.id.buyButton);
+            buyButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) { 
+                    Log.d("checkout","E' stato premuto il bottone buy");
+                       
+                        String result = "ok";
+                        CreditCard creditCard = (CreditCard) dataModel.get("creditCard");
+                        if(amountItems <= 0){
+                            result = "Devi inserire almeno un coupon";                
+                        }                       
+                        if(creditCard == null || !creditCard.isComplete()){
+                            result = "Inserisci i dati della carta di credito";
+                        }
+                        
+                        if(result.equals("ok")){
+                            launchBuyAlert(context);
+                        }
+                        else{
+                            AlertDialog.Builder builder = new Builder(context);
+                            builder.setTitle("Attenzione");
+                            builder.setMessage(result);
+                            builder.setNegativeButton("Ok", new OnClickListener() {
+                                
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {                                            
+                                }
+                            });
+                            builder.create().show();    
+                        }
+                }
+            });
+        }
+        
         private void setUserData(View v,String type){
             TextView dataType = (TextView)v.findViewById(R.id.dataType);
             TextView data = (TextView)v.findViewById(R.id.data);
@@ -245,6 +314,12 @@ public class CheckoutListFragment extends SherlockListFragment implements
                     
                     public void onTextChanged(CharSequence s, int start, 
                             int before, int count) {
+                        try{
+                            amountItems = Integer.parseInt(s.toString());
+                        }
+                        catch(NumberFormatException e){
+                            amountItems = 0;
+                        }
                         total.setText(calculateTotal(s)+"€");
                     }
                     
