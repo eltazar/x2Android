@@ -3,6 +3,7 @@ package it.wm.perdue.doveusarla;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,6 +104,7 @@ public class EsercentiRistoListFragment extends EsercentiListFragment {
                 
                 if (title != null) {
                     title.setText(esercente.getInsegna());
+                    title.setTextColor(Color.BLACK);
                 }
                 if (address != null) {
                     address.setText(esercente.getIndirizzo());

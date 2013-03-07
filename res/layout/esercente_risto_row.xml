@@ -29,7 +29,8 @@
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@+id/eseImage"
         android:text="EseTitle"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        style="@style/ShadowTextView.LightGray" />
     
     <TextView
             android:id="@+id/kindFood"
@@ -37,7 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/eseTitle"
             android:layout_below="@+id/eseTitle"
-            android:text="cucina" />
+            android:text="cucina"
+            style="@style/ShadowTextView" />
 
     <TextView
         android:id="@+id/address"
@@ -48,7 +50,8 @@
         android:layout_below="@id/kindFood"
         android:layout_marginRight="18dp"
         android:maxLength="35"
-        android:text="Address" />
+        android:text="Address" 
+        style="@style/ShadowTextView"/>
 
      <TextView
          android:id="@+id/price"
@@ -58,7 +61,8 @@
          android:layout_below="@+id/address"
          android:text="prezzo"
          android:textStyle="bold" 
-         android:textColor="#7F7F7F"/>
+         android:textColor="#7F7F7F"
+         style="@style/ShadowTextView.LightGray"/>
      
       <TextView
         android:id="@+id/distance"

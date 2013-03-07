@@ -3,6 +3,7 @@ package it.wm.perdue.doveusarla;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -387,6 +388,7 @@ public class EsercentiListFragment extends SearchEndlessListFragment
                 
                 if (title != null) {
                     //Log.d(DEBUG_TAG, "Sorting è: " + sorting);
+                    title.setTextColor(Color.BLACK);
                     title.setText(esercente.getInsegna());
                 }
                 if (address != null) {
