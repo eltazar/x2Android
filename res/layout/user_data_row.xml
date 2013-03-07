@@ -23,6 +23,10 @@
         android:layout_below="@+id/dataType"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="15dp"
-        android:text="il dato" />
+        android:text="il dato"
+        android:shadowColor="#BDBDBD"  
+        android:shadowRadius="1.5"  
+        android:shadowDx="1"  
+        android:shadowDy="1"  />
 
 </RelativeLayout>
