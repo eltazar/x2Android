@@ -36,6 +36,7 @@
             android:paddingLeft="5dip"
             android:text="azione"
             android:textColor="#343434"
-            android:textSize="15dip" />
+            android:textSize="15dip"
+             style="@style/ShadowTextView.LightGray" />
 
     </RelativeLayout>

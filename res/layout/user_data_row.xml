@@ -13,7 +13,8 @@
         android:layout_marginLeft="15dp"
         android:textStyle="bold"
         android:textColor="#A9A9A9"
-        android:text="tipo di dato" />
+        android:text="tipo di dato" 
+        style="@style/ShadowTextView.LightGray" />
 
     <TextView
         android:id="@+id/data"
@@ -24,9 +25,6 @@
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="15dp"
         android:text="il dato"
-        android:shadowColor="#BDBDBD"  
-        android:shadowRadius="1.5"  
-        android:shadowDx="1"  
-        android:shadowDy="1"  />
+        style="@style/ShadowTextView"  />
 
 </RelativeLayout>
