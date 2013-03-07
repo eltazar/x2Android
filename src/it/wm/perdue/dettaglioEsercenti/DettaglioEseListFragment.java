@@ -235,10 +235,10 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             if (esercente != null) {
                 
                 TextView infoTextView = null;            
-
                 if (sections.get(position).equals("info")) {
                     infoTextView = (TextView) v.findViewById(R.id.infoRow);
-                    
+                    //infoTextView.setTextColor(Color.BLACK);
+
                     String giorniString = null;
                     
                     try {
