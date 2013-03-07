@@ -45,6 +45,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
         R.layout.coupon_title_row,R.layout.checkout_row,R.layout.user_data_row,R.layout.button_row
                                          };
     
+    protected static final String                       CHEKCOUT_LIST_FRAGMENT_TAG = "CheckoutListFragmentTag";
     private Map<String,Object>                          dataModel =  null;
     private String                                      urlString = null;
     private Map<String,String>                          postMap = null;
