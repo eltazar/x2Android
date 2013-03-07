@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class CheckoutListFragment extends SherlockListFragment implements
     HTTPAccess.ResponseListener{
@@ -43,8 +44,12 @@ public class CheckoutListFragment extends SherlockListFragment implements
         R.layout.coupon_title_row,R.layout.checkout_row,R.layout.user_data_row,R.layout.button_row
                                          };
     
-    private Map<String,Object> dataModel =  null;
-        
+    private Map<String,Object>                          dataModel =  null;
+    private String                                      urlString = null;
+    private Map<String,String>                          postMap = null;
+    private HTTPAccess                                httpAccess = null;
+    private static final String                       TAG_NORMAL = "normal";
+
     /*DATA MODEL KEYS
      * logindData -> dati di login dell'utente
      * couponInfo -> temporaneo, info di base del coupon
@@ -75,6 +80,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
         super.onActivityCreated(savedInstanceState);
         ListView listView = getListView();
         listView.setDividerHeight(2);
+        
         //ricostruisco dataModel
         if(savedInstanceState != null){
             dataModel.put("couponInfo", savedInstanceState.getStringArrayList("coupon"));
@@ -111,6 +117,8 @@ public class CheckoutListFragment extends SherlockListFragment implements
         setListAdapter(listAdapter);
         urlString = "https://cartaperdue.it/partner/acquistoCoupon.php";
         postMap = new TreeMap<String,String>();
+        httpAccess = new HTTPAccess();
+        httpAccess.setResponseListener(this);
     }
     
     @Override
@@ -137,6 +145,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
     }
     
     public void onListItemClick(ListView l, View v, int position, long id) {
+        Log.d("checkout","cliccato riga "+position);
         if(position == 3){
             //riga carta di credito
             Intent intent = new Intent(getSherlockActivity(),CreditCardActivity.class);
@@ -165,7 +174,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
      * HttpAccessListener END
      * */
     
-    protected static void launchBuyAlert(Context c){
+    protected void launchBuyAlert(Context c){
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
         builder.setTitle("Conferma");
         builder.setMessage("Confermare l'acquisto?");
@@ -174,6 +183,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Log.d("checkout","acquisto confermato");
+                completePurchase();
             }
         });
         builder.setNegativeButton("Annulla", new OnClickListener() {
@@ -187,7 +197,28 @@ public class CheckoutListFragment extends SherlockListFragment implements
         alert.show();
     }
     
-    private static class BuyListAdapter extends ArrayAdapter<Integer> {
+    @SuppressWarnings("unchecked")
+    private void completePurchase(){
+        postMap.put("identificativo", ((ArrayList<String>)dataModel.get("couponInfo")).get(0));//del copuon
+        postMap.put("idiphone","android");
+        postMap.put("quantita", dataModel.get("amount")+"");
+        postMap.put("valore",((ArrayList<String>)dataModel.get("couponInfo")).get(2));
+        postMap.put("importo",dataModel.get("totalPrice")+"");
+        postMap.put("idUtente",((LoginData)dataModel.get("loginData")).getIdCustomer()+"");
+        CreditCard c = (CreditCard) dataModel.get("creditCard");
+        postMap.put("tipocarta", c.getInstituteString());
+        postMap.put("numerocarta", c.getNumber());
+        postMap.put("mesescadenza",c.getMonth()+"");
+        postMap.put("annoscadenza", c.getYear()+"");
+        postMap.put("intestatario", c.getOwner());
+        postMap.put("cvv", c.getCvv());
+        
+//        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
+//                postMap, TAG_NORMAL);
+        
+        Log.d("postMapAcquisto","postmap ---> "+postMap);
+    }
+    
     private class BuyListAdapter extends ArrayAdapter<Integer> {
         private Context   context    = null;
         private Integer[] rows     = null;
@@ -356,6 +387,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
                 if(dataModel.get("amount")!=null){
                     //setto se presente il valore precedente del model
                     amount.setText(dataModel.get("amount")+"");
+                    amountItems = Integer.parseInt(dataModel.get("amount")+"");
                 }
                 
                 amount.addTextChangedListener(new TextWatcher() {
