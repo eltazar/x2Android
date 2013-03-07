@@ -51,6 +51,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
     private HTTPAccess                                httpAccess = null;
     private static final String                       TAG_NORMAL = "normal";
     private ProgressDialog                            progressDialog = null;
+    
     /*DATA MODEL KEYS
      * logindData -> dati di login dell'utente
      * couponInfo -> temporaneo, info di base del coupon
@@ -60,15 +61,8 @@ public class CheckoutListFragment extends SherlockListFragment implements
      **/
     
     public void createDataModel(int userId, String... couponInfo){
-        //dataModel.put("userId", userId);
-        //idCoupon, titolo, prezzo, credit cards, loginData
         dataModel.put("couponInfo", (new ArrayList<String>(Arrays.asList(couponInfo))));  
         dataModel.put("loginData", LoggingHandler.getSavedLoginData());
-        //Log.d("check","data model = "+dataModel);
-    }
-    
-    public void insertIntoDataModel(Object o){
-        //per aggiungere qlc
     }
     
     public CheckoutListFragment newInstance(String eseId) {
@@ -145,6 +139,8 @@ public class CheckoutListFragment extends SherlockListFragment implements
       }
     }
     
+    /*OnListItemClickListener
+     * */
     public void onListItemClick(ListView l, View v, int position, long id) {
         Log.d("checkout","cliccato riga "+position);
         if(position == 3){
@@ -158,6 +154,8 @@ public class CheckoutListFragment extends SherlockListFragment implements
             startActivity(i);
         }
     }
+    /*OnListItemClickListener END
+     * */
     
     /*
      * HttpAccessListener
@@ -181,23 +179,10 @@ public class CheckoutListFragment extends SherlockListFragment implements
     /*
      * HttpAccessListener END
      * */
-    
-    private void showAlert(String title, String message){
-        AlertDialog.Builder builder = new Builder(getSherlockActivity());
-        builder.setTitle(title);
-        builder.setMessage(message);
-        builder.create().show();
-    }
-    
-    private void showProgressDialog(){
-        progressDialog = ProgressDialog.show(getSherlockActivity(),"Acquisto in corso" ,
-                "Attendere il termine della procedura", true);
-    }
-    private void hideProgressDialog(){
-        progressDialog.dismiss();
-    }
-    
-    protected void launchBuyAlert(Context c){
+        
+    /*Metodi privati per l'acquisto
+     * */
+    private void launchBuyAlert(Context c){
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
         builder.setTitle("Conferma");
         builder.setMessage("Confermare l'acquisto?");
@@ -242,7 +227,29 @@ public class CheckoutListFragment extends SherlockListFragment implements
         showProgressDialog();
         Log.d("postMapAcquisto","postmap ---> "+postMap);
     }
+    /*Metodi privati per l'acquisto END
+     **/
     
+    /*Metodi privati
+     * */
+    private void showAlert(String title, String message){
+        AlertDialog.Builder builder = new Builder(getSherlockActivity());
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.create().show();
+    }
+    
+    private void showProgressDialog(){
+        progressDialog = ProgressDialog.show(getSherlockActivity(),"Acquisto in corso" ,
+                "Attendere il termine della procedura", true);
+    }
+    private void hideProgressDialog(){
+        progressDialog.dismiss();
+    }    
+    /*Metodi privati END
+     * */
+    
+    //adapter per la listView
     private class BuyListAdapter extends ArrayAdapter<Integer> {
         private Context   context    = null;
         private Integer[] rows     = null;
