@@ -18,7 +18,7 @@ import it.wm.HTTPAccess;
 import it.wm.perdue.R;
 import it.wm.perdue.businessLogic.Coupon;
 
-public class CouponListFragment extends SherlockListFragment implements
+public class DetailCouponListFragment extends SherlockListFragment implements
         HTTPAccess.ResponseListener {
     private static final String                         DEBUG_TAG  = "CouponListFragment";
     protected static final String                       TAG_NORMAL = "normal";
@@ -37,8 +37,8 @@ public class CouponListFragment extends SherlockListFragment implements
 
     
     
-    public static CouponListFragment newInstance(String eseId) {
-        CouponListFragment fragment = new CouponListFragment();
+    public static DetailCouponListFragment newInstance(String eseId) {
+        DetailCouponListFragment fragment = new DetailCouponListFragment();
         Bundle args = new Bundle();
         //args.putString(ESE_ID, eseId);
         fragment.setArguments(args);
