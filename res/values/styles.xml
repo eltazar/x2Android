@@ -25,7 +25,17 @@
     	<item name="android:textColor">#FFFFFF</item>
     	<item name="android:background">#FFD1D1</item>
 	</style>
-
+	
+	<style name="ShadowTextView">
+        <item name="android:shadowColor">#E0E0E0</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">2</item>
+    </style>
+    
+	<style name="ShadowTextView.LightGray">
+        <item name="android:textColor">#F8F8F8</item>
+    </style>
 
     <!--  
     	bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#D65151")));
