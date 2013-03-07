@@ -102,5 +102,9 @@ public class CreditCard implements Parcelable{
         return 0;  
     } 
     
+    public boolean isComplete(){
+        return institute>0 && owner.length() > 0 && cvv.length() > 0 && number.length() > 0 &&
+                (month > 0 && month < 13) && (year > 2012 && year < 2050);
+    }
     
 }
