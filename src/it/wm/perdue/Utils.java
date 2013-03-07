@@ -313,4 +313,14 @@ public final class Utils {
       //match a number with optional '-' and decimal.
       return s.matches("-?\\d+(\\.\\d+)?"); 
     }    
+    
+    public static String formatPrice(double price) {
+        // Oook, lo so, si vede che di base resto sempre un programmatore C...
+        if (price / 1.00 == (int)price) {
+            return (int)price+"";
+        } 
+        else {
+            return String.format("%.2f", price);
+        }
+    }
 }
