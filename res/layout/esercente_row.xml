@@ -29,7 +29,8 @@
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@+id/eseImage"
         android:text="EseTitle"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        style="@style/ShadowTextView.LightGray" />
 
     <TextView
         android:id="@+id/address"
@@ -40,7 +41,8 @@
         android:layout_below="@+id/eseTitle"
         android:layout_marginRight="18dp"
         android:maxLength="35"
-        android:text="Address" />
+        android:text="Address" 
+        style="@style/ShadowTextView"/>
 
     <TextView
         android:id="@+id/distance"
