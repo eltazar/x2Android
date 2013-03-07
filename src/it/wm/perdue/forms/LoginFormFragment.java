@@ -162,7 +162,10 @@ public class LoginFormFragment extends SherlockFragment implements
                     //loggato
                     Log.d("login","loggato");
                     loginData.setEmail(email);
-                    LoggingHandler.onDidLogin(loginData);
+                    LoggingHandler.doLogin(loginData);
+                    //in automatico torno alla view che ha chiamato il login form
+                    //getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+                    getSherlockActivity().finish();
                 }
             }
         }
