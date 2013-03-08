@@ -19,16 +19,14 @@ import it.wm.perdue.LoggingHandler;
 import it.wm.perdue.LoggingHandler.OnLoggingHandlerListener;
 import it.wm.perdue.MainActivity;
 import it.wm.perdue.R;
+import it.wm.perdue.businessLogic.Coupon;
 import it.wm.perdue.coupon.DetailCouponListFragment.OnCouponActionListener;
 
 public class DetailCouponBaseActivity extends SherlockFragmentActivity implements OnCouponActionListener, OnLoggingHandlerListener {
-    // http://www.cartaperdue.it/partner/v2.0/DettaglioEsercente.php?id=%d
     
     private static final String DEBUG_TAG  = "DetailCouponBaseActivity";
     private static final String COUPON_FRAGMENT_TAG = "CouponFragmentTag";
     private String              idCoupon    = "";
-    private String              insegna = "";
-    private boolean             isRisto = false;
     private String              currentFragment = COUPON_FRAGMENT_TAG;
     
     @Override
@@ -47,7 +45,6 @@ public class DetailCouponBaseActivity extends SherlockFragmentActivity implement
                 | ActionBar.DISPLAY_SHOW_TITLE);
         
         bar.setTitle("titolo coupon");
-
         if (savedInstanceState != null)
             return;
         //capire se è coupon del giorno o coupon con id
@@ -144,14 +141,14 @@ public class DetailCouponBaseActivity extends SherlockFragmentActivity implement
     }
     
     @Override
-    public void onDidCheckout() {
+    public void onDidCheckout(Coupon c) {
         Log.d("coupon","devo lanciare fragment per checkout");
-        Fragment f = new CheckoutListFragment();
+        CheckoutListFragment f = new CheckoutListFragment((c.getID()+""),c.getTitoloBreve(),(c.getValoreAcquisto()+""));
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction =
                 fragmentManager.beginTransaction();
         fragmentTransaction.replace(android.R.id.content, f,CheckoutListFragment.CHEKCOUT_LIST_FRAGMENT_TAG);
-        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.addToBackStack(null); //per aggiungere il fragmente allo stack
         fragmentTransaction.commit();       
         currentFragment = CheckoutListFragment.CHEKCOUT_LIST_FRAGMENT_TAG;
         //per ricreare il menu
@@ -170,7 +167,7 @@ public class DetailCouponBaseActivity extends SherlockFragmentActivity implement
     }
     
     private void backToPreviousFragment(){        
-        //se
+        //per tornare indietro di un fragment
         if(currentFragment.equals(CheckoutListFragment.CHEKCOUT_LIST_FRAGMENT_TAG)){
             getSupportFragmentManager().popBackStack();
             currentFragment = COUPON_FRAGMENT_TAG;
