@@ -45,18 +45,19 @@ public class DetailCouponBaseActivity extends SherlockFragmentActivity implement
                 | ActionBar.DISPLAY_SHOW_TITLE);
         
         bar.setTitle("titolo coupon");
-        if (savedInstanceState != null)
-            return;
-        //capire se è coupon del giorno o coupon con id
-        
-        Fragment f = DetailCouponListFragment.newInstance(idCoupon);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction =
-                fragmentManager.beginTransaction();
-        fragmentTransaction.replace(android.R.id.content, f,COUPON_FRAGMENT_TAG);
-        fragmentTransaction.commit(); 
-        
         LoggingHandler.setListener(this);
+
+        if (savedInstanceState == null){            
+            Fragment f = DetailCouponListFragment.newInstance(idCoupon);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction =
+                    fragmentManager.beginTransaction();
+            fragmentTransaction.replace(android.R.id.content, f,COUPON_FRAGMENT_TAG);
+            fragmentTransaction.commit();
+        }
+        else{
+            
+        }
     }
     
     @Override
