@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -76,7 +77,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
         super.onActivityCreated(savedInstanceState);
         ListView listView = getListView();
         listView.setDividerHeight(2);
-        
+       
         //ricostruisco dataModel
         if(savedInstanceState != null){
             dataModel.put("couponInfo", savedInstanceState.getStringArrayList("coupon"));
@@ -142,6 +143,18 @@ public class CheckoutListFragment extends SherlockListFragment implements
     
     /*OnListItemClickListener
      * */
+    
+    //android 2.x per nascondere la tastiera :S 
+    private void hideSoftKeyboard(){
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB){
+            View v = getSherlockActivity().getCurrentFocus();
+            if(v!=null && v.getId() == R.id.checkoutAmount){
+                InputMethodManager imm = (InputMethodManager)getSherlockActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+        }
+    }
+    
     public void onListItemClick(ListView l, View v, int position, long id) {
         Log.d("checkout","cliccato riga "+position);
         if(position == 3){
@@ -154,6 +167,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
             Intent i = new Intent(getActivity(), CouponsBaseActivity.class);
             startActivity(i);
         }
+        hideSoftKeyboard();
     }
     /*OnListItemClickListener END
      * */
@@ -338,10 +352,11 @@ public class CheckoutListFragment extends SherlockListFragment implements
 
         private void setButtonProperties(View v){
             Button buyButton = (Button) v.findViewById(R.id.buyButton);
-            buyButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) { 
-                    Log.d("checkout","E' stato premuto il bottone buy");
-                       
+            if(buyButton != null){
+                buyButton.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) { 
+                        Log.d("checkout","E' stato premuto il bottone buy");
+                        hideSoftKeyboard();
                         String result = "ok";
                         CreditCard creditCard = (CreditCard) dataModel.get("creditCard");
                         if(amountItems <= 0){
@@ -366,8 +381,9 @@ public class CheckoutListFragment extends SherlockListFragment implements
                             });
                             builder.create().show();    
                         }
-                }
-            });
+                    }
+                });
+            }
         }
         
         private void setUserData(View v,String type){
