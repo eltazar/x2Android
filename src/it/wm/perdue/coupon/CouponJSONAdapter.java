@@ -72,4 +72,8 @@ public class CouponJSONAdapter <T extends Coupon> extends
         // TODO Auto-generated method stub
         
     } 
+    
+    public T getObject(){
+        return coupon;
+    }
 }
