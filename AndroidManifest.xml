@@ -10,6 +10,7 @@
 	<uses-permission android:name="android.permission.ACCESS_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_GPS" />
 	<uses-permission android:name="android.permission.CALL_PHONE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     
     <uses-sdk
         android:minSdkVersion="8"
@@ -136,6 +137,14 @@
             android:label=""
        		android:uiOptions="splitActionBarWhenNarrow">
        		<meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name="it.wm.perdue.coupon.DetailCouponBaseActivity"
+            android:label=""
+            android:windowSoftInputMode="adjustPan"> 
+            <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
