@@ -45,10 +45,12 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     
     
     public interface OnCouponActionListener{
-        public void onDidCheckout();
+        public void onDidCheckout(Coupon c);
     }
     
     public static DetailCouponListFragment newInstance(String eseId) {
+        Log.d("couponList","newInstance");
+
         DetailCouponListFragment fragment = new DetailCouponListFragment();
         Bundle args = new Bundle();
         //args.putString(ESE_ID, eseId);
@@ -90,12 +92,13 @@ public class DetailCouponListFragment extends SherlockListFragment implements
 
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
-        urlString = "http://www.cartaperdue.it/partner/v2.0/DettaglioEsercenteCompleto.php?id="
-                + eseId;
+//        urlString = "http://www.cartaperdue.it/partner/v2.0/DettaglioEsercenteCompleto.php?id="
+//                + eseId;
         
         String urlImageString = "http://www.cartaperdue.it/partner/v2.0/ImmagineEsercente.php?id="
                 + eseId;
         
+        urlString = "http://www.cartaperdue.it/partner/android/coupon2.php?prov=" + "Roma";
         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET,
                 null, TAG_NORMAL);
                 
@@ -228,7 +231,9 @@ public class DetailCouponListFragment extends SherlockListFragment implements
         if(LoggingHandler.isLogged()){
             //mostra Checkout
             Log.d("couponList","mostra checkout");
-            listener.onDidCheckout();
+            Coupon coupon = adapter.getObject();    
+            //Log.d("coupon","coupon in detail scaricato: "+coupon.getID()+" "+coupon.getDescrizioneBreve());
+            listener.onDidCheckout(coupon);
         }
         else{
             //mostra login
