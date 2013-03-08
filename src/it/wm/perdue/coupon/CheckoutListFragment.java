@@ -432,6 +432,10 @@ public class CheckoutListFragment extends SherlockListFragment implements
             
             if(amount != null){
                 
+                //rimuovo centering per far vedere hint
+                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB){
+                    amount.setGravity(0);
+                }
                 if(dataModel.get("amount")!=null){
                     //setto se presente il valore precedente del model
                     amount.setText(dataModel.get("amount")+"");
