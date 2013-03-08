@@ -27,7 +27,7 @@ public class DetailCouponBaseActivity extends SherlockFragmentActivity implement
     private static final String DEBUG_TAG  = "DetailCouponBaseActivity";
     private static final String COUPON_FRAGMENT_TAG = "CouponFragmentTag";
     private String              idCoupon    = "";
-    private String              currentFragment = COUPON_FRAGMENT_TAG;
+    private static String              currentFragment = COUPON_FRAGMENT_TAG;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
