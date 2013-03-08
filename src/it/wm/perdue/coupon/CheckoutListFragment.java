@@ -62,39 +62,54 @@ public class CheckoutListFragment extends SherlockListFragment implements
      * totalPrice -> prezzo totale del carrello
      **/
     
-    public void createDataModel(int userId, String... couponInfo){
+    public void createDataModel(String... couponInfo){
+        dataModel =  new HashMap<String,Object>();
+        Log.d("coupon","couponinfo = "+couponInfo[0]+" "+couponInfo[1]+" "+couponInfo[2]);
         dataModel.put("couponInfo", (new ArrayList<String>(Arrays.asList(couponInfo))));  
         dataModel.put("loginData", LoggingHandler.getSavedLoginData());
     }
     
-    public CheckoutListFragment newInstance(String eseId) {
-        CheckoutListFragment fragment = new CheckoutListFragment();        
-        return fragment;
+//    public CheckoutListFragment newInstance(String eseId) {
+//        CheckoutListFragment fragment = new CheckoutListFragment();        
+//        return fragment;
+//    }
+    
+    public CheckoutListFragment(){
+    }
+    
+    public CheckoutListFragment(String... couponInfo){
+        Log.d("check","fragment istanziato");
+        createDataModel(couponInfo);
     }
     
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+        Log.d("check","on activity created");
+
         ListView listView = getListView();
         listView.setDividerHeight(2);
-       
+
         //ricostruisco dataModel
         if(savedInstanceState != null){
+            Log.d("check","saved instance = "+savedInstanceState);
             dataModel.put("couponInfo", savedInstanceState.getStringArrayList("coupon"));
             dataModel.put("creditCard",savedInstanceState.getParcelable("card"));
             dataModel.put("loginData", LoggingHandler.getSavedLoginData());
             dataModel.put("amount", savedInstanceState.getString("amount"));
             dataModel.put("totalPrice", savedInstanceState.getString("totalPrice"));
         }
-        else{
-            //creo model con dati in input del fragment
-            createDataModel(1234,"0000","vacanza in montagna","120.54");
-        }
+//        else{
+//            //creo model con dati in input del fragment
+//            createDataModel("0000","vacanza in montagna","120.54");
+//        }
     }
     
     @SuppressWarnings("unchecked")
     @Override
-    public void onSaveInstanceState(Bundle outState) {        
+    public void onSaveInstanceState(Bundle outState) {     
+        
+        Log.d("check","salvo stato del data model ->"+dataModel);
         //salvo info coupon
         outState.putStringArrayList("coupon", (ArrayList<String>) dataModel.get("couponInfo"));
         //salvo carta di credito
@@ -109,7 +124,10 @@ public class CheckoutListFragment extends SherlockListFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dataModel =  new HashMap<String,Object>();
+        Log.d("check","on  create");
+        
+        if(dataModel == null)
+            dataModel =  new HashMap<String,Object>();
         ListAdapter listAdapter = new BuyListAdapter(getActivity(), R.layout.coupon_title_row, rowKinds, dataModel);
         setListAdapter(listAdapter);
         urlString = "https://cartaperdue.it/partner/acquistoCoupon.php";
@@ -316,10 +334,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
             switch(position){
                 case 0:
                     //setto il titolo
-                    TextView title = (TextView)v.findViewById(R.id.coupon_title_row);
-                    if(title != null){
-                        
-                    }
+                    setTitle(v);
                     break;
                 case 1:
                     //setto i dati di checkout
@@ -386,6 +401,15 @@ public class CheckoutListFragment extends SherlockListFragment implements
             }
         }
         
+        private void setTitle(View v){
+            TextView title = (TextView)v.findViewById(R.id.coupon_title_row);
+            if(title != null){
+                @SuppressWarnings("unchecked")
+                String text = ((ArrayList<String>)dataModel.get("couponInfo")).get(1);
+                title.setText(text);
+            }
+        }
+        
         private void setUserData(View v,String type){
             TextView dataType = (TextView)v.findViewById(R.id.dataType);
             TextView data = (TextView)v.findViewById(R.id.data);
@@ -422,7 +446,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
             //setto se presente il valore precedente del model
             if(price != null){
                 ArrayList<String> couponInfo = (ArrayList<String>) dataModel.get("couponInfo");
-                Log.d("check","array = "+couponInfo);
+                //Log.d("check","array = "+couponInfo);
                 price.setText(couponInfo.get(2)+"€");
             }
             if(total != null && dataModel.get("totalPrice")!= null){
