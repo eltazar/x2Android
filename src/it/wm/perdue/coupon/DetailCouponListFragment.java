@@ -58,6 +58,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     private CountDownTimer                              countDownTimer = null;
     private long                                        millisTot = 0;
     private boolean                                     isCouponOfTheDay = false;
+    private String                                      jsonString = null;
     
     public interface OnCouponActionListener{
         public void onDidCheckout(Coupon c);
@@ -116,6 +117,13 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.d("couponList","onActivityCreated");
+        
+        if(savedInstanceState != null){
+            Log.d("couponList","recupero stato jsonstring");
+            jsonString = savedInstanceState.getString("couponModel");
+            adapter.addFromJSON(jsonString);
+            setHeaderViews();
+        }
     }
     
     @Override
@@ -141,13 +149,9 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-//        if (adapter.getCount() > 0) {
-//            outState.putInt("nRows", adapter.getCount());
-//        }
-//        if (listState != null) {
-//            outState.putParcelable("listState", listState);
-//        } else {
-//            outState.putParcelable("listState", getListView().onSaveInstanceState());
+        Log.d("couponList","salvo stato jsonstring");
+
+        outState.putString("couponModel", jsonString);
     }
     
     public void onDestroyView() {
