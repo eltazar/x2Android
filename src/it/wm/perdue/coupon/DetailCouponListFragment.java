@@ -363,26 +363,10 @@ public class DetailCouponListFragment extends SherlockListFragment implements
         public View getView(int position, View v, ViewGroup parent) {
             
             
-            int layout = 0;
+            int layout = getItemViewType(position);
             
-            switch(position){
-                case 0:
-                    //titolo
-                    layout = R.layout.coupon_title_row;
-                    break;
-                case 1:
-                    //dettaglio
-                    layout = R.layout.coupon_detail_row;
-                    break;
-                case 2:
-                    //altro
-                    layout = R.layout.coupon_options_row;
-                    break;
-            }
-            
-            if (v == null) {
                 v = inflater.inflate(layout, null);
-            }
+            
             if (coupon != null) {
                 if(position == 0){
                     TextView title = (TextView) v.findViewById(R.id.coupon_title_row); 

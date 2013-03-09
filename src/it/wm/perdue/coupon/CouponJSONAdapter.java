@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import it.wm.perdue.R;
 import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.Coupon;
 
@@ -54,11 +55,34 @@ public class CouponJSONAdapter <T extends Coupon> extends
         sections.add("title");
         sections.add("details");
         sections.add("others"); 
+        sections.add("tel");
+        sections.add("mail");
+        sections.add("faq");        
     }
     
     @Override
     public void clear() {
         super.clear();
+        sections.clear();
+    }
+    
+    public int getItemViewType(int position){
+        
+        int resource = 0;
+        
+        if(position == 0){
+            resource = R.layout.coupon_title_row;
+        }
+        else if(position == 1){
+            resource = R.layout.coupon_detail_row;
+        }
+        else if(position == 2){
+            resource = R.layout.coupon_options_row;
+        }
+        else if(position == 3 || position == 4 || position == 5){
+            resource = R.layout.contact_row;
+        }
+        return resource;
     }
 
     @Override
