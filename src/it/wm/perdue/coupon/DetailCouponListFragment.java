@@ -52,6 +52,8 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     //dati esercente
     protected String                                    eseId      = null;
     private Button                                      buyButton = null;
+    private TextView                                    offerTextView = null;
+    private TextView                                    expiryTimerTextView = null;
     private OnCouponActionListener                      listener = null;
     private CountDownTimer                              countDownTimer = null;
     private long                                        millisTot = 0;
@@ -96,17 +98,16 @@ public class DetailCouponListFragment extends SherlockListFragment implements
 //      urlString = "http://www.cartaperdue.it/partner/v2.0/DettaglioEsercenteCompleto.php?id="
 //      + eseId;
         
+        if(isCouponOfTheDay)
+        getSherlockActivity().getActionBar().setTitle("Coupon del giorno");
+        else getSherlockActivity().getActionBar().setTitle("Coupon");
+
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
         urlString = "http://www.cartaperdue.it/partner/android/coupon2.php?prov=" + "Roma";
-        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET,
-                null, TAG_NORMAL);
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Caricamento in corso...");
-        //progressDialog.setIndeterminate(true);
-        progressDialog.setCancelable(true); 
-
-        progressDialog.show();
+//        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET,
+//                null, TAG_NORMAL);
+        //showProgressDialog();
         onCreateAdapters();     
         setListAdapter(adapter);
     }
@@ -121,16 +122,14 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d("couponList","onCreateView");
 
-        View view = inflater.inflate(R.layout.coupon, container, false);
+      View view = inflater.inflate(R.layout.coupon, container, false);
       buyButton = (Button) view.findViewById(R.id.buyButton);
       buyButton.setOnClickListener(this);
-      TextView tv = (TextView) view.findViewById(R.id.summaryTextView);
-      tv.setText("CIAOOOOO");
+      offerTextView = (TextView) view.findViewById(R.id.summaryTextView);
+      offerTextView.setText("Caricamento...");
+      expiryTimerTextView = (TextView)view.findViewById(R.id.expiryString);
       
-      if(adapter.getObject() != null)
-          buyButton.setEnabled(true);
-      
-        return view;
+      return view;
     }
     
     @Override
@@ -149,30 +148,38 @@ public class DetailCouponListFragment extends SherlockListFragment implements
 //            outState.putParcelable("listState", listState);
 //        } else {
 //            outState.putParcelable("listState", getListView().onSaveInstanceState());
-//        }
-        
     }
     
     public void onDestroyView() {
         super.onDestroyView();
         Log.d("couponList","onDestroyView");
-
         // setListAdapter(null);
-        httpAccess.setResponseListener(null);
     }
     
     public void onResume(){
         super.onResume();
-        Log.d("couponList","onResume");
-
+        Log.d("couponList","onResume");        
+        
+        //ripeto query
+        if(/*isCouponOfTheDay ||*/ adapter.getObject() == null){
+            Log.d("couponList","onResume adapter model è null, rifaccio query");
+            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET,
+                    null, TAG_NORMAL);
+            showProgressDialog();
+        }
+        
         millisTot = 0;
         //su ios facevo così, qui non so se serve... 
         if(countDownTimer != null){
             countDownTimer.cancel();
         }
         
+        if(adapter.getObject() != null){
+            setHeaderViews();
+        }
+        
         //forzo a ricaricare i dati del model per far ripartire il timer
-        adapter.notifyDataSetChanged();
+        //adapter.notifyDataSetChanged();
     }
     
     public void onStop(){
@@ -181,8 +188,6 @@ public class DetailCouponListFragment extends SherlockListFragment implements
         if(countDownTimer != null)
             countDownTimer.cancel();
     }
-    
-
     
     protected void onCreateAdapters() {
         adapter = new DetailCouponAdapter<Coupon>(
@@ -208,16 +213,14 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
     @Override
-    public void onHTTPResponseReceived(String tag, String response) {
-        // downloading--;
-        
+    public void onHTTPResponseReceived(String tag, String response) {        
         //Log.d("couponList", "RISPOSTA = " + response);
         buyButton.setEnabled(true);
         
         if (tag.equals(TAG_NORMAL)) {
-            // Se riceviamo un risultato non di ricerca, lo aggiungiamo sempre e
-            // comunque:
             adapter.addFromJSON(response);
+            jsonString = response;
+            setHeaderViews();
         }
         progressDialog.dismiss();
     }
@@ -225,16 +228,96 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     @Override
     public void onHTTPerror(String tag) {
         // TODO: aggiungere tasto TAP TO REFRESH
-        
-        //Log.d(DEBUG_TAG, "Errore nel download");
-        // downloading--;
-        // Log.d(DEBUG_TAG, "Donwloading " + downloading);
         progressDialog.dismiss();
         CharSequence text = "C'è stato un problema, riprova!";
         Toast toast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
         toast.show();
     }
     
+    /*Metodi privati
+     * */
+    //setta l'header fisso del coupon
+    private void setHeaderViews(){
+        Coupon c = adapter.getObject();
+        if(c != null){
+            buyButton.setEnabled(true);
+        }
+        offerTextView.setText(Html.fromHtml("Solo <b>"+c.getValoreAcquisto()+"€</b>, sconto <b>"+c.getScontoPer()+"</b>" ));
+        setTimer();
+    }
+    
+    //imposta il timer preso in input una data di scadenza
+    private void setTimer(){
+        
+        Date expiryDate = adapter.getObject().getFineValidita();
+        //creo il timer appena la view torna visibile
+          Date now = new Date();
+          DateFormat formatter = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
+          
+          try{
+              //Log.d("uffa","data scadenza coupon1 = "+coupon.getFineValidita().toString());
+              //Date scad = formatter.parse("Sat Mar 16 23:59:00 CET 2013");
+              //Log.d("uffa","data scadenza coupon2 = "+scad.toString());
+              //String scadT = formatter.format(coupon.getFineValidita().toString());
+              Log.d("uffa","data di scad ---> "+expiryDate.toString());
+              Log.d("uffa", "data now --->"+formatter.format(now));
+              millisTot = expiryDate.getTime() - now.getTime();
+              Log.d("Timer","millisecondti minutes = "+millisTot);
+          }
+          catch(IllegalArgumentException e){
+              e.printStackTrace();
+          }
+          countDownTimer = new CountDownTimer(millisTot, 1000) {
+              int count = 0;
+              public void onTick(long millisUntilFinished) {
+                  //Log.d("COUNT","COUNT = "+(count++));
+                  //Log.d("Timer","millisUntilFinished = "+millisUntilFinished);
+                  countDown(millisUntilFinished);
+              }
+
+              public void onFinish() {
+                  expiryTimerTextView.setText(Html.fromHtml("<b>Scade tra:</b> offerta scaduta - 2"));
+                  buyButton.setEnabled(false);
+              }
+           }.start();
+      }
+      
+    //effettua il countdown a partire da un tot di tempo
+    private void countDown(long millisUntilFinished){
+        long days;
+        long minutes;
+        long seconds;
+        long hours;
+        long secondsLeft = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished);
+        
+        if (secondsLeft > 0) {
+            secondsLeft = secondsLeft - 1;
+            days= secondsLeft / (3600*24);
+            hours = (secondsLeft - (days * 24 * 3600)) / 3600;
+            minutes = (secondsLeft - ((hours * 3600) + (days * 24 * 3600))) / 60;
+            seconds = secondsLeft % 60;
+            
+            expiryTimerTextView.setText(Html.fromHtml("<b>Scade tra:</b> "+days+"g "+hours+"h "+minutes+"m "+ seconds+"s"));
+        } 
+        else {
+            secondsLeft = 0;
+            expiryTimerTextView.setText(Html.fromHtml("<b>Scade tra:</b> offerta scaduta - 1"));
+            buyButton.setEnabled(false);
+            //annullo il timer quando scade il countDown
+            countDownTimer.cancel();
+        }
+    }
+    
+    private void showProgressDialog(){
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Caricamento in corso...");
+        //progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(true); 
+        progressDialog.show();
+    }
+    
+    /*Metodi privati END
+     * */
     /* *** END: HTTPAccess.ResponseListener ******************* */
     
     public void onListItemClick(ListView l, View v, int position, long id) {
@@ -326,7 +409,8 @@ public class DetailCouponListFragment extends SherlockListFragment implements
             }
             return v;
         }
-        
+
+        /*
         private void setTimer(TextView t){
           //creo il timer appena la view torna visibile
             Date now = new Date();
@@ -358,8 +442,8 @@ public class DetailCouponListFragment extends SherlockListFragment implements
                     timer.setText(Html.fromHtml("<b>Scade tra:</b> offerta scaduta - 2"));
                 }
              }.start();
-        }
-        
+        }*/
+        /*
         private void countDown(long millisUntilFinished, TextView timer){
             long days;
             long minutes;
@@ -382,7 +466,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
                 //annullo il timer quando scade il countDown
                 countDownTimer.cancel();
             }
-        }
+        }*/
     }
     
 }
