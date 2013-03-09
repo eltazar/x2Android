@@ -44,7 +44,7 @@ public class DetailCouponBaseActivity extends SherlockFragmentActivity implement
                 | ActionBar.DISPLAY_SHOW_HOME
                 | ActionBar.DISPLAY_SHOW_TITLE);
         
-        bar.setTitle("titolo coupon");
+        //bar.setTitle("titolo coupon");
         LoggingHandler.setListener(this);
 
         if (savedInstanceState == null){            
