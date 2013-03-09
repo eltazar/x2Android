@@ -4,35 +4,43 @@
     android:layout_height="wrap_content"
     android:layout_weight="0.12" >
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/fixHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+
         android:background="#CCCCCC"
          >
-
-        <TextView
-            android:id="@+id/summaryTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.85"
-            android:paddingLeft="10dp"
-            android:text="Medium Text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <Button
             android:id="@+id/buyButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
             android:enabled="false"
             android:text="Compra" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/expiryString"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/buyButton"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="14dp"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/summaryTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/expiryString"
+            android:layout_alignTop="@+id/buyButton"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    </RelativeLayout>
 
     <ListView
         android:id="@id/android:list"
