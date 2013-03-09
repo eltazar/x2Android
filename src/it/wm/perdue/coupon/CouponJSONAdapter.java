@@ -4,7 +4,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.google.gson.Gson;
@@ -30,36 +29,31 @@ public class CouponJSONAdapter <T extends Coupon> extends
         sections = new ArrayList<String>();
     }
     
-    public View getView(int position, View v, ViewGroup parent) {
-       
-        return null;  
-    }
-    
     @Override
     public int getCount() {
         //Log.d("XXX", "COUNT = " + sections.size());
-        return 0;
+        return sections.size();
     }
     
     public void addFromJSON(String jsonString) {
         jsonString = Utils.formatJSONwithoutBool(jsonString);
         jsonString = jsonString.substring(1, jsonString.length() - 1);
-        Log.d("TIMER",jsonString);
+        //Log.d("TIMER",jsonString);
         Gson gson = Utils.getGson();
         try {
             this.coupon = gson.fromJson(jsonString, clazz);
             super.add(this.coupon);
-            checkFields();
-            
+            checkFields();           
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }
     }
     
     protected void checkFields() {
-        
-        Log.d("TIMER","counpon = "+coupon.getID());
-                
+        Log.d("TIMER","counpon = "+coupon.getID());         
+        sections.add("title");
+        sections.add("details");
+        sections.add("others"); 
     }
     
     @Override

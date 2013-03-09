@@ -11,7 +11,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:background="#CCCCCC"
+         >
 
         <TextView
             android:id="@+id/summaryTextView"
@@ -37,7 +39,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/fixHeader"
-        android:background="#00FF00"
         android:drawSelectorOnTop="false" >
 
     </ListView>
