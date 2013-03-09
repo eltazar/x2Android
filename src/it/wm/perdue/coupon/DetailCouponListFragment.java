@@ -246,7 +246,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
         if(c != null){
             buyButton.setEnabled(true);
         }
-        offerTextView.setText(Html.fromHtml("Solo <b>"+c.getValoreAcquisto()+"€</b>, sconto <b>"+c.getScontoPer()+"</b>" ));
+        offerTextView.setText(Html.fromHtml("Solo <b>"+Utils.formatPrice(c.getValoreAcquisto())+"€</b>, sconto <b>"+c.getScontoPer()+"</b>" ));
         setTimer();
     }
     
