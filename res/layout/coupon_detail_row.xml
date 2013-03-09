@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="3dp"
+    android:paddingTop="3dp" >
+
+    <it.wm.CachedAsyncImageView
+        android:id="@+id/couponImage"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:gravity="center_vertical" >
+
+    </it.wm.CachedAsyncImageView>
+
+     <TextView
+         android:id="@+id/couponDifference"
+         style="@style/ShadowTextView"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/couponPrice"
+         android:layout_marginTop="16dp"
+         android:layout_toRightOf="@+id/couponImage"
+         android:text="Risparmio"
+         android:textSize="12sp" />
+
+     <TextView
+         android:id="@+id/couponPrice"
+         style="@style/ShadowTextView"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignTop="@+id/couponImage"
+         android:layout_toRightOf="@+id/couponDifference"
+         android:background="@drawable/rounded_edges"
+         android:gravity="center"
+         android:text="Solo"
+         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+     <TextView
+         android:id="@+id/couponDiscount"
+         style="@style/ShadowTextView"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignBaseline="@+id/couponDifference"
+         android:layout_alignBottom="@+id/couponDifference"
+         android:layout_alignLeft="@+id/couponPrice"
+         android:layout_marginLeft="22dp"
+         android:text="Sconto"
+         android:textSize="12sp" />
+
+     <TextView
+         android:id="@+id/couponNormalPrice"
+         style="@style/ShadowTextView"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignBaseline="@+id/couponDiscount"
+         android:layout_alignBottom="@+id/couponDiscount"
+         android:layout_marginLeft="17dp"
+         android:layout_toRightOf="@+id/couponDiscount"
+         android:maxLength="35"
+         android:text="Prezzo pieno"
+         android:textSize="12sp" />
+
+</RelativeLayout>
+
+<!-- <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="3dp"
+    android:paddingTop="3dp" >
+
+    <it.wm.CachedAsyncImageView
+        android:id="@+id/couponImage"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:gravity="center_vertical" >
+
+    </it.wm.CachedAsyncImageView>
+
+     <TextView
+         android:id="@+id/couponDifference"
+         style="@style/ShadowTextView"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignLeft="@+id/couponNormalPrice"
+         android:layout_alignTop="@+id/couponImage"
+         android:text="Risparmio"/>
+
+     <TextView
+         android:id="@+id/couponDiscount"
+         style="@style/ShadowTextView"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignLeft="@+id/couponDifference"
+         android:layout_alignTop="@+id/couponPrice"
+         android:text="Sconto" />
+
+     <TextView
+         android:id="@+id/couponNormalPrice"
+         style="@style/ShadowTextView"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignLeft="@+id/couponExipiry"
+         android:layout_below="@+id/couponDiscount"
+         android:maxLength="35"
+         android:text="Prezzo pieno" />
+
+     <TextView
+         android:id="@+id/couponExipiry"
+		 style="@style/ShadowTextView"      
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/couponNormalPrice"
+         android:layout_toRightOf="@+id/couponImage"
+         android:text="Scadenza" />
+
+     <TextView
+         android:id="@+id/couponPrice"
+         style="@style/ShadowTextView"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentRight="true"
+         android:layout_below="@+id/couponDifference"
+         android:layout_marginBottom="20dp"
+         android:layout_marginRight="40dp"
+         android:text="Solo"
+         android:background="@drawable/rounded_edges"
+         android:gravity="center"
+         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+</RelativeLayout> -->
