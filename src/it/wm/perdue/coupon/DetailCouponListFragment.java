@@ -397,64 +397,6 @@ public class DetailCouponListFragment extends SherlockListFragment implements
             }
             return v;
         }
-
-        /*
-        private void setTimer(TextView t){
-          //creo il timer appena la view torna visibile
-            Date now = new Date();
-            DateFormat formatter = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
-            final TextView timer = t;
-            
-            try{
-                //Log.d("uffa","data scadenza coupon1 = "+coupon.getFineValidita().toString());
-                //Date scad = formatter.parse("Sat Mar 16 23:59:00 CET 2013");
-                //Log.d("uffa","data scadenza coupon2 = "+scad.toString());
-                //String scadT = formatter.format(coupon.getFineValidita().toString());
-                Log.d("uffa","data di scad ---> "+coupon.getFineValidita().toString());
-                Log.d("uffa", "data now --->"+formatter.format(now));
-                millisTot = coupon.getFineValidita().getTime() - now.getTime();
-                Log.d("Timer","millisecondti minutes = "+millisTot);
-            }
-            catch(IllegalArgumentException e){
-                e.printStackTrace();
-            }
-            countDownTimer = new CountDownTimer(millisTot, 1000) {
-                int count = 0;
-                public void onTick(long millisUntilFinished) {
-                    //Log.d("COUNT","COUNT = "+(count++));
-                    //Log.d("Timer","millisUntilFinished = "+millisUntilFinished);
-                    countDown(millisUntilFinished, timer);
-                }
-
-                public void onFinish() {
-                    timer.setText(Html.fromHtml("<b>Scade tra:</b> offerta scaduta - 2"));
-                }
-             }.start();
-        }*/
-        /*
-        private void countDown(long millisUntilFinished, TextView timer){
-            long days;
-            long minutes;
-            long seconds;
-            long hours;
-            long secondsLeft = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished);
-            
-            if (secondsLeft > 0) {
-                secondsLeft = secondsLeft - 1;
-                days= secondsLeft / (3600*24);
-                hours = (secondsLeft - (days * 24 * 3600)) / 3600;
-                minutes = (secondsLeft - ((hours * 3600) + (days * 24 * 3600))) / 60;
-                seconds = secondsLeft % 60;
-                
-                timer.setText(Html.fromHtml("<b>Scade tra:</b> "+days+"g "+hours+"h "+minutes+"m "+ seconds+"s"));
-            } 
-            else {
-                secondsLeft = 0;
-                timer.setText(Html.fromHtml("<b>Scade tra:</b> offerta scaduta - 1"));
-                //annullo il timer quando scade il countDown
-                countDownTimer.cancel();
-            }
-        }*/
     }
     
 }
