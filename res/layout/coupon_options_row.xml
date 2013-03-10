@@ -12,7 +12,7 @@
         android:layout_alignTop="@+id/detailBtn"
         android:layout_centerHorizontal="true"
         android:background="@null"
-        android:src="@drawable/ic_rules" />
+        android:src="@drawable/coupon_rules_selector" />
 
     <ImageButton
         android:id="@+id/infoBtn"
@@ -23,7 +23,7 @@
         android:layout_marginRight="20dp"
         android:layout_toRightOf="@+id/rulesBtn"
         android:background="@null"
-        android:src="@drawable/ic_info" />
+        android:src="@drawable/coupon_info_selector" />
 
     <View
         android:id="@+id/view1"
@@ -40,10 +40,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="42dp"
         android:background="@null"
-        android:src="@drawable/ic_detail" />
+        android:src="@drawable/coupon_detail_selector" />
 
     <View
         android:id="@+id/View2"
