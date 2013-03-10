@@ -5,11 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
-import android.webkit.WebView;
+import android.view.View;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
@@ -17,13 +16,10 @@ import com.actionbarsherlock.widget.ShareActionProvider;
 import it.wm.HTTPAccess;
 import it.wm.perdue.businessLogic.Notizia;
 
-public class NewsDetailActivity extends SherlockActivity implements HTTPAccess.ResponseListener {
+public class NewsDetailActivity extends WebviewActivity implements HTTPAccess.ResponseListener {
     
     private static final String DEBUG_TAG            = "NotiziaActivity";
-    private HTTPAccess          httpAccess           = null;
-    private String              urlString            = null;
     private Notizia             notizia              = null;
-    private WebView             webView              = null;
     private ShareActionProvider mShareActionProvider = null;
     private String              wordpressUrl         = null;
     
@@ -31,11 +27,11 @@ public class NewsDetailActivity extends SherlockActivity implements HTTPAccess.R
         super.onCreate(savedInstanceState);
         notizia = (Notizia) getIntent().getSerializableExtra("notizia");
         
-        setContentView(R.layout.notizia);
         TextView title = (TextView) findViewById(R.id.title);
+        title.setVisibility(View.VISIBLE);
+        
         title.setText(notizia.getTitolo());
         wordpressUrl = notizia.getWordpressUrl();
-        webView = (WebView) findViewById(R.id.newsWebView);
         
         ActionBar bar = getSupportActionBar();
         bar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
@@ -45,8 +41,6 @@ public class NewsDetailActivity extends SherlockActivity implements HTTPAccess.R
         // bar.setTitle(notizia.getTitolo());
         // bar.setSubtitle(notizia.getLocalizedDataString(true));
         
-        httpAccess = new HTTPAccess();
-        httpAccess.setResponseListener(this);
         urlString = "http://www.cartaperdue.it/partner/Notizia.php?id=" + notizia.getID();
         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET, null, null);
         Log.d(DEBUG_TAG, "id " + notizia.getID());
@@ -55,7 +49,6 @@ public class NewsDetailActivity extends SherlockActivity implements HTTPAccess.R
     @Override
     public void onDestroy() {
         super.onDestroy();
-        httpAccess.setResponseListener(null);
     }
     
     @Override
@@ -106,15 +99,21 @@ public class NewsDetailActivity extends SherlockActivity implements HTTPAccess.R
     }
     
     @Override
+    protected void loadPage(String contentString){
+        webView.loadDataWithBaseURL("html://", contentString, "text/html", "utf-8", null);
+    }
+    
+    @Override
     public void onHTTPResponseReceived(String tag, String response) {
         // Log.d(DEBUG_TAG, "RICEVUTA RISPOSTA: " + response);
         response = Utils.formatJSON(response);
         notizia = Utils.getGson().fromJson(response, Notizia[].class)[0];
-        webView.loadDataWithBaseURL("html://", notizia.getTesto(), "text/html", "utf-8", null);
+        loadPage(notizia.getTesto());
     }
     
     @Override
     public void onHTTPerror(String tag) {
     }
+    
     
 }
