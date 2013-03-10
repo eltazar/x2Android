@@ -54,6 +54,7 @@ public class CouponJSONAdapter <T extends Coupon> extends
         Log.d("TIMER","counpon = "+coupon.getID());         
         sections.add("title");
         sections.add("details");
+        sections.add("ese");
         sections.add("others"); 
         sections.add("tel");
         sections.add("mail");
@@ -77,9 +78,12 @@ public class CouponJSONAdapter <T extends Coupon> extends
             resource = R.layout.coupon_detail_row;
         }
         else if(position == 2){
+            resource = R.layout.coupon_ese_row;
+        }
+        else if(position == 3){
             resource = R.layout.coupon_options_row;
         }
-        else if(position == 3 || position == 4 || position == 5){
+        else if(position == 4 || position == 5 || position == 6){
             resource = R.layout.contact_row;
         }
         return resource;
