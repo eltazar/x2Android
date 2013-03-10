@@ -422,6 +422,10 @@ public class DetailCouponListFragment extends SherlockListFragment implements
                     detailBtn.setOnClickListener(this);
                     rulesBtn.setOnClickListener(this);
                     infoBtn.setOnClickListener(this);
+
+                    if(coupon.getDescrizioneEstesa() == null){
+                        infoBtn.setEnabled(false);
+                    }
                 }
                 
             }
@@ -438,11 +442,11 @@ public class DetailCouponListFragment extends SherlockListFragment implements
                     break;
                 case R.id.infoBtn:
                     Log.d("couponList","info btn pressed");
-                    loadWebPage(coupon.getDescrizioneEstesa(),"Condizioni");
+                    loadWebPage(coupon.getDescrizioneEstesa(),"Per saperne di più");
                     break;
                 case R.id.rulesBtn:
                     Log.d("couponList","rules btn pressed");
-                    loadWebPage(coupon.getCondizioni(),"Per saperne di più");
+                    loadWebPage(coupon.getCondizioni(),"Condizioni");
                     break;
             }
         }
