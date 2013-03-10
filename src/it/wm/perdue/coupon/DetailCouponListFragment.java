@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ import it.wm.HTTPAccess;
 import it.wm.perdue.LoggingHandler;
 import it.wm.perdue.R;
 import it.wm.perdue.Utils;
+import it.wm.perdue.WebviewActivity;
 import it.wm.perdue.businessLogic.Coupon;
 import it.wm.perdue.forms.BaseFormActivity;
 
@@ -136,7 +138,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
       offerTextView = (TextView) view.findViewById(R.id.summaryTextView);
       offerTextView.setText("Caricamento...");
       expiryTimerTextView = (TextView)view.findViewById(R.id.expiryString);
-      
+            
       return view;
     }
     
@@ -336,18 +338,30 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     @Override
     public void onClick(View v) {
         //buy button pressed
-        if(LoggingHandler.isLogged()){
-            //mostra Checkout
-            Log.d("couponList","mostra checkout");
-            Coupon coupon = adapter.getObject();    
-            //Log.d("coupon","coupon in detail scaricato: "+coupon.getID()+" "+coupon.getDescrizioneBreve());
-            listener.onDidCheckout(coupon);
-        }
-        else{
-            //mostra login
-            Log.d("couponList","mostra login");
-            Intent i = new Intent(getSherlockActivity(),BaseFormActivity.class);
-            startActivity(i);
+        switch(v.getId()){
+            case R.id.buyButton:
+                if(LoggingHandler.isLogged()){
+                    //mostra Checkout
+                    Log.d("couponList","mostra checkout");
+                    Coupon coupon = adapter.getObject();    
+                    //Log.d("coupon","coupon in detail scaricato: "+coupon.getID()+" "+coupon.getDescrizioneBreve());
+                    listener.onDidCheckout(coupon);
+                }
+                else{
+                    //mostra login
+                    Log.d("couponList","mostra login");
+                    Intent i = new Intent(getSherlockActivity(),BaseFormActivity.class);
+                    startActivity(i);
+                }
+            case R.id.detailBtn:
+                Log.d("couponList","detail btn pressed");
+                break;
+            case R.id.infoBtn:
+                Log.d("couponList","info btn pressed");
+                break;
+            case R.id.rulesBtn:
+                Log.d("couponList","rules btn pressed");
+                break;
         }
     }
     
@@ -393,7 +407,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
                     price.setText(Html.fromHtml("<b>Solo</b>" + "<br/>"
                             + Utils.formatPrice(coupon.getValoreAcquisto())+"€"));      
                 }
-                if(position == 2){
+                else if(position == 2){
                     //riga esercente
                     TextView eseName = (TextView) v.findViewById(R.id.eseName);
                     TextView eseAddress = (TextView) v.findViewById(R.id.eseAddress);
@@ -401,8 +415,43 @@ public class DetailCouponListFragment extends SherlockListFragment implements
                     eseName.setText(coupon.getNomeEsercente());
                     eseAddress.setText(coupon.getIndirizzoEsercente());
                 }
+                else if(position == 3){
+                    ImageButton detailBtn = (ImageButton) v.findViewById(R.id.detailBtn);
+                    ImageButton rulesBtn = (ImageButton) v.findViewById(R.id.rulesBtn);
+                    ImageButton infoBtn = (ImageButton) v.findViewById(R.id.infoBtn);
+                    detailBtn.setOnClickListener(this);
+                    rulesBtn.setOnClickListener(this);
+                    infoBtn.setOnClickListener(this);
+                }
+                
             }
             return v;
+        }
+        
+        @Override
+        public void onClick(View v) {
+            //buy button pressed
+            switch(v.getId()){
+                case R.id.detailBtn:
+                    Log.d("couponList","detail btn pressed");
+                    loadWebPage(coupon.getDescrizioneBreve(),"Dettagli offerta");
+                    break;
+                case R.id.infoBtn:
+                    Log.d("couponList","info btn pressed");
+                    loadWebPage(coupon.getDescrizioneEstesa(),"Condizioni");
+                    break;
+                case R.id.rulesBtn:
+                    Log.d("couponList","rules btn pressed");
+                    loadWebPage(coupon.getCondizioni(),"Per saperne di più");
+                    break;
+            }
+        }
+        
+        private void loadWebPage(String contentData, String contentTitle){
+            Intent i = new Intent(getSherlockActivity(), WebviewActivity.class);
+            i.putExtra("content", contentData);
+            i.putExtra("contentTitle",contentTitle);
+            startActivity(i);
         }
     }
     
