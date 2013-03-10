@@ -390,9 +390,16 @@ public class DetailCouponListFragment extends SherlockListFragment implements
                             + Utils.formatPrice(coupon.getSconto())+"€"));
                     normalPrice.setText(Html.fromHtml("<b> Prezzo pieno </b>" + "<br />"
                             + Utils.formatPrice(coupon.getValoreFacciale())+"€"));
-                    price.setText(Html.fromHtml("<b> Solo </b>" + "<br />"
+                    price.setText(Html.fromHtml("<b>Solo</b>" + "<br/>"
                             + Utils.formatPrice(coupon.getValoreAcquisto())+"€"));      
-                    //setTimer(timer);
+                }
+                if(position == 2){
+                    //riga esercente
+                    TextView eseName = (TextView) v.findViewById(R.id.eseName);
+                    TextView eseAddress = (TextView) v.findViewById(R.id.eseAddress);
+
+                    eseName.setText(coupon.getNomeEsercente());
+                    eseAddress.setText(coupon.getIndirizzoEsercente());
                 }
             }
             return v;
