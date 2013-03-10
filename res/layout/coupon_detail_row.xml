@@ -11,10 +11,8 @@
         android:id="@+id/couponImage"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_centerVertical="true"
         android:layout_margin="10dp"
         android:gravity="center_vertical" >
 
@@ -25,34 +23,20 @@
          style="@style/ShadowTextView"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_below="@+id/couponPrice"
-         android:layout_marginTop="16dp"
+         android:layout_alignTop="@+id/couponImage"
+         android:layout_marginLeft="16dp"
          android:layout_toRightOf="@+id/couponImage"
          android:text="Risparmio"
          android:textSize="12sp" />
-
-     <TextView
-         android:id="@+id/couponPrice"
-         style="@style/ShadowTextView"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignTop="@+id/couponImage"
-         android:layout_toRightOf="@+id/couponDifference"
-         android:background="@drawable/rounded_edges"
-         android:gravity="center"
-         android:padding="5dp"
-         android:text="Solo"
-         android:textAppearance="?android:attr/textAppearanceLarge" />
 
      <TextView
          android:id="@+id/couponDiscount"
          style="@style/ShadowTextView"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_alignBaseline="@+id/couponDifference"
-         android:layout_alignBottom="@+id/couponDifference"
-         android:layout_alignLeft="@+id/couponPrice"
-         android:layout_marginLeft="22dp"
+         android:layout_alignLeft="@+id/couponDifference"
+         android:layout_below="@+id/couponDifference"
+         android:maxLength="35"
          android:text="Sconto"
          android:textSize="12sp" />
 
@@ -61,13 +45,23 @@
          style="@style/ShadowTextView"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_alignBaseline="@+id/couponDiscount"
-         android:layout_alignBottom="@+id/couponDiscount"
-         android:layout_marginLeft="17dp"
-         android:layout_toRightOf="@+id/couponDiscount"
-         android:maxLength="35"
+         android:layout_alignLeft="@+id/couponDiscount"
+         android:layout_below="@+id/couponDiscount"
          android:text="Prezzo pieno"
          android:textSize="12sp" />
+
+     <TextView
+         android:id="@+id/couponPrice"
+         style="@style/ShadowTextView"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentRight="true"
+         android:layout_alignTop="@+id/couponDifference"
+         android:layout_marginRight="31dp"
+         android:background="@drawable/rounded_edges"
+         android:padding="2dp"
+         android:text="Solo"
+         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>
 
