@@ -26,7 +26,7 @@ public class DetailCouponBaseActivity extends SherlockFragmentActivity implement
     
     private static final String DEBUG_TAG  = "DetailCouponBaseActivity";
     private static final String COUPON_FRAGMENT_TAG = "CouponFragmentTag";
-    private String              idCoupon    = "";
+    private int              idCoupon    = -1;
     private static String              currentFragment = COUPON_FRAGMENT_TAG;
     
     @Override
@@ -37,6 +37,7 @@ public class DetailCouponBaseActivity extends SherlockFragmentActivity implement
         
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
+            idCoupon = extras.getInt("couponId");
         }
         
         ActionBar bar = getSupportActionBar();
@@ -48,7 +49,10 @@ public class DetailCouponBaseActivity extends SherlockFragmentActivity implement
         LoggingHandler.setListener(this);
 
         if (savedInstanceState == null){            
-            Fragment f = DetailCouponListFragment.newInstance(idCoupon);
+            Fragment f = new DetailCouponListFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt("couponId", idCoupon);
+            f.setArguments(bundle);
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction =
                     fragmentManager.beginTransaction();
