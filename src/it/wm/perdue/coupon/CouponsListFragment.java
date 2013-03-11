@@ -1,6 +1,7 @@
 package it.wm.perdue.coupon;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -49,11 +50,11 @@ implements HTTPAccess.ResponseListener {
     
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-//        Bundle extras = new Bundle();
-//        extras.putSerializable("notizia", (Serializable)(l.getItemAtPosition(position)));
-//        Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-//        intent.putExtras(extras);
-//        startActivity(intent);
+        Bundle extras = new Bundle();
+        extras.putInt("couponId",((Coupon)l.getAdapter().getItem(position)).getID() );
+        Intent intent = new Intent(getActivity(), DetailCouponBaseActivity.class);
+        intent.putExtras(extras);
+        startActivity(intent);
     }
     
     
