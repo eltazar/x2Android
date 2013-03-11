@@ -14,15 +14,13 @@ import it.wm.perdue.businessLogic.EsercenteRistorazione;
 
 public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
     
-    public static DettaglioEseRistoListFragment newInstance(String eseId) {
-        
-        Log.d("XXX", "DETTAGLIO RISTO");
-        
+    public static DettaglioEseRistoListFragment newInstance(String eseId, boolean mode, boolean generic) {
         DettaglioEseRistoListFragment fragment = new DettaglioEseRistoListFragment();
         Bundle args = new Bundle();
         args.putString(ESE_ID, eseId);
-        fragment.setArguments(args);
-        
+        fragment.setArguments(args);            
+        isCoupon = mode;
+        isGenerico = generic;
         return fragment;
     }
     
@@ -30,8 +28,22 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        urlString = "http://www.cartaperdue.it/partner/v2.0/DettaglioRistorantePub.php?id="
-                + eseId;
+        if(isGenerico){
+            Log.d("dettaglioEse","esercente generico query");
+            urlString = "http://www.cartaperdue.it/partner/DettaglioRistoCoupon.php?id="
+                    + eseId;
+        }
+        else if(isCoupon){
+            Log.d("dettaglioEse","coupon mode query");
+            urlString = "http://www.cartaperdue.it/partner/DettaglioRistoCoupon.php?id="
+                    + eseId;
+        }
+        else{
+            Log.d("dettaglioEse","esercente senza contratto query");
+            urlString = "http://www.cartaperdue.it/partner/v2.0/DettaglioRistorantePub.php?id="
+                    + eseId;
+        }
+        
     }
     
     @Override
@@ -73,23 +85,26 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
                     if(giorniValidita.equals("<b>Giorni di validità</b><br />"))
                         giorniValidita = "";
                     
-                    infoTextView.setText(Html.fromHtml((
-                            ("<b>"
+                    String infoText = "<b>"
                                     + esercente.getTipologia()
                                     + "</b> <br />"
                                     +
                                     esercente.getInsegna()
-                                    + "<br />")
+                                    + "<br />"
                                     +
                                     giorniValidita
                                     +
                                     (esercente.getGiornoChiusura() != null ? "<b> Giorno di chiusura</b><br />"
                                             +
-                                            esercente.getGiornoChiusura() + "<br />"
-                                            : "")
-                                    + (esercente.getNoteVarie() != null ? "<b> Condizioni di validità</b>"
+                                            esercente.getGiornoChiusura()
+                                            : "");
+                    if(! isCoupon){
+                        infoText = infoText+(esercente.getNoteVarie() != null ? "<br /><b> Condizioni di validità</b>"
                                     
-                                    +" <br />"+ esercente.getNoteVarie() : ""))));
+                                    +" <br />"+ esercente.getNoteVarie() : "");
+                    }
+                    
+                    infoTextView.setText(Html.fromHtml(infoText));
                     
                 }
                 else if (sections.get(position).equals("infoRisto")) {
