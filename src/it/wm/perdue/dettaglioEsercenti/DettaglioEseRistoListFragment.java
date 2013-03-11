@@ -30,12 +30,12 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
         
         if(isGenerico){
             Log.d("dettaglioEse","esercente generico query");
-            urlString = "http://www.cartaperdue.it/partner/DettaglioRistoCoupon.php?id="
+            urlString = "http://www.cartaperdue.it/partner/android/DettaglioRistoCoupon.php?id="
                     + eseId;
         }
         else if(isCoupon){
             Log.d("dettaglioEse","coupon mode query");
-            urlString = "http://www.cartaperdue.it/partner/DettaglioRistoCoupon.php?id="
+            urlString = "http://www.cartaperdue.it/partner/android/DettaglioRistoCoupon.php?id="
                     + eseId;
         }
         else{
