@@ -30,6 +30,7 @@ import it.wm.perdue.R;
 import it.wm.perdue.Utils;
 import it.wm.perdue.WebviewActivity;
 import it.wm.perdue.businessLogic.Coupon;
+import it.wm.perdue.dettaglioEsercenti.DettaglioEsercenteBaseActivity;
 import it.wm.perdue.forms.BaseFormActivity;
 
 import java.text.DateFormat;
@@ -342,6 +343,39 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     /* *** END: HTTPAccess.ResponseListener ******************* */
     
     public void onListItemClick(ListView l, View v, int position, long id) {
+        
+        if(position == 2){
+            //cella esercente
+            Coupon c = adapter.getObject();
+            
+            Intent intent = new Intent(getSherlockActivity(),DettaglioEsercenteBaseActivity.class);
+            //DettaglioEsercenteBaseActivity eseActivity = new DettaglioEsercenteBaseActivity();
+            //Bundle bundle = new Bundle();
+            intent.putExtra(DettaglioEsercenteBaseActivity.Tags.ID, c.getIdEsercente()+"");
+            intent.putExtra(DettaglioEsercenteBaseActivity.Tags.TITLE, c.getNomeEsercente());
+            intent.putExtra(DettaglioEsercenteBaseActivity.Tags.COUPON_MODE, true);
+
+            int tipologia = c.getIdTipologiaEsercente();
+            Log.d("TIPO","TIPOLOGIA = "+tipologia);
+            
+            if(tipologia == -1){
+                //senza contratto
+                intent.putExtra(DettaglioEsercenteBaseActivity.Tags.GENERICO_MODE, true);
+            }
+            else if ((tipologia ==  2) || (tipologia ==  5) || (tipologia ==  6) ||
+                    (tipologia ==  9) || (tipologia == 59) || (tipologia == 60) ||
+                    (tipologia == 61) || (tipologia == 27)) {
+                //con contratto ristorazione
+                intent.putExtra(DettaglioEsercenteBaseActivity.Tags.IS_RISTO, true);
+                intent.putExtra(DettaglioEsercenteBaseActivity.Tags.GENERICO_MODE, false);
+            }
+            else { 
+                //con qlc contratto
+                intent.putExtra(DettaglioEsercenteBaseActivity.Tags.IS_RISTO, false);
+                intent.putExtra(DettaglioEsercenteBaseActivity.Tags.GENERICO_MODE, false);
+            }
+            getSherlockActivity().startActivity(intent);
+        }
         
     }
     
