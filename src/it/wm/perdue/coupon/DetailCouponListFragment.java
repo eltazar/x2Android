@@ -61,20 +61,10 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     private long                                        millisTot = 0;
     private boolean                                     isCouponOfTheDay = false;
     private String                                      jsonString = null;
+    private int                                         idCoupon = -1;
     
     public interface OnCouponActionListener{
         public void onDidCheckout(Coupon c);
-    }
-    
-    public static DetailCouponListFragment newInstance(String eseId) {
-        Log.d("couponList","newInstance");
-
-        DetailCouponListFragment fragment = new DetailCouponListFragment();
-        Bundle args = new Bundle();
-        //args.putString(ESE_ID, eseId);
-        fragment.setArguments(args);
-        
-        return fragment;
     }
     
     @Override
@@ -96,18 +86,34 @@ public class DetailCouponListFragment extends SherlockListFragment implements
         Log.d("couponList","onCreate");
         
         Bundle args = getArguments();
+        if(args != null){
+            idCoupon = args.getInt("couponId");
+        }
+        
+        /*se 0 assumiamo query per coupon del giorno
+         * se -1 problema
+         * se > 0 è id per query con id
+         * */
         //eseId = args.getString(ESE_ID);
         
-//      urlString = "http://www.cartaperdue.it/partner/v2.0/DettaglioEsercenteCompleto.php?id="
-//      + eseId;
-        
-        if(isCouponOfTheDay)
-        getSherlockActivity().getActionBar().setTitle("Coupon del giorno");
-        else getSherlockActivity().getActionBar().setTitle("Coupon");
+        Log.d("couponList","id coupon = "+idCoupon);
+        if(idCoupon == 0){
+            urlString = "http://www.cartaperdue.it/partner/android/coupon2.php?prov=" + "Roma";
+            isCouponOfTheDay = true;
+            getSherlockActivity().getActionBar().setTitle("Coupon del giorno");
+        }
+        else if (idCoupon > 0){
+            urlString = "http://www.cartaperdue.it/partner/android/offerta2.php?id="+idCoupon;
+            isCouponOfTheDay = false;
+            getSherlockActivity().getActionBar().setTitle("Coupon");
+        }
+        else{
+            //mostra alert "coupon non disponibile"
+        }            
 
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
-        urlString = "http://www.cartaperdue.it/partner/android/coupon2.php?prov=" + "Roma";
+        //urlString = "http://www.cartaperdue.it/partner/android/coupon2.php?prov=" + "Roma";
 //        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET,
 //                null, TAG_NORMAL);
         //showProgressDialog();
@@ -167,7 +173,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
         Log.d("couponList","onResume");        
         
         //ripeto query
-        if(/*isCouponOfTheDay ||*/ adapter.getObject() == null){
+        if(isCouponOfTheDay || adapter.getObject() == null){
             Log.d("couponList","onResume adapter model è null, rifaccio query");
             httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET,
                     null, TAG_NORMAL);
@@ -220,7 +226,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
     @Override
     public void onHTTPResponseReceived(String tag, String response) {        
-        //Log.d("couponList", "RISPOSTA = " + response);
+        Log.d("couponList", "RISPOSTA = " + response);
         buyButton.setEnabled(true);
         
         if (tag.equals(TAG_NORMAL)) {
@@ -245,11 +251,15 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     //setta l'header fisso del coupon
     private void setHeaderViews(){
         Coupon c = adapter.getObject();
-        if(c != null){
+        if(c != null && c.getID() >= 0){
             buyButton.setEnabled(true);
+            offerTextView.setText(Html.fromHtml("Solo <b>"+Utils.formatPrice(c.getValoreAcquisto())+"€</b>, sconto <b>"+c.getScontoPer()+"</b>" ));
+            setTimer();
         }
-        offerTextView.setText(Html.fromHtml("Solo <b>"+Utils.formatPrice(c.getValoreAcquisto())+"€</b>, sconto <b>"+c.getScontoPer()+"</b>" ));
-        setTimer();
+        else{
+            offerTextView.setText("Spiacenti, nessuna offerta");
+            buyButton.setEnabled(false);
+        }
     }
     
     //imposta il timer preso in input una data di scadenza
@@ -265,8 +275,8 @@ public class DetailCouponListFragment extends SherlockListFragment implements
               //Date scad = formatter.parse("Sat Mar 16 23:59:00 CET 2013");
               //Log.d("uffa","data scadenza coupon2 = "+scad.toString());
               //String scadT = formatter.format(coupon.getFineValidita().toString());
-              Log.d("uffa","data di scad ---> "+expiryDate.toString());
-              Log.d("uffa", "data now --->"+formatter.format(now));
+              //Log.d("uffa","data di scad ---> "+expiryDate.toString());
+              //Log.d("uffa", "data now --->"+formatter.format(now));
               millisTot = expiryDate.getTime() - now.getTime();
               Log.d("Timer","millisecondti minutes = "+millisTot);
           }
@@ -285,6 +295,11 @@ public class DetailCouponListFragment extends SherlockListFragment implements
                   expiryTimerTextView.setText(Html.fromHtml("<b>Scade tra:</b> offerta scaduta - 2"));
                   buyButton.setEnabled(false);
               }
+
+            protected void dismissWaitingProgressDialog(){
+                //Log.d("uuu","dismissed");
+                progressDialog.dismiss();
+            }
            }.start();
       }
       
@@ -330,11 +345,6 @@ public class DetailCouponListFragment extends SherlockListFragment implements
         
     }
     
-    protected void dismissWaitingProgressDialog(){
-        //Log.d("uuu","dismissed");
-        progressDialog.dismiss();
-    }
-
     @Override
     public void onClick(View v) {
         //buy button pressed
@@ -381,7 +391,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
             
                 v = inflater.inflate(layout, null);
             
-            if (coupon != null) {
+            if (coupon != null && coupon.getID() >= 0 ) {
                 if(position == 0){
                     TextView title = (TextView) v.findViewById(R.id.coupon_title_row); 
                     title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
@@ -423,7 +433,8 @@ public class DetailCouponListFragment extends SherlockListFragment implements
                     rulesBtn.setOnClickListener(this);
                     infoBtn.setOnClickListener(this);
 
-                    if(coupon.getDescrizioneEstesa() == null){
+                    
+                    if(coupon.getDescrizioneEstesa() == null || coupon.getDescrizioneEstesa().equals("")){
                         infoBtn.setEnabled(false);
                     }
                 }
