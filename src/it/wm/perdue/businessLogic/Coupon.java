@@ -136,4 +136,8 @@ public class Coupon implements HasID {
     public String getDescrizioneEstesa(){
         return descrizioneEstesa;
     }
+    
+    public int getIdTipologiaEsercente(){
+        return idTipoEsercente;
+    }
 }
