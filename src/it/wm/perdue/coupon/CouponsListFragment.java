@@ -36,7 +36,7 @@ implements HTTPAccess.ResponseListener {
         super.onCreate(savedInstanceState); 
         // Super. onCreate utilizza l'adapter in caso di config change, 
         // quindi va richiamato dopo averlo inizializzato
-        urlString = "http://www.cartaperdue.it/partner/altreofferte.php?prov="+Utils.getPreferenceString(COUPON_CITY, "Roma");
+        urlString = "http://www.cartaperdue.it/partner/android/listaCoupon.php?prov="+Utils.getPreferenceString(COUPON_CITY, "Roma")+"&from=0";
         Log.d("coupon","url _---> "+urlString);
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
@@ -66,7 +66,7 @@ implements HTTPAccess.ResponseListener {
         try{
             int n = ((CouponsJSONListAdapter)adapter).addFromJSON(response);
             Log.d("coupon","n = "+n);
-            if (n == 0) {
+            if (n < PHP_ARRAY_LENGTH) {
                 notifyDataEnded();
             }
             setListShown(true);
@@ -89,8 +89,7 @@ implements HTTPAccess.ResponseListener {
     
     @Override
     protected void downloadRows(int from) { 
-        urlString = "http://www.cartaperdue.it/partner/altreofferte.php?prov="+Utils.getPreferenceString(COUPON_CITY, "Roma");
-        Log.d("ccccc","url = "+urlString);
+        urlString = "http://www.cartaperdue.it/partner/android/listaCoupon.php?prov="+Utils.getPreferenceString(COUPON_CITY, "Roma")+"&from="+from;
         Boolean downloadStarted = httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET, null, null);
         if (downloadStarted)
             notifyDownloadStarted();
