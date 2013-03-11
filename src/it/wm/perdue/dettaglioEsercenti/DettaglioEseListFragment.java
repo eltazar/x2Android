@@ -29,7 +29,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
     private static final String                         DEBUG_TAG  = "DettaglioEseListFragment";
     protected static final String                       TAG_NORMAL = "normal";
     protected static final String                       ESE_ID     = "eseId";
-    
+
     // Gestione dei download:
     protected HTTPAccess                                httpAccess = null;
     protected String                                    urlString  = null;
@@ -41,15 +41,16 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
     
     //dati esercente
     protected String                                    eseId      = null;
+    protected static boolean                            isCoupon = false;
+    protected static boolean                            isGenerico = false;
 
-    
-    
-    public static DettaglioEseListFragment newInstance(String eseId) {
+    public static DettaglioEseListFragment newInstance(String eseId, boolean mode, boolean generic) {
         DettaglioEseListFragment fragment = new DettaglioEseListFragment();
         Bundle args = new Bundle();
         args.putString(ESE_ID, eseId);
-        fragment.setArguments(args);
-        
+        fragment.setArguments(args);            
+        isCoupon = mode;
+        isGenerico = generic;
         return fragment;
     }
     
@@ -62,9 +63,22 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
-        urlString = "http://www.cartaperdue.it/partner/v2.0/DettaglioEsercenteCompleto.php?id="
-                + eseId;
-        
+
+        if(isGenerico){
+            Log.d("dettaglioEse","esercente generico query");
+            urlString = "http://www.cartaperdue.it/partner/DettaglioEsercenteGenerico.php?id="
+                    + eseId;
+        }
+        else if(isCoupon){
+            Log.d("dettaglioEse","coupon mode query");
+            urlString = "http://www.cartaperdue.it/partner/DettaglioEsercente.php?id="
+                    + eseId;
+        }
+        else{
+            Log.d("dettaglioEse","esercente senza contratto query");
+            urlString = "http://www.cartaperdue.it/partner/v2.0/DettaglioEsercenteCompleto.php?id="
+                    + eseId;
+        }
         onCreateAdapters();
     }
     
@@ -232,6 +246,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             
             v = super.getView(position, v, parent);
             
+            
             if (esercente != null) {
                 
                 TextView infoTextView = null;            
@@ -241,23 +256,30 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
 
                     String giorniString = null;
                     
-                    try {
-                        giorniString = (esercente.getGiorniString() != null ?
-                                "<b> Giorni validità </b>" + "<br />"
-                                + esercente.getGiorniString() + "<br />" : "");
-                    } catch (NullPointerException e) {
-                        Log.d(DEBUG_TAG, "eccezione in getView: " + e.getLocalizedMessage());
+                    if(isCoupon){
+                        infoTextView.setText(Html.fromHtml((
+                                esercente.getGiornoChiusura() != null ? "<b> Giorno di chiusura</b>"
+                                        + "<br />" +
+                                        esercente.getGiornoChiusura(): "")));
                     }
-                    
-                    infoTextView.setText(Html.fromHtml((
-                            esercente.getGiornoChiusura() != null ? "<b> Giorno di chiusura</b>"
-                                    + "<br />" +
-                                    esercente.getGiornoChiusura() + "<br />" : "")
-                                    +
-                                    (giorniString != null ? giorniString : "")
-                                    + (esercente.getNoteVarie() != null ? "<b> Condizioni</b>" + "<br />"
-                                            + esercente.getNoteVarie() : "")));
-                    
+                    else {                    
+                        try {
+                            giorniString = (esercente.getGiorniString() != null ?
+                                    "<b> Giorni validità </b>" + "<br />"
+                                    + esercente.getGiorniString() + "<br />" : "");
+                        } catch (NullPointerException e) {
+                            Log.d(DEBUG_TAG, "eccezione in getView: " + e.getLocalizedMessage());
+                        }
+                        
+                        infoTextView.setText(Html.fromHtml((
+                                esercente.getGiornoChiusura() != null ? "<b> Giorno di chiusura</b>"
+                                        + "<br />" +
+                                        esercente.getGiornoChiusura() + "<br />" : "")
+                                        +
+                                        (giorniString != null ? giorniString : "")
+                                        + (esercente.getNoteVarie() != null ? "<b> Condizioni</b>" + "<br />"
+                                                + esercente.getNoteVarie() : "")));
+                    }
                 }
             }
             return v;

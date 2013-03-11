@@ -24,6 +24,8 @@ public class DettaglioEsercenteBaseActivity extends SherlockFragmentActivity {
     private String              id      = "";
     private String              insegna = "";
     private boolean             isRisto = false;
+    private boolean             isCoupon = false;
+    private boolean             isGenerico = false;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,9 @@ public class DettaglioEsercenteBaseActivity extends SherlockFragmentActivity {
             id      = extras.getString (Tags.ID);
             insegna = extras.getString (Tags.TITLE);
             isRisto = extras.getBoolean(Tags.IS_RISTO);
-            
+            isCoupon = extras.getBoolean(Tags.COUPON_MODE);
+            isGenerico = extras.getBoolean(Tags.GENERICO_MODE);
+            Log.d("EXTRAS","Extras ->"+extras);
         }
         
         ActionBar bar = getSupportActionBar();
@@ -50,12 +54,15 @@ public class DettaglioEsercenteBaseActivity extends SherlockFragmentActivity {
         
         if (savedInstanceState != null)
             return;
-        
+
         if (isRisto) {
-            f = DettaglioEseRistoListFragment.newInstance(id);
+            f = DettaglioEseRistoListFragment.newInstance(id, isCoupon, isGenerico);
+            //f = DettaglioEseRistoListFragment.newInstance(id);
         }
         else {
-            f = DettaglioEseListFragment.newInstance(id);
+            //f = DettaglioEseListFragment.newInstance(id);
+            f = DettaglioEseListFragment.newInstance(id, isCoupon, isGenerico);
+            
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction =
@@ -110,5 +117,7 @@ public class DettaglioEsercenteBaseActivity extends SherlockFragmentActivity {
         public static final String ID       = "id";
         public static final String TITLE    = "title";
         public static final String IS_RISTO = "isRisto";
+        public static final String COUPON_MODE = "couponMode";
+        public static final String GENERICO_MODE = "genericoMode";
     }
 }
