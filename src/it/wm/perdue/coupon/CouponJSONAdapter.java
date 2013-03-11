@@ -1,6 +1,5 @@
 package it.wm.perdue.coupon;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -51,14 +50,16 @@ public class CouponJSONAdapter <T extends Coupon> extends
     }
     
     protected void checkFields() {
-        Log.d("TIMER","counpon = "+coupon.getID());         
-        sections.add("title");
-        sections.add("details");
-        sections.add("ese");
-        sections.add("others"); 
-        sections.add("tel");
-        sections.add("mail");
-        sections.add("faq");        
+        if(coupon != null && coupon.getID() >= 0){
+            //Log.d("TIMER","counpon = "+coupon.getID());         
+            sections.add("title");
+            sections.add("details");
+            sections.add("ese");
+            sections.add("others"); 
+            sections.add("tel");
+            sections.add("mail");
+            sections.add("faq");        
+        }
     }
     
     @Override
