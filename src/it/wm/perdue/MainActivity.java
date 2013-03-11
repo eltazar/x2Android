@@ -18,7 +18,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 import it.wm.perdue.contatti.InfoPerDueBaseActivity;
-import it.wm.perdue.coupon.ProvaCouponTimer;
+import it.wm.perdue.coupon.CouponsListFragment;
 import it.wm.perdue.doveusarla.DoveUsarlaFragment;
 import it.wm.perdue.forms.RichiediCartaFragment;
 
@@ -41,7 +41,7 @@ public class MainActivity extends SherlockFragmentActivity implements TabListene
         Utils.setContext(this.getApplicationContext());
         
         tabList = new ArrayList<TabDescriptor>();
-        tabList.add(new TabDescriptor(COUPON_TAB_TAG, ProvaCouponTimer.class, "Coupon"));
+        tabList.add(new TabDescriptor(COUPON_TAB_TAG, CouponsListFragment.class, "Coupon"));
         tabList.add(new TabDescriptor(DOVE_USARLA_TAB_TAG, DoveUsarlaFragment.class, "Dove Usarla"));
         tabList.add(new TabDescriptor(NEWS_TAB_TAG, NewsListFragment.class, "News"));
         tabList.add(new TabDescriptor(RICHIEDI_TAB_TAG, RichiediCartaFragment.class, "Richiedi"));
