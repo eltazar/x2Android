@@ -3,6 +3,7 @@ package it.wm.perdue.coupon;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -376,6 +377,32 @@ public class DetailCouponListFragment extends SherlockListFragment implements
                 intent.putExtra(DettaglioEsercenteBaseActivity.Tags.GENERICO_MODE, false);
             }
             getSherlockActivity().startActivity(intent);
+        }
+        else if(position == 4){
+            try {
+                Utils.callNumber(((TextView) v.findViewById(R.id.contactResource))
+                        .getText().toString().replace(" ", ""), getActivity());
+            } catch (ActivityNotFoundException e) {
+                //Log.e("helloandroid dialing example", "Call failed", e);
+                Toast.makeText(getActivity(),
+                        "Spiacenti, non è possibile chiamare il numero selezionato.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if(position == 5){
+            try {
+                Utils.writeEmail(((TextView) v.findViewById(R.id.contactResource))
+                        .getText().toString(), getActivity());
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(getActivity(), "Spiacenti, non ci sono client di posta installati.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if(position == 6){
+            Intent i = new Intent(getSherlockActivity(), WebviewActivity.class);
+            i.putExtra("contentTitle","F.A.Q.");
+            i.putExtra("urlContent","http://www.cartaperdue.it/partner/android/faq.html");
+            startActivity(i);
         }
         
     }
