@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pd_vetrina_coupon_background_color"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/RelativeLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="false"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dip"
+        android:background="@drawable/pd_sfondo_coupon_del_giorno"
+        android:gravity="center_horizontal|center" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="false"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/pd_coupondelgiorno" />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="wrap_content"
+            android:layout_height="2dp"
+            android:layout_below="@id/textView1"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/pd_action_bar_red" />
+
+        <FrameLayout
+            android:id="@+id/frameLayout1"
+            android:layout_width="130dp"
+            android:layout_height="70dp"
+            android:layout_alignLeft="@id/view1"
+            android:layout_below="@id/view1"
+            android:layout_marginTop="14dp" >
+
+            <it.wm.CachedAsyncImageView
+                android:id="@+id/pd_imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ristoranti" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view1"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="14dp"
+            android:layout_toRightOf="@+id/frameLayout1"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView2"
+            android:layout_below="@+id/textView2"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView3"
+            android:layout_below="@+id/textView3"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/pd_prezzo_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/textView2"
+            android:layout_alignBottom="@+id/textView2"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/textView2"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/pd_sconto_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/textView3"
+            android:layout_alignBottom="@+id/textView3"
+            android:layout_alignLeft="@+id/pd_prezzo_tv"
+            android:text="TextView" />
+        
+        <TextView
+            android:id="@+id/pd_prezzo_originale_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/textView4"
+            android:layout_alignBottom="@+id/textView4"
+            android:layout_alignLeft="@+id/pd_sconto_tv"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/view1"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:text="TextView"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/pd_descrizione_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/textView9"
+            android:layout_alignLeft="@id/frameLayout1"
+            android:layout_alignRight="@+id/view1"
+            android:layout_below="@id/frameLayout1"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="15dp"
+            android:text="TextView" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/textView9"
+            android:layout_alignLeft="@id/view1"
+            android:layout_alignRight="@id/view1"
+            android:layout_below="@id/view1" >
+
+            <ProgressBar
+                android:id="@+id/pd_progressBar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentStart="false"
+                android:layout_gravity="center" />
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/pd_tutte_le_offerte_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/RelativeLayout2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="33dp"
+        android:background="@drawable/pd_mostra_tutte_le_offerte_btn"
+        android:text="@string/mostratutteleofferte"
+        android:textColor="@color/white" />
+
+</RelativeLayout>
