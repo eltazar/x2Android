@@ -270,10 +270,12 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
         fadeOut.start();
     }
     
-    public interface Listener {
-        public void onImageLoadingCompleted(CachedAsyncImageView imageView);
-        
-        public void onImageLoadingFailed(CachedAsyncImageView imageView);
+    public ImageView getImageView(){
+        return imageView;
     }
     
+    public interface Listener {
+        public void onImageLoadingCompleted(CachedAsyncImageView imageView);
+        public void onImageLoadingFailed(CachedAsyncImageView imageView);
+    }    
 }
