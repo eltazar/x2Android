@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
+import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 
@@ -67,7 +68,6 @@ public class DetailCouponBaseActivity extends SherlockFragmentActivity implement
     @Override
     public void onBackPressed(){
         // do something here and don't write super.onBackPressed()
-
     }
     
     @Override
@@ -140,8 +140,17 @@ public class DetailCouponBaseActivity extends SherlockFragmentActivity implement
     private Intent getDefaultShareIntent() {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Carta PerDue: " + "FANTASTICA OFFERTA 10EURO");
-        intent.putExtra(Intent.EXTRA_TEXT, "www.ciao.it");
+        Coupon c = ((DetailCouponListFragment) getSupportFragmentManager().findFragmentByTag(COUPON_FRAGMENT_TAG)).adapter.getObject();
+        if(c != null){
+            String url = "http://www.cartaperdue.it/coupon/dettaglio_affare.jsp?idofferta="+c.getID();
+            String content = "<b>Descrizione:</b>"+c.getTitoloBreve()+
+                    "<b>Prezzo coupon:</b>"+ c.getValoreAcquisto()+"€"+
+                    "<b>Invece di:</b>"+c.getValoreFacciale()+"€"+
+                    "</b>Risparmio: </b>"+c.getSconto()+"€"+
+                    "<b>Link:</b>"+"<a href=\""+url+"\">Apri offerta</a>";  
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Offerta coupon PerDue");
+            intent.putExtra(Intent.EXTRA_TEXT,Html.fromHtml(content));
+        }
         return intent;
     }
     
@@ -164,6 +173,8 @@ public class DetailCouponBaseActivity extends SherlockFragmentActivity implement
     public void onDidLogin() {
         currentFragment = COUPON_FRAGMENT_TAG;
         invalidateOptionsMenu ();
+//        DetailCouponListFragment f = (DetailCouponListFragment) getSupportFragmentManager().findFragmentByTag(COUPON_FRAGMENT_TAG);
+//        onDidCheckout(f.adapter.getObject());
     } 
     
     @Override
