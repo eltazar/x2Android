@@ -19,13 +19,14 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockListFragment;
 
 import it.wm.CachedAsyncImageView;
+import it.wm.CachedAsyncImageView.Listener;
 import it.wm.HTTPAccess;
 import it.wm.perdue.R;
 import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.Esercente;
 
 public class DettaglioEseListFragment extends SherlockListFragment implements
-        HTTPAccess.ResponseListener {
+        HTTPAccess.ResponseListener, Listener {
     private static final String                         DEBUG_TAG  = "DettaglioEseListFragment";
     protected static final String                       TAG_NORMAL = "normal";
     protected static final String                       ESE_ID     = "eseId";
@@ -43,6 +44,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
     protected String                                    eseId      = null;
     protected static boolean                            isCoupon = false;
     protected static boolean                            isGenerico = false;
+    protected CachedAsyncImageView                      cachedImg = null;
 
     public static DettaglioEseListFragment newInstance(String eseId, boolean mode, boolean generic) {
         DettaglioEseListFragment fragment = new DettaglioEseListFragment();
@@ -93,8 +95,9 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         
         String urlImageString = "http://www.cartaperdue.it/partner/v2.0/ImmagineEsercente.php?id="
                 + eseId;
-        ((CachedAsyncImageView) detailImg.findViewById(R.id.dettaglioImg))
-                .loadImageFromURL(urlImageString);
+        cachedImg = ((CachedAsyncImageView) detailImg.findViewById(R.id.dettaglioImg));
+        cachedImg.setListener(this);
+        cachedImg.loadImageFromURL(urlImageString);
         lv.addHeaderView(detailImg, null, false);
         
         setListAdapter(adapter);
@@ -315,5 +318,19 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         // }
         //
 
+    }
+
+    @Override
+    public void onImageLoadingCompleted(CachedAsyncImageView imageView) {
+        Log.d("dettaglio","IMMAGINE CARICATA");     
+        if(imageView.getImageView().getDrawable() == null){
+            Log.d("dettaglio","immagine vuota");
+            cachedImg.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onImageLoadingFailed(CachedAsyncImageView imageView) {
+        Log.d("dettaglio","IMMAGINE NON CARICATA");                
     }
 }
