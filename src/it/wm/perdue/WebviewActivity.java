@@ -16,6 +16,7 @@ public class WebviewActivity extends SherlockActivity implements HTTPAccess.Resp
     protected String              urlString            = null;
     protected WebView             webView              = null;
     private   String              content              = null;
+    private String                urlContent           = null;
     
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,9 +38,12 @@ public class WebviewActivity extends SherlockActivity implements HTTPAccess.Resp
         Bundle extras = getIntent().getExtras(); 
         String title = "";
         if(extras !=null) {
+            urlContent = extras.getString("urlContent");
             content = extras.getString("content");
             title = extras.getString("contentTitle");
-            loadPage(content);
+            if(urlContent != null)
+                loadPageUrl(urlContent);
+            else loadPage(content);
         }
         bar.setTitle(title);
     }
@@ -53,6 +57,10 @@ public class WebviewActivity extends SherlockActivity implements HTTPAccess.Resp
     
     protected void loadPage(String contentString){
         webView.loadData(content, "text/html", "UTF-8");
+    }
+    
+    protected void loadPageUrl(String urlContent){
+        webView.loadUrl(urlContent);
     }
 
 
