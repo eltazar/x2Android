@@ -111,7 +111,9 @@ public class DrawableCache implements DownloadListener {
     private Drawable convertData(byte[] data, int reqWidth, int reqHeight) {
         BitmapDrawable d = null;
         if ((new String(data)).equals("Use a placeholder")) {
-            // TODO: settare un placeholder.
+//            int imageResource = R.drawable.logo;
+//            d = (BitmapDrawable) appContext.getResources().getDrawable(imageResource);
+            
         } else {
             
             BitmapFactory.Options opt = new BitmapFactory.Options();
@@ -248,7 +250,6 @@ public class DrawableCache implements DownloadListener {
     
     public interface DrawableCacheListener {
         public void onCacheLineLoaded(DownloadRequest request, Drawable data);
-        
         public void onCacheLineError(DownloadRequest request);
     }
     
