@@ -19,10 +19,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import it.wm.perdue.contatti.InfoPerDueBaseActivity;
 import it.wm.perdue.coupon.CouponsListFragment;
-<<<<<<< HEAD
-=======
 import it.wm.perdue.coupon.VetrinaCoupon;
->>>>>>> 02f3ae6f37ba549d189d87470e714ea9f63571ba
 import it.wm.perdue.doveusarla.DoveUsarlaFragment;
 import it.wm.perdue.forms.RichiediCartaFragment;
 
@@ -31,7 +28,7 @@ import java.util.List;
 
 public class MainActivity extends SherlockFragmentActivity implements TabListener {
    
-    spublic static final String  VETRINA_COUPON_TAB_TAG = "vetrina_coupon"; 
+    public static final String  VETRINA_COUPON_TAB_TAG = "vetrina_coupon"; 
     public static final String  COUPON_TAB_TAG      = "coupon";
     public static final String  DOVE_USARLA_TAB_TAG = "doveusarla";
     public static final String  NEWS_TAB_TAG        = "news";
