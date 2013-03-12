@@ -17,6 +17,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -472,9 +473,30 @@ public class DetailCouponListFragment extends SherlockListFragment implements
                         infoBtn.setEnabled(false);
                     }
                 }
+                else if(position == 4){
+                    // telefono x2
+                    setContactRows("Numero verde","800 73 73 83",R.drawable.ic_phone, v);
+                }
+                else if(position == 5){
+                    //mail x2
+                    setContactRows("E-mail","redazione@cartaperdue.it",R.drawable.ic_mail, v);
+                }
+                else if(position == 6){
+                    //faq x2
+                    setContactRows("F.A.Q.","Domande frequenti",R.drawable.ic_faq, v);
+                }
                 
             }
             return v;
+        }
+        
+        private void setContactRows(String kind,String resource, int img, View v){
+            TextView contactKind = (TextView) v.findViewById(R.id.contactKind);
+            TextView contactResource = (TextView) v.findViewById(R.id.contactResource);
+            ImageView contactImg = (ImageView) v.findViewById(R.id.contactImage);
+            contactResource.setText(resource);
+            contactKind.setText(kind);
+            contactImg.setImageResource(img);
         }
         
         @Override
