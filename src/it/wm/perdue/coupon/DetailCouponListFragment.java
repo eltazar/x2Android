@@ -108,7 +108,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
         else if (idCoupon > 0){
             urlString = "http://www.cartaperdue.it/partner/android/offerta2.php?id="+idCoupon;
             isCouponOfTheDay = false;
-            getSherlockActivity().getActionBar().setTitle("Coupon");
+            getSherlockActivity().getSupportActionBar().setTitle("Coupon");
         }
         else{
             //mostra alert "coupon non disponibile"
