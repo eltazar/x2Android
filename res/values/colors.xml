@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
    <color name="perdue_red">#941421</color>
+   <color name="white">#FFFFFF</color>
+   <color name="pd_vetrina_coupon_background_color">#F3F3F3</color>
+   <color name="pd_action_bar_red">#d94141</color>
 </resources>

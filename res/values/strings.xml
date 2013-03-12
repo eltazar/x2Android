@@ -11,4 +11,6 @@
 	<string name="advise">Per richiedere la Guida ai Vantaggi + Carta PerDue compila il form e invialo al nostro staff. Sarai ricontattato entro un giorno lavorativo</string>
 	<string name="login_string">Per acquistare devi effettuare il login od essere registrato a perdue.it</string>
 	<string name="reg_string">Per fruire dei servizi PerDue devi effettuare la registrazione a perdue.it</string>
+	<string name="mostratutteleofferte">Mostra tutte le offerte</string>
+	<string name="pd_coupondelgiorno">Coupon del giorno</string>
 </resources>
