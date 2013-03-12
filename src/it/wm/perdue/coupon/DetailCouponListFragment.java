@@ -51,7 +51,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     private ProgressDialog                              progressDialog;
     
     // Gestione dello stato della lista:
-    protected DetailCouponAdapter<Coupon> adapter    = null;
+    protected DetailCouponAdapter<Coupon>               adapter    = null;
     private Parcelable                                  listState  = null;
     
     //dati esercente
@@ -412,19 +412,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
         //buy button pressed
         switch(v.getId()){
             case R.id.buyButton:
-                if(LoggingHandler.isLogged()){
-                    //mostra Checkout
-                    Log.d("couponList","mostra checkout");
-                    Coupon coupon = adapter.getObject();    
-                    //Log.d("coupon","coupon in detail scaricato: "+coupon.getID()+" "+coupon.getDescrizioneBreve());
-                    listener.onDidCheckout(coupon);
-                }
-                else{
-                    //mostra login
-                    Log.d("couponList","mostra login");
-                    Intent i = new Intent(getSherlockActivity(),BaseFormActivity.class);
-                    startActivity(i);
-                }
+                buyButtonPressed();
             case R.id.detailBtn:
                 Log.d("couponList","detail btn pressed");
                 break;
@@ -437,6 +425,21 @@ public class DetailCouponListFragment extends SherlockListFragment implements
         }
     }
     
+    protected void buyButtonPressed(){
+        if(LoggingHandler.isLogged()){
+            //mostra Checkout
+            Log.d("couponList","mostra checkout");
+            Coupon coupon = adapter.getObject();    
+            //Log.d("coupon","coupon in detail scaricato: "+coupon.getID()+" "+coupon.getDescrizioneBreve());
+            listener.onDidCheckout(coupon);
+        }
+        else{
+            //mostra login
+            Log.d("couponList","mostra login");
+            Intent i = new Intent(getSherlockActivity(),BaseFormActivity.class);
+            startActivity(i);
+        }
+    }
     
     protected class DetailCouponAdapter<T extends Coupon> extends
             CouponJSONAdapter<T> {
@@ -467,7 +470,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
                     //TextView timer = (TextView) v.findViewById(R.id.couponExipiry);  
                     TextView normalPrice = (TextView) v.findViewById(R.id.couponNormalPrice);  
                     CachedAsyncImageView image = (CachedAsyncImageView) v.findViewById(R.id.couponImage);
-                    
+                    image.setOnClickListener(this);
                     String urlImg = "http://www.cartaperdue.it/coupon/img_offerte/";
                     image.loadImageFromURL(urlImg+coupon.getUrlImmagine());
                     discount.setText(Html.fromHtml("<b> Sconto </b>" + "<br />"
@@ -541,6 +544,12 @@ public class DetailCouponListFragment extends SherlockListFragment implements
                 case R.id.rulesBtn:
                     Log.d("couponList","rules btn pressed");
                     loadWebPage(coupon.getCondizioni(),"Condizioni");
+                    break;
+                case R.id.couponImage:
+                    String urlImage = "http://www.cartaperdue.it/coupon/img_offerte/"+coupon.getUrlImmagine();
+                    Intent i = new Intent(getSherlockActivity(),FullImageActivity.class);
+                    i.putExtra("urlImage",urlImage);
+                    startActivity(i);
                     break;
             }
         }
