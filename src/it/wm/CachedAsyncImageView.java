@@ -1,6 +1,7 @@
 
 package it.wm;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -118,7 +119,8 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
         loadImageFromURL(url, -1, -1);
     }
     
-    public void loadImageFromURL(String url, int reqWidth, int reqHeight) {
+    @SuppressLint("NewApi")
+	public void loadImageFromURL(String url, int reqWidth, int reqHeight) {
         
         if (request != null) {
             request = null;

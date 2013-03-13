@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -147,7 +148,13 @@ public class VetrinaCoupon extends SherlockFragment implements HTTPAccess.Respon
     private void showCoupon() {
         Activity c;
         TextView tv;
-        
+        String html = "<style media=\"screen\" type=\"text/css\">" +
+        		"* {" +
+                "   font-size: 20%;" +
+                "}" +
+                "</style>" +
+                coupon.getDescrizione();
+
         c = getSherlockActivity();
         tv = (TextView) c.findViewById(R.id.pd_prezzo_tv);
         tv.setText(""+coupon.getValoreFacciale());
@@ -155,11 +162,12 @@ public class VetrinaCoupon extends SherlockFragment implements HTTPAccess.Respon
         tv.setText(""+coupon.getSconto());
         tv = (TextView) c.findViewById(R.id.pd_prezzo_originale_tv);
         tv.setText(""+coupon.getValoreAcquisto());
-        tv = (TextView) c.findViewById(R.id.pd_descrizione_tv);
-        tv.setText(""+coupon.getDescrizione());
+        
+        WebView wv = (WebView) c.findViewById(R.id.pd_descrizione_wv);
+        wv.loadData(html, "text/html", null);
         
         CachedAsyncImageView iv = (CachedAsyncImageView) c.findViewById(R.id.pd_imageView);
-        iv.loadScaledImageFromURL(coupon.getUrlImmagine());
+        iv.loadScaledImageFromURL("http://www.cartaperdue.it/coupon/img_offerte/" + coupon.getUrlImmagine());
         
         ProgressBar v = (ProgressBar) c.findViewById(R.id.pd_progressBar);
         v.setVisibility(View.INVISIBLE);
