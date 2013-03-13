@@ -13,4 +13,5 @@
 	<string name="reg_string">Per fruire dei servizi PerDue devi effettuare la registrazione a perdue.it</string>
 	<string name="mostratutteleofferte">Mostra tutte le offerte</string>
 	<string name="pd_coupondelgiorno">Coupon del giorno</string>
+	<string name="pd_visualizza_dettagli">Visualizza i dettagli</string>
 </resources>
