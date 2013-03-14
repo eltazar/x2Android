@@ -520,6 +520,12 @@ public class DetailCouponListFragment extends SherlockListFragment implements
             return v;
         }
         
+        public boolean isEnabled(int position) {
+            if(position == 0 || position == 1)
+                return false;
+            else return true;
+         }
+        
         private void setContactRows(String kind,String resource, int img, View v){
             TextView contactKind = (TextView) v.findViewById(R.id.contactKind);
             TextView contactResource = (TextView) v.findViewById(R.id.contactResource);
