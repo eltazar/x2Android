@@ -549,6 +549,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
                     String urlImage = "http://www.cartaperdue.it/coupon/img_offerte/"+coupon.getUrlImmagine();
                     Intent i = new Intent(getSherlockActivity(),FullImageActivity.class);
                     i.putExtra("urlImage",urlImage);
+                    i.putExtra("eseName",coupon.getNomeEsercente());
                     startActivity(i);
                     break;
             }

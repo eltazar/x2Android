@@ -2,17 +2,16 @@ package it.wm.perdue.coupon;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockActivity;
 
 import it.wm.CachedAsyncImageView;
 import it.wm.perdue.R;
 
-public class FullImageActivity extends SherlockFragmentActivity{
+public class FullImageActivity extends SherlockActivity{
     
     private CachedAsyncImageView image = null;
     
@@ -26,12 +25,14 @@ public class FullImageActivity extends SherlockFragmentActivity{
         bar.setTitle("Immagine");    
         LayoutInflater inflater = (LayoutInflater)   getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
         View view = inflater.inflate(R.layout.image_layout, null);
+        setContentView(view);
 
         Bundle extras = getIntent().getExtras();
         String urlImage = "";
-        Log.d("coupon","immagine = "+extras.getString("urlImage"));
+        
         if (extras != null) {
             urlImage = extras.getString("urlImage");
+            bar.setTitle(extras.getString("eseName"));    
         }
         
         image= (CachedAsyncImageView) view.findViewById(R.id.fullImage);
