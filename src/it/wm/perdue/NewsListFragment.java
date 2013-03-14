@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -26,25 +27,53 @@ public class NewsListFragment extends EndlessListFragment
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState); 
+
+    }
+  
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = super.onCreateView(inflater, container, null);
+        return v;
+    }
+    
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        //resetData();
         adapter = new NewsJSONListAdapter(
                 getActivity(),
                 R.layout.news_row,
                 Notizia[].class);
-        super.onCreate(savedInstanceState); 
         // Super. onCreate utilizza l'adapter in caso di config change, 
         // quindi va richiamato dopo averlo inizializzato
         urlString = "http://www.cartaperdue.it/partner/v2.0/News.php";
         postMap = new HashMap<String, String>();
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
+        super.onActivityCreated(savedInstanceState);
+    }
+    
+    @Override
+    public void onResume(){
+        listState = null;
+        super.onResume();
     }
     
     @Override
     public void onDestroy() {
         super.onDestroy();
-        httpAccess.setResponseListener(null);
     }
     
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        httpAccess.setResponseListener(null);
+        saveListState();
+    }
+    
+    protected void saveListState(){
+        Log.d("news","save liststate figlio");
+    }
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Bundle extras = new Bundle();
@@ -59,7 +88,7 @@ public class NewsListFragment extends EndlessListFragment
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
-        
+        Log.d("news","on http received");
         try{
             int n = ((NewsJSONListAdapter)adapter).addFromJSON(response);
         
@@ -68,7 +97,7 @@ public class NewsListFragment extends EndlessListFragment
         }
         setListShown(true);
         notifyDownloadEnded();
-        saveData(response);
+        //saveData(response);
         }
         catch(NullPointerException e){
             Log.d(DEBUG_TAG,"Eccezione in list fragment ---> "+e.getLocalizedMessage());
@@ -86,6 +115,7 @@ public class NewsListFragment extends EndlessListFragment
     
     @Override
     protected void downloadRows(int from) { 
+        Log.d("news","lancio query from ->"+from);
         postMap.put("from", "" + from);
         Boolean downloadStarted = httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST, postMap, null);
         if (downloadStarted) notifyDownloadStarted();
@@ -93,7 +123,8 @@ public class NewsListFragment extends EndlessListFragment
     
     @Override
     protected void restoreData(String data) {
-        ((NewsJSONListAdapter)adapter).addFromJSON(data);
+        //if(adapter != null)
+        //((NewsJSONListAdapter)adapter).addFromJSON(data);
     }
     
     
