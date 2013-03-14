@@ -45,6 +45,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
     protected static boolean                            isCoupon = false;
     protected static boolean                            isGenerico = false;
     protected CachedAsyncImageView                      cachedImg = null;
+    private   String                                    jsonData  = null;
 
     public static DettaglioEseListFragment newInstance(String eseId, boolean mode, boolean generic) {
         DettaglioEseListFragment fragment = new DettaglioEseListFragment();
@@ -102,20 +103,27 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         
         setListAdapter(adapter);
         
-        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET,
-                null, TAG_NORMAL);
-                
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Caricamento in corso...");
-        //progressDialog.setIndeterminate(true);
-        progressDialog.setCancelable(true); 
-//        progressDialog.setOnDismissListener(new DialogInterface.OnCancelListener(){
-//           @Override
-//           public void onCancel(DialogInterface dialog)
-//           {
-//               **** cleanup.  Not needed if not cancelable ****
-//           }});
-        progressDialog.show();
+        if(savedInstanceState != null){
+            Log.d("couponList","recupero stato jsonstring");
+            jsonData = savedInstanceState.getString("eseModel");
+            adapter.addFromJSON(jsonData);
+        }
+        else{
+            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET,
+                    null, TAG_NORMAL);
+            
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setMessage("Caricamento in corso...");
+            //progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(true); 
+            //        progressDialog.setOnDismissListener(new DialogInterface.OnCancelListener(){
+            //           @Override
+            //           public void onCancel(DialogInterface dialog)
+            //           {
+            //               **** cleanup.  Not needed if not cancelable ****
+            //           }});
+            progressDialog.show();
+        }
     }
     
     @Override
@@ -123,6 +131,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         super.onSaveInstanceState(outState);
         if (adapter.getCount() > 0) {
             outState.putInt("nRows", adapter.getCount());
+            outState.putString("eseModel", jsonData);
         }
         if (listState != null) {
             outState.putParcelable("listState", listState);
@@ -155,8 +164,13 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             // Se riceviamo un risultato non di ricerca, lo aggiungiamo sempre e
             // comunque:
             adapter.addFromJSON(response);
+            saveData(response);
         }
         progressDialog.dismiss();
+    }
+    
+    private void saveData(String jsonData){
+        this.jsonData = jsonData;
     }
     
     @Override
