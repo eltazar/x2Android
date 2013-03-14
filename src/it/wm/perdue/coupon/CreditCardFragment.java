@@ -150,7 +150,12 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
                 creditCard.setInstitute(0);            }
         });
         
-        creditCard = new CreditCard();
+        //recupero carta passata da activity precedente se esiste
+        creditCard = (CreditCard) getArguments().get("creditCard");
+        if(creditCard == null){
+            creditCard = new CreditCard();
+        }
+        
         return view;
     } 
 

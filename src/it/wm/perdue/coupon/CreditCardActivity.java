@@ -16,7 +16,6 @@ import it.wm.perdue.coupon.CreditCardFragment.OnCreditCardFormListener;
 public class CreditCardActivity extends SherlockFragmentActivity implements OnCreditCardFormListener{
     
     private static final String DEBUG_TAG  = "CreditcardActivity";
-    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,11 +24,13 @@ public class CreditCardActivity extends SherlockFragmentActivity implements OnCr
         bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME
                 | ActionBar.DISPLAY_SHOW_TITLE);
         bar.setTitle("Carta di credito");    
-        
+                
         //se prima volta istanzio il fragment, 
         //altrimenti era già stato istanziato e bisogna quindi ripristinare lo stato
         if(savedInstanceState == null){
             Fragment f = CreditCardFragment.newInstance();
+            //invio carta di credito al fragment se è stata creata in precedenza
+            f.setArguments(getIntent().getExtras());
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction =
                     fragmentManager.beginTransaction();

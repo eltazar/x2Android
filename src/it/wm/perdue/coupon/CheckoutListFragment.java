@@ -178,8 +178,9 @@ public class CheckoutListFragment extends SherlockListFragment implements
         if(position == 3){
             //riga carta di credito
             Intent intent = new Intent(getSherlockActivity(),CreditCardActivity.class);
-            //TODO: se già esiste mandare la carta di credito precedente
-            startActivityForResult( intent, 0);
+            //se già esiste mandare la carta di credito precedente
+            intent.putExtra("creditCard",  (CreditCard)dataModel.get("creditCard"));
+            startActivityForResult(intent, 0);
         }
         else{
             Intent i = new Intent(getActivity(), CouponsBaseActivity.class);
