@@ -107,6 +107,8 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
             Log.d("couponList","recupero stato jsonstring");
             jsonData = savedInstanceState.getString("eseModel");
             adapter.addFromJSON(jsonData);
+            if(cachedImg.getImageView().getDrawable()==null)
+                cachedImg.setVisibility(View.GONE);
         }
         else{
             httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET,
