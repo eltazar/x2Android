@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -182,10 +183,6 @@ public class CheckoutListFragment extends SherlockListFragment implements
             intent.putExtra("creditCard",  (CreditCard)dataModel.get("creditCard"));
             startActivityForResult(intent, 0);
         }
-        else{
-            Intent i = new Intent(getActivity(), CouponsBaseActivity.class);
-            startActivity(i);
-        }
         hideSoftKeyboard();
     }
     /*OnListItemClickListener END
@@ -343,11 +340,11 @@ public class CheckoutListFragment extends SherlockListFragment implements
                     break;
                 case 2:
                     //setto la mail con la quale ci si è loggati
-                    setUserData(v,"card");
+                    setUserData(v,"mail");
                     break;
                 case 3:
                     //setto numero carta di credito
-                    setUserData(v,"mail");
+                    setUserData(v,"card");
                     break;
                 case 4:
                     //setto compito del button
@@ -365,6 +362,12 @@ public class CheckoutListFragment extends SherlockListFragment implements
             //numero di tipi di riga + 1 dato che 2 righe sono dello stesso tipo
             return rows.length+1;
         }
+        
+        public boolean isEnabled(int position) {
+            if(position == 2)
+                return false;
+            else return true;
+         }
 
         private void setButtonProperties(View v){
             Button buyButton = (Button) v.findViewById(R.id.buyButton);
@@ -415,7 +418,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
             TextView dataType = (TextView)v.findViewById(R.id.dataType);
             TextView data = (TextView)v.findViewById(R.id.data);
             
-            if(type.equals("card")){
+            if(type.equals("mail")){
                 if(dataType != null){
                     dataType.setText("Utente");
                 }
@@ -423,8 +426,10 @@ public class CheckoutListFragment extends SherlockListFragment implements
                     //recupera i dati dal model relativi al login, se presenti
                     data.setText(((LoginData) dataModel.get("loginData")).getEmail());
                 }
-            }
-            else{
+                ImageView image = (ImageView)v.findViewById(R.id.user_data_img);
+                image.setVisibility(View.GONE);
+            }else if(type.equals("card")){
+                
                 if(dataType != null){
                     dataType.setText("Carta di credito");
                 }
@@ -486,7 +491,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
                         }
                         //aggiorno dataModel con amount convertito in stringa
                         dataModel.put("amount", amountItems+"");
-                        total.setText(String.format("%.2f", calculateTotal())+"€");
+                        total.setText(String.format("%.1f", calculateTotal())+"€");
                     }
                     
                     private double calculateTotal(){

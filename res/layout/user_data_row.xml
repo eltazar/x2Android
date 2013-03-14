@@ -27,5 +27,16 @@
         android:layout_marginLeft="15dp"
         android:text="il dato"
         style="@style/ShadowTextView"  />
+    
+    <ImageView
+        android:id="@+id/user_data_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/data"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="3dp"
+        android:src="@drawable/disclosure_arrow" />
 
 </RelativeLayout>
