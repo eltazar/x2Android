@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -25,7 +26,7 @@ public abstract class EndlessListFragment extends SherlockListFragment
     private static final String DEBUG_TAG   = "EndlessListFragment";
     protected LayoutInflater        inflater    = null;
     protected ListAdapter           adapter     = null;
-    private   Parcelable            listState   = null;
+    protected   Parcelable            listState   = null;
     private   int                   downloading = 0;
     private   boolean               noMoreData  = false;
     protected View                  footerView  = null;
@@ -34,34 +35,40 @@ public abstract class EndlessListFragment extends SherlockListFragment
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	// TODO Auto-generated method stub
     	super.onCreate(savedInstanceState);
-    	inflater = (LayoutInflater) getActivity()
-    			.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    	footerView = inflater.inflate(R.layout.endless_list_footer, null);
-    	if (footerView == null) {
-    		//Log.d(DEBUG_TAG, "footerView è null");
-    	} else 
-    		//Log.d(DEBUG_TAG, "footerView non è null");
-    	
-    	if (savedInstanceState != null) {
-            listState  = savedInstanceState.getParcelable(		Tags.LIST_STATE);
-            dataToSave = savedInstanceState.getStringArrayList(	Tags.DATA_TO_SAVE);
-            noMoreData = savedInstanceState.getBoolean(			Tags.NO_MORE_DATA);
+    }
+    
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        
+        inflater = (LayoutInflater) getActivity()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        footerView = inflater.inflate(R.layout.endless_list_footer, null);
+        if (footerView == null) {
+            //Log.d(DEBUG_TAG, "footerView è null");
+        } else 
+            //Log.d(DEBUG_TAG, "footerView non è null");
+        
+        if (savedInstanceState != null) {
+            listState  = savedInstanceState.getParcelable(      Tags.LIST_STATE);
+            dataToSave = savedInstanceState.getStringArrayList( Tags.DATA_TO_SAVE);
+            noMoreData = savedInstanceState.getBoolean(         Tags.NO_MORE_DATA);
             //Log.d(DEBUG_TAG, "dataToSave è: " + dataToSave);
         }
-        
+                
         if (dataToSave == null) dataToSave = new ArrayList<String>();
         
         for (String data : dataToSave) {
             restoreData(data);
         }
+        
+        return v;
     }
-    
     
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        super.onActivityCreated(savedInstanceState);        
         ListView lv = getListView();
         lv.addFooterView(footerView, null, false);
         lv.setOnScrollListener(this);
@@ -98,21 +105,34 @@ public abstract class EndlessListFragment extends SherlockListFragment
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        //da togliere in classi figlie che devono refresharsi ad ogni visita
+        //listState = getListView().onSaveInstanceState();
+        saveListState();
+    }
+    
+    protected void saveListState(){
         listState = getListView().onSaveInstanceState();
     }
     
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putStringArrayList(Tags.DATA_TO_SAVE, dataToSave);
-        outState.putBoolean(Tags.NO_MORE_DATA, noMoreData);
-        
-        if (listState != null) {
-            outState.putParcelable(Tags.LIST_STATE, listState);
-        } else {
-            outState.putParcelable(Tags.LIST_STATE, getListView().onSaveInstanceState());
+       
+        if(outState != null){
+            outState.putStringArrayList(Tags.DATA_TO_SAVE, dataToSave);
+            outState.putBoolean(Tags.NO_MORE_DATA, noMoreData);
+            
+            if (listState != null) {
+                outState.putParcelable(Tags.LIST_STATE, listState);
+            } else {
+                try{
+                    outState.putParcelable(Tags.LIST_STATE, getListView().onSaveInstanceState());
+                }
+                catch(IllegalStateException e){
+                    e.printStackTrace();
+                }
+            }
         }
-        
     }
     
     /* *** BEGIN: AbsListView.OnScrollListener **************** */
@@ -153,7 +173,7 @@ public abstract class EndlessListFragment extends SherlockListFragment
     }
     
     protected void resetData() {
-    	dataToSave.clear();
+    	if(dataToSave != null) dataToSave.clear();
     	downloading = 0;
     	noMoreData = false;
     }
