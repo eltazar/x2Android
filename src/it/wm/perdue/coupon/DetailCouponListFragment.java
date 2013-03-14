@@ -507,11 +507,11 @@ public class DetailCouponListFragment extends SherlockListFragment implements
                 }
                 else if(position == 4){
                     // telefono x2
-                    setContactRows("Numero verde","800 73 73 83",R.drawable.ic_phone, v);
+                    setContactRows("Contatta PerDue","800 73 73 83",R.drawable.ic_phone, v);
                 }
                 else if(position == 5){
                     //mail x2
-                    setContactRows("E-mail","redazione@cartaperdue.it",R.drawable.ic_mail, v);
+                    setContactRows("Scrivi a PerDue","redazione@cartaperdue.it",R.drawable.ic_mail, v);
                 }
                 else if(position == 6){
                     //faq x2
