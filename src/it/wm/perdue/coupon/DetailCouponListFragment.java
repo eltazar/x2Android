@@ -132,8 +132,10 @@ public class DetailCouponListFragment extends SherlockListFragment implements
         if(savedInstanceState != null){
             Log.d("couponList","recupero stato jsonstring");
             jsonString = savedInstanceState.getString("couponModel");
-            adapter.addFromJSON(jsonString);
-            setHeaderViews();
+            if(jsonString != null){
+                adapter.addFromJSON(jsonString);
+                setHeaderViews();
+            }
         }
     }
     
