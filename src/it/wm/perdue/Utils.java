@@ -13,6 +13,8 @@ import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 
 import com.google.android.maps.GeoPoint;
@@ -44,7 +46,7 @@ public final class Utils {
                                                                       +
                                                                       ")+"
                                                               );
-    public static Context context = null; // TODO: passare a private
+    private static Context context = null; 
     
     public static boolean checkEmail(String email) {
         return EMAIL_ADDRESS_PATTERN.matcher(email).matches();
@@ -322,5 +324,12 @@ public final class Utils {
         else {
             return String.format("%.2f", price);
         }
+    }
+    
+    public static boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager 
+              = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
