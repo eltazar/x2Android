@@ -157,10 +157,21 @@ public class CheckoutListFragment extends SherlockListFragment implements
           //ho ricevuto la carta di credito creata, la salvo nel model
           dataModel.put("creditCard", data.getExtras().get("creditCard"));
           //aggiorno la listView
-          ((BaseAdapter) getListView().getAdapter()).notifyDataSetChanged();
+          if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB){
+              updateCreditCardRow(((CreditCard)data.getExtras().get("creditCard")).getNumber());
+          }
+          else{
+              ((BaseAdapter) getListView().getAdapter()).notifyDataSetChanged();
+          }
       }
     }
     
+    private void updateCreditCardRow(String number){
+        View v = getListView().getChildAt(3 - 
+                getListView().getFirstVisiblePosition());
+             TextView data = (TextView) v.findViewById(R.id.data);
+             data.setText(number);
+    }
     /*OnListItemClickListener
      * */
     
@@ -362,6 +373,19 @@ public class CheckoutListFragment extends SherlockListFragment implements
         public int getCount() {
             //numero di tipi di riga + 1 dato che 2 righe sono dello stesso tipo
             return rows.length+1;
+        }
+        
+        @Override
+        public Integer getItem(int position){
+            if(position == 0)
+                return rows[0];
+            else if (position == 1)
+                return rows[1];
+            else if (position == 2 || position == 3)
+                return rows[2];
+            else if (position == 4)
+                return rows[3];
+            else return 0;
         }
         
         public boolean isEnabled(int position) {
