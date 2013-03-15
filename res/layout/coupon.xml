@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
 
-        android:background="#CCCCCC"
+        android:background="#e5e5e5"
          >
 
         <Button
@@ -20,7 +20,8 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
             android:enabled="false"
-            android:text="Compra" />
+            android:text="Compra"
+            android:background="@drawable/round_shape_button" />
 
         <TextView
             android:id="@+id/expiryString"
