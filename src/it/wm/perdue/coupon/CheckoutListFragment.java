@@ -31,6 +31,7 @@ import com.actionbarsherlock.app.SherlockListFragment;
 import it.wm.HTTPAccess;
 import it.wm.perdue.LoggingHandler;
 import it.wm.perdue.R;
+import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.CreditCard;
 import it.wm.perdue.businessLogic.LoginData;
 
@@ -378,17 +379,25 @@ public class CheckoutListFragment extends SherlockListFragment implements
                         hideSoftKeyboard();
                         String result = "ok";
                         CreditCard creditCard = (CreditCard) dataModel.get("creditCard");
-                        if(amountItems <= 0){
-                            result = "Devi inserire almeno un coupon";                
-                        }                       
-                        if(creditCard == null || !creditCard.isComplete()){
-                            result = "Inserisci i dati della carta di credito";
-                        }
                         
-                        if(result.equals("ok")){
-                            launchBuyAlert(context);
+                        //se rete disponibile lancio procedura di acquisto...
+                        if(Utils.isNetworkAvailable()){
+                            if(amountItems <= 0){
+                                result = "Devi inserire almeno un coupon";                
+                            }                       
+                            if(creditCard == null || !creditCard.isComplete()){
+                                result = "Inserisci i dati della carta di credito";
+                            }
+                            
+                            if(result.equals("ok")){
+                                launchBuyAlert(context);
+                            }
                         }
                         else{
+                            result = "Connessione di rete non disponibile, verifica la connessione e riprova";
+                        }
+                        
+                        if(! result.equals("ok")){
                             AlertDialog.Builder builder = new Builder(context);
                             builder.setTitle("Attenzione");
                             builder.setMessage(result);
@@ -399,7 +408,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
                                 }
                             });
                             builder.create().show();    
-                        }
+                        } 
                     }
                 });
             }
