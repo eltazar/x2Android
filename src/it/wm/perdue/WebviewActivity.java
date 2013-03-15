@@ -10,6 +10,9 @@ import com.actionbarsherlock.app.SherlockActivity;
 
 import it.wm.HTTPAccess;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 public class WebviewActivity extends SherlockActivity implements HTTPAccess.ResponseListener {
     
     protected HTTPAccess          httpAccess           = null;
@@ -56,7 +59,12 @@ public class WebviewActivity extends SherlockActivity implements HTTPAccess.Resp
     }
     
     protected void loadPage(String contentString){
-        webView.loadData(content, "text/html", "UTF-8");
+        try {
+            //fonte: http://stackoverflow.com/questions/10317977/web-page-at-datatext-html-not-available-with-certain-webview-text-html-cont
+            webView.loadData(URLEncoder.encode(content,"utf-8").replaceAll("\\+"," "), "text/html", "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
     
     protected void loadPageUrl(String urlContent){
