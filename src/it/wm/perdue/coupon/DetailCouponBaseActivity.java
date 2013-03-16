@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
-import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 
@@ -25,11 +24,11 @@ import it.wm.perdue.coupon.DetailCouponListFragment.OnCouponActionListener;
 
 public class DetailCouponBaseActivity extends SherlockFragmentActivity implements OnCouponActionListener, OnLoggingHandlerListener {
     
-    private static final String DEBUG_TAG  = "DetailCouponBaseActivity";
-    private static final String COUPON_FRAGMENT_TAG = "CouponFragmentTag";
-    private int              idCoupon    = -1;
+    private static final String        DEBUG_TAG  = "DetailCouponBaseActivity";
+    private static final String        COUPON_FRAGMENT_TAG = "CouponFragmentTag";
+    private int                        idCoupon    = -1;
     private static String              currentFragment = COUPON_FRAGMENT_TAG;
-    
+    private ShareActionProvider        mShareActionProvider = null;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,11 +97,7 @@ public class DetailCouponBaseActivity extends SherlockFragmentActivity implement
         //se il fragment è quello del coupon inserisco pulsanti
         if(currentFragment.equals(COUPON_FRAGMENT_TAG)){
             // Locate MenuItem with ShareActionProvider
-            ShareActionProvider mShareActionProvider = (ShareActionProvider) shareItem.getActionProvider();
-            Intent intent = getDefaultShareIntent();
-            if (intent != null) {
-                mShareActionProvider.setShareIntent(intent);
-            }
+            mShareActionProvider = (ShareActionProvider) shareItem.getActionProvider();
             if(LoggingHandler.isLogged()){
                 logoutItem.setVisible(true); 
             }
@@ -137,20 +132,26 @@ public class DetailCouponBaseActivity extends SherlockFragmentActivity implement
         return super.onOptionsItemSelected(item);
     }
     
-    private Intent getDefaultShareIntent() {
+    private Intent setShareIntent(Coupon c) {
+        
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        Coupon c = ((DetailCouponListFragment) getSupportFragmentManager().findFragmentByTag(COUPON_FRAGMENT_TAG)).adapter.getObject();
+        //Coupon c = ((DetailCouponListFragment) getSupportFragmentManager().findFragmentByTag(COUPON_FRAGMENT_TAG)).adapter.getObject();
         if(c != null){
-            String url = "http://www.cartaperdue.it/coupon/dettaglio_affare.jsp?idofferta="+c.getID();
-            String content = "<b>Descrizione:</b>"+c.getTitoloBreve()+
+            String contentUrl = "http://www.cartaperdue.it/coupon/dettaglio_affare.jsp?idofferta="+c.getID();
+            /*String content = "<b>Descrizione:</b>"+c.getTitoloBreve()+
                     "<b>Prezzo coupon:</b>"+ c.getValoreAcquisto()+"€"+
                     "<b>Invece di:</b>"+c.getValoreFacciale()+"€"+
                     "</b>Risparmio: </b>"+c.getSconto()+"€"+
-                    "<b>Link:</b>"+"<a href=\""+url+"\">Apri offerta</a>";  
+                    "<b>Link:</b>"+"<a href=\""+url+"\">Apri offerta</a>"; */
             intent.putExtra(Intent.EXTRA_SUBJECT, "Offerta coupon PerDue");
-            intent.putExtra(Intent.EXTRA_TEXT,Html.fromHtml(content));
+            intent.putExtra(Intent.EXTRA_TEXT, contentUrl);
         }
+        
+        if (mShareActionProvider != null && intent != null) {
+            mShareActionProvider.setShareIntent(intent);
+        }
+        
         return intent;
     }
     
@@ -180,6 +181,11 @@ public class DetailCouponBaseActivity extends SherlockFragmentActivity implement
     @Override
     public void onDidLogout() {
         invalidateOptionsMenu ();
+    }
+    
+    @Override
+    public void onDidReceiveCoupon(Coupon c) {
+        setShareIntent(c);        
     }
     
     private void backToPreviousFragment(){        

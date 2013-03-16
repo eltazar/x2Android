@@ -68,6 +68,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     
     public interface OnCouponActionListener{
         public void onDidCheckout(Coupon c);
+        public void onDidReceiveCoupon(Coupon c);
     }
     
     @Override
@@ -238,6 +239,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
             adapter.addFromJSON(response);
             jsonString = response;
             setHeaderViews();
+            listener.onDidReceiveCoupon(adapter.getObject());
         }
         progressDialog.dismiss();
     }
