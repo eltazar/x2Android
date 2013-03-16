@@ -14,4 +14,5 @@
 	<string name="mostratutteleofferte">Mostra tutte le offerte</string>
 	<string name="pd_coupondelgiorno">Coupon del giorno</string>
 	<string name="pd_visualizza_dettagli">Visualizza i dettagli</string>
+	<string name="security_info">I tuoi dati e quelli della tua carta di credito sono archiviati esclusivamente sul tuo smartphone per facilitarti i prossimi acquisti. I dati della carta di credito non vengono conservati sul server. La trasmissione delle informazioni  per ogni signolo acquisto avviene utilizzando le più recenti e sicure tecnologie disponibili per assicurare la massima sicurezza, su una connessione cifrata SSL (Secure Socket Layer), e i dati non vengono conservati sul server.</string>
 </resources>
