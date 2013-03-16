@@ -1,6 +1,7 @@
 package it.wm.perdue.coupon;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,7 +25,11 @@ public class CreditCardActivity extends SherlockFragmentActivity implements OnCr
         bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME
                 | ActionBar.DISPLAY_SHOW_TITLE);
         bar.setTitle("Carta di credito");    
-                
+        
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+        
         //se prima volta istanzio il fragment, 
         //altrimenti era già stato istanziato e bisogna quindi ripristinare lo stato
         if(savedInstanceState == null){
