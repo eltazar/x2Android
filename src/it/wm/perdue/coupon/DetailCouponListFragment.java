@@ -297,7 +297,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
               }
 
               public void onFinish() {
-                  expiryTimerTextView.setText(Html.fromHtml("<b>Scade tra:</b> offerta scaduta - 2"));
+                  expiryTimerTextView.setText(Html.fromHtml("<b>Scade tra:</b> offerta scaduta"));
                   buyButton.setEnabled(false);
               }
 
@@ -327,7 +327,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
         } 
         else {
             secondsLeft = 0;
-            expiryTimerTextView.setText(Html.fromHtml("<b>Scade tra:</b> offerta scaduta - 1"));
+            expiryTimerTextView.setText(Html.fromHtml("<b>Scade tra:</b> offerta scaduta"));
             buyButton.setEnabled(false);
             //annullo il timer quando scade il countDown
             countDownTimer.cancel();
