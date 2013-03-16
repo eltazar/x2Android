@@ -1,6 +1,8 @@
 package it.wm.perdue.coupon;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -109,11 +111,14 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
     // onCreateView
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        
         View view = inflater.inflate(R.layout.credit_card_form, container, false);
         
         Button doneBtn = (Button) view.findViewById(R.id.saveCardBtn);
         doneBtn.setOnClickListener(this);
-    
+        Button infoBtn = (Button) view.findViewById(R.id.securityInfoBtn);
+        infoBtn.setOnClickListener(this);
+        
         numberEditText = (EditText) view.findViewById(R.id.creditNumber);
         numberEditText.setOnFocusChangeListener(this);
         numberEditText.setOnEditorActionListener(this);
@@ -176,6 +181,9 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
                     showErrorMessage(result);
                 }
                 break;
+            case R.id.securityInfoBtn:
+                showAlert("Acquisti sicuri",getResources().getString(R.string.security_info));
+                break;
             default:
                 break;
         }
@@ -215,6 +223,13 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
     
     /*Metodi privati
      * */
+    
+    private void showAlert(String title, String message){
+        AlertDialog.Builder builder = new Builder(getSherlockActivity());
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.create().show();
+    }
     
     //salva info nella carta di credito
     private void saveIntoModel(){
