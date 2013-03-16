@@ -212,9 +212,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
         if(progressDialog != null) hideProgressDialog();
-        
-        Log.d("SERVER","RISPOSTA = ->"+response);
-        
+                
         if(response.equals("Ok")){
             showAlert("Complimenti","La tua richiesta verrà processata dai nostri sistemi e a breve riceverai una mail di conferma.\n Condividi subito questa offerta!");
         }
@@ -225,7 +223,6 @@ public class CheckoutListFragment extends SherlockListFragment implements
 
     @Override
     public void onHTTPerror(String tag) {
-        Log.d("SERVER","SERVER FAIL ->"+tag);
         if(progressDialog != null) hideProgressDialog();
         showAlert("Spiacenti","Non è stato possibile processare la tua richiesta, riprovare!");
     }
