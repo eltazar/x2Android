@@ -159,7 +159,7 @@ public class VetrinaCoupon extends SherlockFragment implements HTTPAccess.Respon
             }
 
             public void onFinish() {
-                timerLbl.setText("Tempo scaduto2");
+                timerLbl.setText("Tempo scaduto");
             }
          }.start();
     }
@@ -168,32 +168,37 @@ public class VetrinaCoupon extends SherlockFragment implements HTTPAccess.Respon
     private void showCoupon() {
         Activity c;
         TextView tv;
-        String html =  "<style media=\"screen\" type=\"text/css\">" +
-        		"* {                     " +
-                "   font-size: 10pt;      " +
-        		"   text-align: justify; " +
-                "   margin: 0;           " +
-                "   padding: 0;          " +
-                "}                       " +
-                "</style>                " + 
-                coupon.getDescrizioneBreve();
-
         c = getSherlockActivity();
-        tv = (TextView) c.findViewById(R.id.pd_titolo);
-        tv.setText(coupon.getTitoloBreve());
-        tv = (TextView) c.findViewById(R.id.pd_prezzo_tv);
-        tv.setText("Solo "+coupon.getValoreAcquisto() + "Û");
-        tv = (TextView) c.findViewById(R.id.pd_sconto_tv);
-        tv.setText(coupon.getScontoPer());
-        tv = (TextView) c.findViewById(R.id.pd_prezzo_originale_tv);
-        tv.setText(""+coupon.getValoreFacciale()+"Û");
         
-        WebView wv = (WebView) c.findViewById(R.id.pd_descrizione_wv);
-        wv.loadData(html, "text/html", null);
-        
-        CachedAsyncImageView iv = (CachedAsyncImageView) c.findViewById(R.id.pd_imageView);
-        iv.loadScaledImageFromURL("http://www.cartaperdue.it/coupon/img_offerte/" + coupon.getUrlImmagine());
-        
+        try{
+            String html =  "<style media=\"screen\" type=\"text/css\">" +
+                    "* {                     " +
+                    "   font-size: 10pt;      " +
+                    "   text-align: justify; " +
+                    "   margin: 0;           " +
+                    "   padding: 0;          " +
+                    "}                       " +
+                    "</style>                " + 
+                    coupon.getDescrizioneBreve();
+            
+            tv = (TextView) c.findViewById(R.id.pd_titolo);
+            tv.setText(coupon.getTitoloBreve());
+            tv = (TextView) c.findViewById(R.id.pd_prezzo_tv);
+            tv.setText("Solo "+coupon.getValoreAcquisto() + "â‚¬");
+            tv = (TextView) c.findViewById(R.id.pd_sconto_tv);
+            tv.setText(coupon.getScontoPer());
+            tv = (TextView) c.findViewById(R.id.pd_prezzo_originale_tv);
+            tv.setText(""+coupon.getValoreFacciale()+"â‚¬");
+            
+            WebView wv = (WebView) c.findViewById(R.id.pd_descrizione_wv);
+            wv.loadData(html, "text/html", null);
+            
+            CachedAsyncImageView iv = (CachedAsyncImageView) c.findViewById(R.id.pd_imageView);
+            iv.loadScaledImageFromURL("http://www.cartaperdue.it/coupon/img_offerte/" + coupon.getUrlImmagine());
+        }
+        catch(NullPointerException e){
+            e.printStackTrace();
+        }
         ProgressBar pb = (ProgressBar) c.findViewById(R.id.pd_progressBar);
         pb.setVisibility(View.INVISIBLE);
         View v = (View) c.findViewById(R.id.cover);
@@ -220,7 +225,7 @@ public class VetrinaCoupon extends SherlockFragment implements HTTPAccess.Respon
         } 
         else {
             secondsLeft = 0;
-            timerLbl.setText("tempo scaduto1");
+            timerLbl.setText("tempo scaduto");
             //annullo il timer quando scade il countDown
             countDownTimer.cancel();
         }
