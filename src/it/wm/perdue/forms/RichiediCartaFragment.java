@@ -63,7 +63,8 @@ public class RichiediCartaFragment extends UserFormFragment implements
     
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(TAG_CARD,cardSpinner.getSelectedItemPosition());
+        if(outState != null)
+            outState.putInt(TAG_CARD,cardSpinner.getSelectedItemPosition());
         super.onSaveInstanceState(outState);
     }
     // onCreateView
