@@ -83,10 +83,15 @@ public class VetrinaCoupon extends SherlockFragment implements HTTPAccess.Respon
             @Override
             public void onClick(View v) {
                 Bundle extras = new Bundle();
+                try{
                 extras.putInt("couponId", coupon.getID());
                 Intent intent = new Intent(getActivity(), DetailCouponBaseActivity.class);
                 intent.putExtras(extras);
                 startActivity(intent);
+                }
+                catch(NullPointerException e){
+                    e.printStackTrace();
+                }
             }
         });
         
