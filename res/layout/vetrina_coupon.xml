@@ -2,17 +2,17 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ScrollView1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/pd_vetrina_coupon_background_color" >
 
     <RelativeLayout
         android:id="@+id/RelativeLayout1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/pd_vetrina_coupon_background_color"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
         <RelativeLayout
-            android:id="@+id/RelativeLayout2"
+            android:id="@+id/pd_cdelgiorno"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -21,8 +21,8 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="20dp"
-            android:layout_weight="0.9"
-            android:background="@drawable/pd_vetrina_coupon_cdelgiorno"
+            android:background="@drawable/pd_vetrina_coup_cdelgiorno"
+            android:clickable="true"
             android:gravity="center_horizontal|center" >
 
             <TextView
@@ -36,7 +36,8 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="2dp"
-                android:text="@string/pd_coupondelgiorno" />
+                android:text="@string/pd_coupondelgiorno"
+                android:textSize="14sp" />
 
             <View
                 android:id="@+id/view1"
@@ -49,75 +50,121 @@
                 android:layout_marginRight="5dp"
                 android:background="@color/pd_action_bar_red" />
 
+            <TextView
+                android:id="@+id/pd_titolo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/view1"
+                android:layout_alignRight="@id/view1"
+                android:layout_below="@id/view1"
+                android:layout_marginTop="5dp"
+                android:gravity="right"
+                android:text="TextView"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
             <FrameLayout
                 android:id="@+id/frameLayout1"
                 android:layout_width="100dp"
-                android:layout_height="70dp"
+                android:layout_height="100dp"
                 android:layout_alignLeft="@id/view1"
-                android:layout_below="@id/view1"
-                android:layout_marginTop="14dp" >
+                android:layout_below="@id/pd_titolo"
+                android:layout_marginTop="14dp"
+                android:minHeight="70dp" >
 
                 <it.wm.CachedAsyncImageView
                     android:id="@+id/pd_imageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:minHeight="70dp"
                     android:src="@drawable/ristoranti" />
+
             </FrameLayout>
 
-            <TextView
-                android:id="@+id/textView2"
+            <RelativeLayout
+                android:id="@+id/relativeLayout3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/view1"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="14dp"
-                android:layout_toRightOf="@+id/frameLayout1"
-                android:text="TextView" />
+                android:layout_alignRight="@id/view1"
+                android:layout_below="@id/pd_titolo"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="10dp" >
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/textView2"
-                android:layout_below="@+id/textView2"
-                android:text="TextView" />
+                <FrameLayout
+                    android:id="@+id/frameLayout2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_toRightOf="@+id/frameLayout1" >
 
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/textView3"
-                android:layout_below="@+id/textView3"
-                android:text="TextView" />
+                    <TextView
+                        android:id="@+id/pd_prezzo_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/rounded_edges"
+                        android:gravity="center"
+                        android:padding="7dp"
+                        android:text="Solo 3€"
+                        android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/pd_prezzo_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/textView2"
-                android:layout_alignBottom="@+id/textView2"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@id/textView2"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/pd_sconto_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/textView3"
-                android:layout_alignBottom="@+id/textView3"
-                android:layout_alignLeft="@+id/pd_prezzo_tv"
-                android:text="TextView" />
+                </FrameLayout>
+                
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/frameLayout2"
+                    android:layout_marginTop="5dp"
+                    android:text="Prezzo intero"
+                    android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/pd_prezzo_originale_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/textView4"
-                android:layout_alignBottom="@+id/textView4"
-                android:layout_alignLeft="@+id/pd_sconto_tv"
-                android:text="TextView" />
+                android:layout_alignBaseline="@id/textView4"
+                android:layout_alignBottom="@id/textView4"
+                android:layout_alignLeft="@id/pd_titolo"
+                android:layout_marginLeft="8dp"
+                android:layout_toRightOf="@id/textView4"
+                android:gravity="right"
+                android:text="TextView"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/textView4"
+                android:layout_below="@id/textView4"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Sconto"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/pd_sconto_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/textView3"
+                android:layout_alignLeft="@id/pd_prezzo_originale_tv"
+                android:layout_toRightOf="@id/textView3"
+                android:gravity="right"
+                android:text="TextView"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            </RelativeLayout>
+
+            
 
             <android.webkit.WebView
                 android:id="@+id/pd_descrizione_wv"
@@ -127,27 +174,61 @@
                 android:layout_alignRight="@+id/view1"
                 android:layout_below="@id/frameLayout1"
                 android:layout_marginBottom="10dp"
-                android:layout_marginTop="15dp" />
+                android:layout_marginTop="15dp"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:longClickable="false"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/textView1"
+                android:layout_below="@id/frameLayout1"
+                android:layout_marginBottom="5dp"
+                android:text="@string/scadetra"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/pd_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/textView2"
+                android:layout_alignRight="@+id/relativeLayout3"
+                android:layout_toRightOf="@id/textView2"
+                android:gravity="right"
+                android:minHeight="10dp"
+                android:text="TextView" />
 
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
-                android:layout_height="17dp"
-                android:layout_alignParentBottom="false"
-                android:layout_below="@id/pd_descrizione_wv"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="1dp"
+                android:layout_height="20dp"
+                android:layout_alignLeft="@+id/textView1"
+                android:layout_alignRight="@+id/pd_timer"
+                android:layout_below="@id/textView2"
+                android:gravity="center"
                 android:shadowColor="@color/abs__background_holo_dark"
                 android:shadowDx="1"
                 android:shadowDy="1"
                 android:text="@string/pd_visualizza_dettagli"
                 android:textColor="@color/white" />
 
+            <View
+                android:id="@+id/cover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/textView2"
+                android:layout_below="@id/view1"
+                android:background="@color/white" />
+
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/pd_descrizione_wv"
-                android:layout_below="@id/textView1"
+                android:layout_alignBottom="@id/textView2"
+                android:layout_below="@id/view1"
                 android:layout_centerHorizontal="true" >
 
                 <ProgressBar
@@ -159,17 +240,17 @@
                     android:layout_alignParentStart="false"
                     android:layout_gravity="center" />
             </FrameLayout>
+
         </RelativeLayout>
 
         <Button
             android:id="@+id/pd_tutte_le_offerte_btn"
             android:layout_width="248dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/RelativeLayout2"
+            android:layout_below="@id/pd_cdelgiorno"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:layout_weight="1"
-            android:background="@drawable/pd_vetrina_coupon_tutteleofferte"
+            android:background="@drawable/pd_vetrina_coup_tutteleofferte"
             android:text="@string/mostratutteleofferte"
             android:textColor="@color/white" />
 
@@ -179,7 +260,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/RelativeLayout2"
+            android:layout_below="@id/pd_cdelgiorno"
             android:layout_gravity="fill_horizontal"
             android:layout_marginTop="30dp"
             android:layout_weight="0" >
@@ -190,8 +271,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_weight="0" />
+            android:layout_alignParentLeft="true" />
     </RelativeLayout>
 
 </ScrollView>
