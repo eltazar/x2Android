@@ -20,7 +20,8 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
             android:enabled="false"
-            android:text="Compra"/>
+            android:text="Compra"
+            android:background="@drawable/coupon_buy_button"/>
 
         <TextView
             android:id="@+id/expiryString"
