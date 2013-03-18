@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -27,7 +28,6 @@ import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.Coupon;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -37,43 +37,38 @@ import java.util.concurrent.TimeUnit;
  *
  */
 public class VetrinaCoupon extends SherlockFragment implements HTTPAccess.ResponseListener {
-    
-    private static final String TAG_NORMAL      = "normal";
     private Coupon         coupon = null;
     
     // Gestione dei download:
     private HTTPAccess httpAccess = null;
     private String     urlString  = null;
-  
-    private TextView       timer = null;
+    // Timer
+    private TextView       timerLbl      = null;
     private CountDownTimer countDownTimer = null;
         
     
-    
-    // onAttach
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
     }
     
-    // onCreate
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
     
-    // onActivityCreated
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
     
-    // onCreateView
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.vetrina_coupon, container, false);
-        Button button = (Button) view.findViewById(R.id.pd_tutte_le_offerte_btn);
-        button.setOnClickListener(new View.OnClickListener() {
+        timerLbl = (TextView) view.findViewById(R.id.pd_timer);
+        timerLbl.setText("CountDownTimer");
+        Button tutteleofferteBtn = (Button) view.findViewById(R.id.pd_tutte_le_offerte_btn);
+        tutteleofferteBtn.setOnClickListener(new View.OnClickListener() {
             
             @Override
             public void onClick(View v) {
@@ -82,39 +77,73 @@ public class VetrinaCoupon extends SherlockFragment implements HTTPAccess.Respon
             }
         });
         
+        RelativeLayout cdelgiornoLayout = (RelativeLayout) view.findViewById(R.id.pd_cdelgiorno);
+        cdelgiornoLayout.setOnClickListener(new View.OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+                Bundle extras = new Bundle();
+                extras.putInt("couponId", coupon.getID());
+                Intent intent = new Intent(getActivity(), DetailCouponBaseActivity.class);
+                intent.putExtras(extras);
+                startActivity(intent);
+            }
+        });
+        
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
-        /*timer = (TextView) view.findViewById(R.id.timer);
-        
-        timer.setText("CountDownTimer");*/
-        
         return view;
     }
     
     @Override
     public void onResume (){
         super.onResume();
-        Log.d("TIMER", "on resume");
-        
-        long millisTot = 0;
-        
         urlString = "http://www.cartaperdue.it/partner/android/coupon2.php?prov=" + "Roma";
         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET, null, null);
         
+    }
+    
+    
+    @Override
+    public void onStop (){
+        super.onStop();
+        Log.d("TIMER","ON STOP");
+        //annullo il timer quando la view non è più visibile
+        countDownTimer.cancel();
+    }
+    
+    
+    /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
+    @Override
+    public void onHTTPResponseReceived(String tag, String response) {
+        Log.d("TIMER", " RISPOSTA = "+response);
+        addFromJSON(response);
+        showCoupon();
+        setTimer();
+    }
+    
+    
+    @Override
+    public void onHTTPerror(String tag) {
+        //Log.d("XXX", "ERRORE INVIO ->" + tag);
+     
+    }
+    /* *** END: HTTPAccess.ResponseListener ****************** */
+    
+    
+    public void setTimer() {
+        Log.d("TIMER", "on resume");
+        long millisTot = 0;
+
         Date now = new Date();
+        Date expiry = coupon.getFineValidita();
         DateFormat formatter = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
-       
-        try {
-            Date scad = formatter.parse("2013-02-28 23:59:00");
-            String scadT = formatter.format(scad);
-            Log.d("TIMER","data di scad ---> "+scadT);
-            Log.d("TIMER", "data now --->"+formatter.format(now));
-            millisTot = scad.getTime() - now.getTime();
-            Log.d("Timer","millisecondti minutes = "+millisTot);
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        String scadT = formatter.format(expiry);
+        Log.d("TIMER","data di scad ---> "+scadT);
+        Log.d("TIMER", "data now --->"+formatter.format(now));
+        millisTot = expiry.getTime() - now.getTime();
+        Log.d("Timer","millisecondti minutes = " + millisTot);
+        
 
         //su ios facevo così, qui non so se serve... 
         if(countDownTimer != null){
@@ -126,42 +155,38 @@ public class VetrinaCoupon extends SherlockFragment implements HTTPAccess.Respon
             int count = 0;
             public void onTick(long millisUntilFinished) {
                 //Log.d("COUNT","COUNT = "+(count++));
-                //Log.d("Timer","millisUntilFinished = "+millisUntilFinished);
-                countDown(millisUntilFinished);
+                updateTimer(millisUntilFinished);
             }
 
             public void onFinish() {
-                //timer.setText("Tempo scaduto2");
+                timerLbl.setText("Tempo scaduto2");
             }
          }.start();
-    }
-    
-    @Override
-    public void onStop (){
-        super.onStop();
-        Log.d("TIMER","ON STOP");
-        //annullo il timer quando la view non è più visibile
-        countDownTimer.cancel();
     }
     
     
     private void showCoupon() {
         Activity c;
         TextView tv;
-        String html = "<style media=\"screen\" type=\"text/css\">" +
-        		"* {" +
-                "   font-size: 20%;" +
-                "}" +
-                "</style>" +
-                coupon.getDescrizione();
+        String html =  "<style media=\"screen\" type=\"text/css\">" +
+        		"* {                     " +
+                "   font-size: 10pt;      " +
+        		"   text-align: justify; " +
+                "   margin: 0;           " +
+                "   padding: 0;          " +
+                "}                       " +
+                "</style>                " + 
+                coupon.getDescrizioneBreve();
 
         c = getSherlockActivity();
+        tv = (TextView) c.findViewById(R.id.pd_titolo);
+        tv.setText(coupon.getTitoloBreve());
         tv = (TextView) c.findViewById(R.id.pd_prezzo_tv);
-        tv.setText(""+coupon.getValoreFacciale());
+        tv.setText("Solo "+coupon.getValoreAcquisto() + "�");
         tv = (TextView) c.findViewById(R.id.pd_sconto_tv);
-        tv.setText(""+coupon.getSconto());
+        tv.setText(coupon.getScontoPer());
         tv = (TextView) c.findViewById(R.id.pd_prezzo_originale_tv);
-        tv.setText(""+coupon.getValoreAcquisto());
+        tv.setText(""+coupon.getValoreFacciale()+"�");
         
         WebView wv = (WebView) c.findViewById(R.id.pd_descrizione_wv);
         wv.loadData(html, "text/html", null);
@@ -169,33 +194,20 @@ public class VetrinaCoupon extends SherlockFragment implements HTTPAccess.Respon
         CachedAsyncImageView iv = (CachedAsyncImageView) c.findViewById(R.id.pd_imageView);
         iv.loadScaledImageFromURL("http://www.cartaperdue.it/coupon/img_offerte/" + coupon.getUrlImmagine());
         
-        ProgressBar v = (ProgressBar) c.findViewById(R.id.pd_progressBar);
+        ProgressBar pb = (ProgressBar) c.findViewById(R.id.pd_progressBar);
+        pb.setVisibility(View.INVISIBLE);
+        View v = (View) c.findViewById(R.id.cover);
         v.setVisibility(View.INVISIBLE);
     }
-    
-    
-    /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
-    @Override
-    public void onHTTPResponseReceived(String tag, String response) {
-        Log.d("TIMER", " RISPOSTA = "+response);
-        addFromJSON(response);
-        showCoupon();
-    }
-    
-    @Override
-    public void onHTTPerror(String tag) {
-        //Log.d("XXX", "ERRORE INVIO ->" + tag);
-     
-    }
-    /* *** END: HTTPAccess.ResponseListener ****************** */
 
  
-    private void countDown(long millisUntilFinished){
+    private void updateTimer(long millisUntilFinished){
         long days;
         long minutes;
         long seconds;
         long hours;
         long secondsLeft = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished);
+        
         
         if (secondsLeft > 0) {
             secondsLeft = secondsLeft - 1;
@@ -204,16 +216,16 @@ public class VetrinaCoupon extends SherlockFragment implements HTTPAccess.Respon
             minutes = (secondsLeft - ((hours * 3600) + (days * 24 * 3600))) / 60;
             seconds = secondsLeft % 60;
             
-            timer.setText(days+"g "+hours+"h "+minutes+"m "+ seconds+"s");
+            timerLbl.setText(days+"g "+hours+"h "+minutes+"m "+ seconds+"s");
         } 
         else {
             secondsLeft = 0;
-            timer.setText("tempo scaduto1");
+            timerLbl.setText("tempo scaduto1");
             //annullo il timer quando scade il countDown
             countDownTimer.cancel();
         }
-        
     }
+    
     
     public void addFromJSON(String jsonString) {
         jsonString = Utils.formatJSON(jsonString);
