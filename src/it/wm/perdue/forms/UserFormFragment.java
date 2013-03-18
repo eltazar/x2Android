@@ -108,10 +108,16 @@ import java.util.HashMap;
         
         @Override
         public void onSaveInstanceState(Bundle outState) {
-            outState.putString(TAG_MAIL,mailEditText.getText().toString());
-            outState.putString(TAG_NAME,nameEditText.getText().toString());
-            outState.putString(TAG_SURNAME,surnameEditText.getText().toString());
-            outState.putString(TAG_TEL,telEditText.getText().toString());
+            try{
+                outState.putString(TAG_MAIL,mailEditText.getText().toString());
+                outState.putString(TAG_NAME,nameEditText.getText().toString());
+                outState.putString(TAG_SURNAME,surnameEditText.getText().toString());
+                outState.putString(TAG_TEL,telEditText.getText().toString());
+            }
+            catch(NullPointerException e){
+                e.printStackTrace();
+            }
+            
             super.onSaveInstanceState(outState);
         }   
         
