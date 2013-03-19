@@ -57,6 +57,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     //dati esercente
     protected String                                    eseId      = null;
     private Button                                      buyButton = null;
+    private ImageButton                                 refreshButton = null;
     private TextView                                    offerTextView = null;
     private TextView                                    expiryTimerTextView = null;
     private OnCouponActionListener                      listener = null;
@@ -147,6 +148,8 @@ public class DetailCouponListFragment extends SherlockListFragment implements
       View view = inflater.inflate(R.layout.coupon, container, false);
       buyButton = (Button) view.findViewById(R.id.buyButton);
       buyButton.setOnClickListener(this);
+      refreshButton = (ImageButton) view.findViewById(R.id.refreshBtn);
+      refreshButton.setOnClickListener(this);
       offerTextView = (TextView) view.findViewById(R.id.summaryTextView);
       offerTextView.setText("Caricamento...");
       expiryTimerTextView = (TextView)view.findViewById(R.id.expiryString);
@@ -233,8 +236,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     @Override
     public void onHTTPResponseReceived(String tag, String response) {        
         Log.d("couponList", "RISPOSTA = " + response);
-        buyButton.setEnabled(true);
-        
+
         if (tag.equals(TAG_NORMAL)) {
             adapter.addFromJSON(response);
             jsonString = response;
@@ -246,8 +248,8 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     
     @Override
     public void onHTTPerror(String tag) {
-        // TODO: aggiungere tasto TAP TO REFRESH
         progressDialog.dismiss();
+        setHeaderErrorViews();
         CharSequence text = "C'è stato un problema, riprova!";
         Toast toast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
         toast.show();
@@ -259,6 +261,9 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     private void setHeaderViews(){
         Coupon c = adapter.getObject();
         if(c != null && c.getID() >= 0){
+            refreshButton.setVisibility(View.INVISIBLE);
+            refreshButton.setEnabled(false);
+            buyButton.setVisibility(View.VISIBLE);
             buyButton.setEnabled(true);
             offerTextView.setText(Html.fromHtml("Solo <b>"+Utils.formatPrice(c.getValoreAcquisto())+"€</b>, sconto <b>"+c.getScontoPer()+"</b>" ));
             setTimer();
@@ -267,6 +272,20 @@ public class DetailCouponListFragment extends SherlockListFragment implements
             offerTextView.setText("Spiacenti, nessuna offerta");
             buyButton.setEnabled(false);
         }
+    }
+    
+    private void setHeaderErrorViews(){
+        offerTextView.setText("");
+        buyButton.setEnabled(false);
+        buyButton.setVisibility(View.INVISIBLE);
+        refreshButton.setVisibility(View.VISIBLE);
+        refreshButton.setEnabled(true);
+    }
+    
+    private void refreshView(){
+        httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET,
+                null, TAG_NORMAL);
+        showProgressDialog();
     }
     
     //imposta il timer preso in input una data di scadenza
@@ -417,14 +436,10 @@ public class DetailCouponListFragment extends SherlockListFragment implements
         switch(v.getId()){
             case R.id.buyButton:
                 buyButtonPressed();
-            case R.id.detailBtn:
+                break;
+            case R.id.refreshBtn:
                 Log.d("couponList","detail btn pressed");
-                break;
-            case R.id.infoBtn:
-                Log.d("couponList","info btn pressed");
-                break;
-            case R.id.rulesBtn:
-                Log.d("couponList","rules btn pressed");
+                refreshView();
                 break;
         }
     }
