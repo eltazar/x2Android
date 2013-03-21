@@ -114,7 +114,8 @@ public class VetrinaCoupon extends SherlockFragment implements HTTPAccess.Respon
         super.onStop();
         Log.d("TIMER","ON STOP");
         //annullo il timer quando la view non è più visibile
-        countDownTimer.cancel();
+        if(countDownTimer != null)
+            countDownTimer.cancel();
     }
     
     
