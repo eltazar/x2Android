@@ -16,6 +16,7 @@ import android.util.Log;
 import com.actionbarsherlock.app.SherlockMapActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 
 import it.wm.HTTPAccess;
@@ -32,6 +33,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
     private static final String      DEBUG_TAG       = "EsercentiMapActivity";
     private String                   category        = null;
     private MapView                  mapView         = null;
+    private MapController            mapController   = null;
     private LocationManager          locationManager = null;
     private EsercentiItemizedOverlay itemizedOverlay = null;
     private DownloadHandler          dh              = null;
@@ -40,10 +42,26 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mapView = new MapView(this, getResources().getString(R.string.map_api_key));
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 1, this);
+        Location lastLocation = locationManager.getLastKnownLocation(
+                LocationManager.NETWORK_PROVIDER);
+        
+        mapView = new MapView(this, getResources().getString(R.string.map_api_key));
         mapView.setClickable(true);
-        mapView.getController().setZoom(18);// (12);
+        
+        mapController = mapView.getController();
+        if (lastLocation != null) {
+            mapController.animateTo(
+                    new SimpleGeoPoint(
+                            lastLocation.getLatitude(), 
+                            lastLocation.getLongitude()
+                        ).toGeoPoint());
+            mapController.setZoom(12);
+        } else {
+            mapController.animateTo(new SimpleGeoPoint(41.891544, 12.497532).toGeoPoint());
+            mapController.setZoom(7);
+        }
+        
         itemizedOverlay = new EsercentiItemizedOverlay(
                 this,
                 getResources().getDrawable(android.R.drawable.presence_online),
@@ -84,16 +102,19 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
         return super.onOptionsItemSelected(item);
     }
     
+    
+    
     /* *** BEGIN: LocationListener Methods ********************* */
     
     @Override
     public void onLocationChanged(Location location) {
+        Log.d(DEBUG_TAG, "onLocationChanged: " + location.getLatitude() + ", " + location.getLongitude());
         locationManager.removeUpdates(this);
         final SimpleGeoPoint sGeoPoint = new SimpleGeoPoint(
-                41.891544, 12.497532);
-        // location.getLatitude(),
-        // location.getLongitude());
-        mapView.getController().animateTo(
+                //41.891544, 12.497532);
+                location.getLatitude(),
+                location.getLongitude());
+        mapController.animateTo(
                 sGeoPoint.toGeoPoint(),
                 new Runnable() {
                     @Override
@@ -101,7 +122,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
                         dh.startDowloading(sGeoPoint, getRange());
                     }
                 });
-        
+        mapController.setZoom(12);
     }
     
     @Override
@@ -117,6 +138,8 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
     }
     
     /* *** END: LocationListener Methods *********************** */
+    
+    
     
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
     
@@ -174,8 +197,9 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
             this.from = 0;
             postMap.put("lat", "" + queryPoint.getLatitude());
             postMap.put("long", "" + queryPoint.getLongitude());
-            postMap.put("raggio", "" + range);
+            postMap.put("raggio", "" + range*8);
             postMap.put("from", "" + from);
+            Log.d(DEBUG_TAG, "startDownloading, postMap: " + postMap);
             startHTTPConnection();
         }
         
