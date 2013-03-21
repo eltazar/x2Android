@@ -17,9 +17,9 @@ import com.actionbarsherlock.app.SherlockMapActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
 
 import it.wm.HTTPAccess;
+import it.wm.ObservableMapView;
 import it.wm.SimpleGeoPoint;
 import it.wm.perdue.R;
 
@@ -32,7 +32,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
         HTTPAccess.ResponseListener {
     private static final String      DEBUG_TAG       = "EsercentiMapActivity";
     private String                   category        = null;
-    private MapView                  mapView         = null;
+    private ObservableMapView        mapView         = null;
     private MapController            mapController   = null;
     private LocationManager          locationManager = null;
     private EsercentiItemizedOverlay itemizedOverlay = null;
@@ -41,12 +41,15 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
+        dh = new DownloadHandler(this);
+        
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 1, this);
         Location lastLocation = locationManager.getLastKnownLocation(
                 LocationManager.NETWORK_PROVIDER);
         
-        mapView = new MapView(this, getResources().getString(R.string.map_api_key));
+        mapView = new ObservableMapView(this, 
+                getResources().getString(R.string.map_api_key));
         mapView.setClickable(true);
         
         mapController = mapView.getController();
@@ -58,8 +61,10 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
                         ).toGeoPoint());
             mapController.setZoom(12);
         } else {
-            mapController.animateTo(new SimpleGeoPoint(41.891544, 12.497532).toGeoPoint());
+            SimpleGeoPoint italia = new SimpleGeoPoint(41.891544, 12.497532);
+            mapController.animateTo(italia.toGeoPoint());
             mapController.setZoom(7);
+            dh.startDowloading(italia, getRange());
         }
         
         itemizedOverlay = new EsercentiItemizedOverlay(
@@ -72,17 +77,17 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
         mapView.getOverlays().add(itemizedOverlay);
         
         setContentView(mapView);
-        dh = new DownloadHandler(this);
     }
     
     @Override
     protected boolean isRouteDisplayed() {
-        // TODO Auto-generated method stub
         return false;
     }
     
-    /* *** BEGIN: OptionsMenu Methods **************** */
     
+    
+    
+    /* *** BEGIN: OptionsMenu Methods **************** */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.esercenti_map_menu, menu);
@@ -101,17 +106,16 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
         }
         return super.onOptionsItemSelected(item);
     }
+    /* ***** END: OptionsMenu Methods **************** */
     
     
     
     /* *** BEGIN: LocationListener Methods ********************* */
-    
     @Override
     public void onLocationChanged(Location location) {
         Log.d(DEBUG_TAG, "onLocationChanged: " + location.getLatitude() + ", " + location.getLongitude());
         locationManager.removeUpdates(this);
         final SimpleGeoPoint sGeoPoint = new SimpleGeoPoint(
-                //41.891544, 12.497532);
                 location.getLatitude(),
                 location.getLongitude());
         mapController.animateTo(
@@ -136,13 +140,11 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
     }
-    
     /* *** END: LocationListener Methods *********************** */
     
     
     
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
-    
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
         if (itemizedOverlay.addFromJSON(response) > 0)
@@ -153,8 +155,9 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
     public void onHTTPerror(String tag) {
         
     }
-    
     /* *** END: HTTPAccess.ResponseListener ******************** */
+    
+    
     
     private double getRange() {
         SimpleGeoPoint topLeft;
