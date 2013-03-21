@@ -45,7 +45,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
         
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 1, this);
-        Location lastLocation = locationManager.getLastKnownLocation(
+        Location lastLoc = locationManager.getLastKnownLocation(
                 LocationManager.NETWORK_PROVIDER);
         
         mapView = new ObservableMapView(this, 
@@ -53,13 +53,12 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
         mapView.setClickable(true);
         
         mapController = mapView.getController();
-        if (lastLocation != null) {
-            mapController.animateTo(
-                    new SimpleGeoPoint(
-                            lastLocation.getLatitude(), 
-                            lastLocation.getLongitude()
-                        ).toGeoPoint());
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+        if (lastLoc != null) {
+            SimpleGeoPoint p = new SimpleGeoPoint(lastLoc.getLatitude(), lastLoc.getLongitude());
+            mapController.animateTo(p.toGeoPoint());
             mapController.setZoom(12);
+            dh.startDowloading(p, getRange());
         } else {
             SimpleGeoPoint italia = new SimpleGeoPoint(41.891544, 12.497532);
             mapController.animateTo(italia.toGeoPoint());
