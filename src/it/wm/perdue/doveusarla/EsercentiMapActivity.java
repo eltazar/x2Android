@@ -170,8 +170,10 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
          * continuiamo a fetchare gli altri elementi della stessa query se e solo se
          * la query combiacia col download tag corrente. */
         int receivedElements = itemizedOverlay.addFromJSON(response);
-        if (tag.contains(currentDLTag) && receivedElements > 0)
+        mapView.postInvalidate();
+        if (tag.contains(currentDLTag) && receivedElements > 0) {
             dh.downloadMore();
+        }
     }
     
     @Override
