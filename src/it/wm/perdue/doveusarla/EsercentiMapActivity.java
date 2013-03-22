@@ -5,12 +5,10 @@
 package it.wm.perdue.doveusarla;
 
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -122,11 +120,12 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.lista: 
             case android.R.id.home:
-            case R.id.lista: // / mmmh da qui dovrebbe tornare nello stesso
-                             // stato :/
-                Intent intent = NavUtils.getParentActivityIntent(this);
-                NavUtils.navigateUpTo(this, intent);
+                finish();
+                /*Intent intent = NavUtils.getParentActivityIntent(this);
+                intent.putExtra(Intent.EXTRA_TEXT, MainActivity.DOVE_USARLA_TAB_TAG);
+                NavUtils.navigateUpTo(this, intent);*/
                 return true;
         }
         return super.onOptionsItemSelected(item);
