@@ -5,6 +5,7 @@
 package it.wm.perdue.doveusarla;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
@@ -18,6 +19,7 @@ import com.readystatesoftware.mapviewballoons.BalloonItemizedOverlay;
 import it.wm.SimpleGeoPoint;
 import it.wm.perdue.Utils;
 import it.wm.perdue.businessLogic.Esercente;
+import it.wm.perdue.dettaglioEsercenti.DettaglioEsercenteBaseActivity;
 
 import java.util.ArrayList;
 
@@ -29,6 +31,7 @@ public class EsercentiItemizedOverlay extends BalloonItemizedOverlay<OverlayItem
     private Context                context   = null;
     private ArrayList<OverlayItem> overlays  = new ArrayList<OverlayItem>();
     private ArrayList<Integer>     ids       = new ArrayList<Integer>();
+    private Boolean                isRisto   = false;
     
     public EsercentiItemizedOverlay(Context context, Drawable marker, MapView mapView) {
         super(boundCenterBottom(marker), mapView);
@@ -61,9 +64,13 @@ public class EsercentiItemizedOverlay extends BalloonItemizedOverlay<OverlayItem
     
     @Override
     protected boolean onBalloonTap(int index, OverlayItem item) {
-//        Toast.makeText(context, "" + ((EsercenteOverlayItem) item).getID() +
-//                "/" + overlays.size() + "/" + ids.size(), Toast.LENGTH_LONG)
-//                .show();
+        Intent intent = new Intent(context, DettaglioEsercenteBaseActivity.class);
+        EsercenteOverlayItem ese = (EsercenteOverlayItem) item;
+        intent.putExtra(DettaglioEsercenteBaseActivity.Tags.ID,       "" + ese.getID());
+        intent.putExtra(DettaglioEsercenteBaseActivity.Tags.TITLE,    ese.getInsegna());
+        intent.putExtra(DettaglioEsercenteBaseActivity.Tags.IS_RISTO, isRisto);
+        context.startActivity(intent);
+
         return true;
     }
     
@@ -94,16 +101,26 @@ public class EsercentiItemizedOverlay extends BalloonItemizedOverlay<OverlayItem
         return objects.length;
     }
     
+    public void setRisto(Boolean isRisto) {
+        this.isRisto = isRisto;
+    }
+    
     protected static class EsercenteOverlayItem extends OverlayItem {
-        private int id = 0;
+        private int    id      = 0;
+        private String insegna = null;
         
         public EsercenteOverlayItem(GeoPoint geoPoint, String insegna, String indirizzo, int id) {
             super(geoPoint, insegna, indirizzo);
             this.id = id;
+            this.insegna = insegna;
         }
         
         public int getID() {
             return id;
+        }
+        
+        public String getInsegna() {
+            return this.insegna;
         }
     }
 }

@@ -88,6 +88,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
                 this,
                 getResources().getDrawable(android.R.drawable.presence_online),
                 mapView);
+        itemizedOverlay.setRisto(isRisto);
         itemizedOverlay.setShowClose(false);
         itemizedOverlay.setShowDisclosure(true);
         itemizedOverlay.setBalloonBottomOffset(10);
