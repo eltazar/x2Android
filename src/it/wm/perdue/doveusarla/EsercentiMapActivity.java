@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockMapActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -58,6 +59,12 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
             category = extras.getString ("category").replace(" ", "");
             isRisto  = extras.getBoolean("isRisto" );
         }
+        
+        ActionBar bar = getSupportActionBar();
+        bar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
+                | ActionBar.DISPLAY_SHOW_HOME
+                | ActionBar.DISPLAY_SHOW_TITLE);
+        bar.setTitle(category);
         
         
         dh = new DownloadHandler(this, category, isRisto);
