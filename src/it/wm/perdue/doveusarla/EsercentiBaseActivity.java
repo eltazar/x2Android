@@ -235,7 +235,16 @@ public class EsercentiBaseActivity extends SherlockFragmentActivity implements O
                 DoveQuandoDialog dialog = new DoveQuandoDialog();
                 dialog.show(getSupportFragmentManager(), "whereWhen");
                 return true;
-                
+            case R.id.map_button:
+                intent = new Intent(this, EsercentiMapActivity.class);
+                intent.putExtra("category", category);
+                if (category.equals("Ristoranti") || category.equals("PubseBar")) {
+                    intent.putExtra("isRisto", true);
+                } else {
+                    intent.putExtra("isRisto", false);
+                }
+                startActivity(intent);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
