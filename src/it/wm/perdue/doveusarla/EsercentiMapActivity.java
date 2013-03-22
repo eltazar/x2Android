@@ -223,6 +223,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
         /* Dopo un pan parte sempre un click: facciamo partire la query qui
          * altrimenti a ogni microspostamento ne parte una */
         Log.d(DEBUG_TAG, "Click");
+        clickedPoint = mapView.getMapCenter();
         currentDLTag = dh.startDowloading(new SimpleGeoPoint(clickedPoint), getRange());
     }
     /* *** END: ObservableMavView.MapViewListener ************** */
@@ -271,7 +272,8 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
         
         public String startDowloading(SimpleGeoPoint point, double range) {
             Log.d(DEBUG_TAG, "Starting Download from: " + point + "" + range);
-            if (this.queryPoint.equals(point) && this.range == range) return getTag();
+            if ((this.queryPoint != null && this.queryPoint.equals(point)) && 
+                    this.range == range) return getTag();
             this.queryPoint = point;
             this.range = range;
             this.from = 0;
