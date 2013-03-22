@@ -12,6 +12,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 
 import com.actionbarsherlock.app.SherlockMapActivity;
 import com.actionbarsherlock.view.Menu;
@@ -29,13 +31,16 @@ import java.util.HashMap;
 /**
  * @author Gabriele "Whisky" Visconti
  */
-public class EsercentiMapActivity extends SherlockMapActivity 
-        implements LocationListener, HTTPAccess.ResponseListener,
-        ObservableMapView.MapViewListener {
+public class EsercentiMapActivity extends SherlockMapActivity implements 
+        LocationListener, 
+        HTTPAccess.ResponseListener,
+        ObservableMapView.MapViewListener,
+        View.OnTouchListener {
     private static final String      DEBUG_TAG       = "EsercentiMapActivity";
     private String                   category        = null;
     private ObservableMapView        mapView         = null;
     private MapController            mapController   = null;
+    private Boolean                  gestureStarted  = false;
     private LocationManager          locationManager = null;
     private EsercentiItemizedOverlay itemizedOverlay = null;
     private DownloadHandler          dh              = null;
@@ -65,6 +70,7 @@ public class EsercentiMapActivity extends SherlockMapActivity
         mapView = new ObservableMapView(this, 
                 getResources().getString(R.string.map_api_key));
         mapView.setMapViewListener(this);
+        mapView.setOnTouchListener(this);
         mapView.setClickable(true);
         
         mapController = mapView.getController();
@@ -176,11 +182,29 @@ public class EsercentiMapActivity extends SherlockMapActivity
     
     
     
+    /* *** BEGIN: View.OnTouchListener ************************* */
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (v != mapView) return false;
+        int action = event.getAction();
+        if (action == MotionEvent.ACTION_DOWN) {
+            Log.d(DEBUG_TAG, "DITO GIU");
+            gestureStarted = true;
+        } else if (action == MotionEvent.ACTION_UP) {
+            Log.d(DEBUG_TAG, "DITO SU");
+            gestureStarted = true;
+        }
+        return false;
+    }
+    /* *** END: View.OnTouchListener *************************** */
+    
+    
+    
     /* * BEGIN: ObservableMavView.MapViewListener ************** */
     @Override
     public void onPan(GeoPoint oldTopLeft, GeoPoint oldCenter, GeoPoint oldBottomRight,
             GeoPoint newTopLeft, GeoPoint newCenter, GeoPoint newBottomRight) {
-        currentDLTag = dh.startDowloading(new SimpleGeoPoint(newCenter), getRange());
+        
     }
 
     @Override
@@ -188,11 +212,17 @@ public class EsercentiMapActivity extends SherlockMapActivity
             GeoPoint oldTopLeft, GeoPoint oldCenter, GeoPoint oldBottomRight,
             GeoPoint newTopLeft, GeoPoint newCenter, GeoPoint newBottomRight, 
             int oldZoomLevel, int newZoomLevel) {
+        if (gestureStarted) return;
         currentDLTag = dh.startDowloading(new SimpleGeoPoint(newCenter), getRange());
     }
 
     @Override
-    public void onClick(GeoPoint clickedPoint) { /* Do Nothing */ }
+    public void onClick(GeoPoint clickedPoint) { 
+        /* Dopo un pan parte sempre un click: facciamo partire la query qui
+         * altrimenti a ogni microspostamento ne parte una */
+        Log.d(DEBUG_TAG, "Click");
+        currentDLTag = dh.startDowloading(new SimpleGeoPoint(clickedPoint), getRange());
+    }
     /* *** END: ObservableMavView.MapViewListener ************** */
 
     
@@ -210,9 +240,9 @@ public class EsercentiMapActivity extends SherlockMapActivity
         bottomRight = new SimpleGeoPoint(
                 center.getLatitude() + latSpan / 2,
                 center.getLongitude() + longSpan / 2);
-        Log.d(DEBUG_TAG, "Il range è: " + topLeft.calculateDistance(bottomRight));
-        double distance = topLeft.calculateDistance(bottomRight);
-        return (distance > 0 && distance < 1) ? 1 : distance;
+        Log.d(DEBUG_TAG, "Il range è: " + topLeft.calculateDistance(bottomRight) / 2);
+        double distance = topLeft.calculateDistance(bottomRight) / 2;
+        return (distance >= 0 && distance < 1) ? 1 : distance;
     }
     
     private static class DownloadHandler {
