@@ -5,6 +5,8 @@
 package it.wm.perdue.doveusarla;
 
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -24,8 +26,11 @@ import it.wm.HTTPAccess;
 import it.wm.ObservableMapView;
 import it.wm.SimpleGeoPoint;
 import it.wm.perdue.R;
+import it.wm.perdue.Utils;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Gabriele "Whisky" Visconti
@@ -100,6 +105,16 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
         mapView.getOverlays().add(itemizedOverlay);
         
         setContentView(mapView);
+        String city = Utils.getPreferenceString("where", "Roma");
+
+        if(city != null && city.equals("Qui")){
+            //mostra mappa su posizione utente
+        }
+        else{
+            //mostra mappa su citt√†
+            setCenterCityMap(city);
+        }
+        
     }
     
     @Override
@@ -107,7 +122,24 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
         return false;
     }
     
-    
+    public void setCenterCityMap(String city){
+        Geocoder geocoder = new Geocoder(this);  
+        List<Address> addresses = null;
+        try {
+            addresses = geocoder.getFromLocationName(city, 1);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if(addresses != null && addresses.size() > 0) {
+            double latitude= addresses.get(0).getLatitude();
+            double longitude= addresses.get(0).getLongitude();
+            //Log.d("Map","lat = "+latitude+"long = "+longitude);
+            mapController.setZoom(12);
+            final SimpleGeoPoint sGeoPoint = new SimpleGeoPoint(latitude, longitude);
+            animateTo(sGeoPoint);
+        }
+    }
     
     
     /* *** BEGIN: OptionsMenu Methods **************** */
@@ -164,7 +196,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
-        /* Aggiungiamo a priori gli esercenti appena ricevuti alla mappa. Dopodiché 
+        /* Aggiungiamo a priori gli esercenti appena ricevuti alla mappa. DopodichÔøΩ 
          * continuiamo a fetchare gli altri elementi della stessa query se e solo se
          * la query combiacia col download tag corrente. */
         int receivedElements = itemizedOverlay.addFromJSON(response);
@@ -282,9 +314,9 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
             Log.d(DEBUG_TAG, "Starting Download from: " + point + "" + range);
             /* Se il punto e il range combaciano (ad Es al tap a vuoto) non rifaccio
              * partire le query da capo
-             * TODO: Non dovrebbero ripartire neanche se il range si è semplicemente 
+             * TODO: Non dovrebbero ripartire neanche se il range si ÔøΩ semplicemente 
              * ridotto. Se metto il <= sul controllo del range cambia il tag e rischio di
-             * perdere uno o più json. */
+             * perdere uno o piÔøΩ json. */
             if ((this.queryPoint != null && this.queryPoint.equals(point)) && 
                     this.range == range) return getTag();
             this.queryPoint = point;
