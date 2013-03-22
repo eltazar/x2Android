@@ -201,14 +201,16 @@ public class VetrinaCoupon extends SherlockFragment implements HTTPAccess.Respon
             
             CachedAsyncImageView iv = (CachedAsyncImageView) c.findViewById(R.id.pd_imageView);
             iv.loadScaledImageFromURL("http://www.cartaperdue.it/coupon/img_offerte/" + coupon.getUrlImmagine());
+            
+            ProgressBar pb = (ProgressBar) c.findViewById(R.id.pd_progressBar);
+            
+            pb.setVisibility(View.INVISIBLE);
+            View v = (View) c.findViewById(R.id.cover);
+            v.setVisibility(View.INVISIBLE);
         }
         catch(NullPointerException e){
             e.printStackTrace();
         }
-        ProgressBar pb = (ProgressBar) c.findViewById(R.id.pd_progressBar);
-        pb.setVisibility(View.INVISIBLE);
-        View v = (View) c.findViewById(R.id.cover);
-        v.setVisibility(View.INVISIBLE);
     }
 
  
