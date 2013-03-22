@@ -31,14 +31,6 @@
 			android:inputType="textPassword"
             android:paddingTop="3dp" />
 
-        <Button
-            android:id="@+id/loginBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/textView1"
-            android:text="Login" />
-
         <ScrollView
             android:id="@+id/scrollView1"
             android:layout_width="match_parent"
@@ -51,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_alignRight="@+id/psw"
             android:layout_below="@+id/psw"
-            android:gravity="right"
+            android:gravity="center"
             android:paddingTop="10dp"
             android:text="@string/login_string"
             android:textSize="11sp" />
@@ -79,7 +71,15 @@
 			android:layout_centerInParent="true"
 			android:layout_marginTop="5dp"
             android:layout_below="@+id/retrievePswBtn"
-            android:text="Registrati a PerDue" />       
+            android:text="Registrati a PerDue" />
+
+        <Button
+            android:id="@+id/loginBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView1"
+            android:layout_centerHorizontal="true"
+            android:text="Login" />
 
     </RelativeLayout>
 
