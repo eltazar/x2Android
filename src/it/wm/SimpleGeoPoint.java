@@ -53,4 +53,28 @@ public class SimpleGeoPoint {
         return d;
     }
     
+    public boolean equals(Object o) {
+        if (!(o instanceof SimpleGeoPoint)) {
+            return false;
+        }
+        if (o == this) {
+            return true;
+        }
+        
+        SimpleGeoPoint p = (SimpleGeoPoint) o;
+        
+        if (this.latitude == p.latitude && this.longitude == p.longitude) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 37 * result + (int)(latitude*1E3);
+        result = 37 * result + (int)(longitude*1E3);
+        return result;
+    } 
 }
