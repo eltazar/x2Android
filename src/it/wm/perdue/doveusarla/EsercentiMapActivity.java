@@ -271,7 +271,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
             httpAccess.setResponseListener(listener);
             postMap = new HashMap<String, String>();
             postMap.put("request", "fetch");
-            postMap.put("categ", category);
+            postMap.put("categ", category.toLowerCase());
             postMap.put("ordina", "distanza");
             
             urlString = isRisto ? 
