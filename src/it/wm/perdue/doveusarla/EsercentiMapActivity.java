@@ -76,14 +76,12 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
         mapController = mapView.getController();
         if (lastLoc != null) {
             SimpleGeoPoint p = new SimpleGeoPoint(lastLoc.getLatitude(), lastLoc.getLongitude());
-            mapController.animateTo(p.toGeoPoint());
             mapController.setZoom(12);
-            currentDLTag = dh.startDowloading(p, getRange());
+            animateTo(p);
         } else {
             SimpleGeoPoint italia = new SimpleGeoPoint(41.891544, 12.497532);
-            mapController.animateTo(italia.toGeoPoint());
             mapController.setZoom(7);
-            currentDLTag = dh.startDowloading(italia, getRange());
+            animateTo(italia);
         }
         
         itemizedOverlay = new EsercentiItemizedOverlay(
@@ -134,18 +132,11 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
     public void onLocationChanged(Location location) {
         Log.d(DEBUG_TAG, "onLocationChanged: " + location.getLatitude() + ", " + location.getLongitude());
         locationManager.removeUpdates(this);
+        mapController.setZoom(12);
         final SimpleGeoPoint sGeoPoint = new SimpleGeoPoint(
                 location.getLatitude(),
                 location.getLongitude());
-        mapController.animateTo(
-                sGeoPoint.toGeoPoint(),
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        currentDLTag = dh.startDowloading(sGeoPoint, getRange());
-                    }
-                });
-        mapController.setZoom(12);
+        animateTo(sGeoPoint);
     }
     
     @Override
@@ -229,6 +220,16 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
     /* *** END: ObservableMavView.MapViewListener ************** */
 
     
+    private void animateTo(final SimpleGeoPoint destination) {
+        mapController.animateTo(
+                destination.toGeoPoint(),
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        currentDLTag = dh.startDowloading(destination, getRange());
+                    }
+                });
+    }
     
     
     private double getRange() {
@@ -272,6 +273,11 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
         
         public String startDowloading(SimpleGeoPoint point, double range) {
             Log.d(DEBUG_TAG, "Starting Download from: " + point + "" + range);
+            /* Se il punto e il range combaciano (ad Es al tap a vuoto) non rifaccio
+             * partire le query da capo
+             * TODO: Non dovrebbero ripartire neanche se il range si è semplicemente 
+             * ridotto. Se metto il <= sul controllo del range cambia il tag e rischio di
+             * perdere uno o più json. */
             if ((this.queryPoint != null && this.queryPoint.equals(point)) && 
                     this.range == range) return getTag();
             this.queryPoint = point;
