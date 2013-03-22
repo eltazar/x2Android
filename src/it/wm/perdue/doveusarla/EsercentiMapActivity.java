@@ -41,7 +41,18 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
-        dh = new DownloadHandler(this);
+        
+        Bundle extras = getIntent().getExtras();
+        // Valori predefiniti per il debug:
+        category = "teatri";
+        Boolean isRisto = false;
+        if (extras != null) {
+            category = extras.getString ("category").replace(" ", "");
+            isRisto  = extras.getBoolean("isRisto" );
+        }
+        
+        
+        dh = new DownloadHandler(this, category, isRisto);
         
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 1, this);
@@ -183,14 +194,18 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
         private SimpleGeoPoint          queryPoint;
         private double                  range;
         
-        public DownloadHandler(HTTPAccess.ResponseListener listener) {
+        public DownloadHandler(HTTPAccess.ResponseListener listener,
+                String category, Boolean isRisto) {
             httpAccess = new HTTPAccess();
             httpAccess.setResponseListener(listener);
-            urlString = "http://www.cartaperdue.it/partner/v2.0/EsercentiNonRistorazione.php";
             postMap = new HashMap<String, String>();
             postMap.put("request", "fetch");
-            postMap.put("categ", "teatri");
+            postMap.put("categ", category);
             postMap.put("ordina", "distanza");
+            
+            urlString = isRisto ? 
+                    "http://www.cartaperdue.it/partner/v2.0/EsercentiRistorazione.php":
+                    "http://www.cartaperdue.it/partner/v2.0/EsercentiNonRistorazione.php";
         }
         
         public void startDowloading(SimpleGeoPoint point, double range) {
