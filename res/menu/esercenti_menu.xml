@@ -4,12 +4,12 @@
      <item android:id="@+id/ww"
           android:title=""
           android:showAsAction="ifRoom|collapseActionView" />
-     <!-- 
+     
      <item android:id="@+id/map_button"
           android:title="Mappa"
           android:icon="@drawable/ic_action_map_image"
           android:showAsAction="ifRoom|collapseActionView" />
- -->
+
      <item
        android:id="@+id/abSearch"
        android:actionViewClass="com.actionbarsherlock.widget.SearchView"
