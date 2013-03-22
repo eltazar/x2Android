@@ -37,6 +37,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
     private LocationManager          locationManager = null;
     private EsercentiItemizedOverlay itemizedOverlay = null;
     private DownloadHandler          dh              = null;
+    private String                   currentDLTag    = null;
     
     @Override
     protected void onCreate(Bundle savedInstance) {
@@ -69,12 +70,12 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
             SimpleGeoPoint p = new SimpleGeoPoint(lastLoc.getLatitude(), lastLoc.getLongitude());
             mapController.animateTo(p.toGeoPoint());
             mapController.setZoom(12);
-            dh.startDowloading(p, getRange());
+            currentDLTag = dh.startDowloading(p, getRange());
         } else {
             SimpleGeoPoint italia = new SimpleGeoPoint(41.891544, 12.497532);
             mapController.animateTo(italia.toGeoPoint());
             mapController.setZoom(7);
-            dh.startDowloading(italia, getRange());
+            currentDLTag = dh.startDowloading(italia, getRange());
         }
         
         itemizedOverlay = new EsercentiItemizedOverlay(
@@ -133,7 +134,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
                 new Runnable() {
                     @Override
                     public void run() {
-                        dh.startDowloading(sGeoPoint, getRange());
+                        currentDLTag = dh.startDowloading(sGeoPoint, getRange());
                     }
                 });
         mapController.setZoom(12);
@@ -157,7 +158,11 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
-        if (itemizedOverlay.addFromJSON(response) > 0)
+        /* Aggiungiamo a priori gli esercenti appena ricevuti alla mappa. Dopodich 
+         * continuiamo a fetchare gli altri elementi della stessa query se e solo se
+         * la query combiacia col download tag corrente. */
+        int receivedElements = itemizedOverlay.addFromJSON(response);
+        if (tag.contains(currentDLTag) && receivedElements > 0)
             dh.downloadMore();
     }
     
@@ -208,7 +213,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
                     "http://www.cartaperdue.it/partner/v2.0/EsercentiNonRistorazione.php";
         }
         
-        public void startDowloading(SimpleGeoPoint point, double range) {
+        public String startDowloading(SimpleGeoPoint point, double range) {
             this.queryPoint = point;
             this.range = range;
             this.from = 0;
@@ -217,7 +222,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
             postMap.put("raggio", "" + range*8);
             postMap.put("from", "" + from);
             Log.d(DEBUG_TAG, "startDownloading, postMap: " + postMap);
-            startHTTPConnection();
+            return startHTTPConnection();
         }
         
         public void downloadMore() {
@@ -230,15 +235,17 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
         }
         
         public String getTag() {
-            return queryPoint.toString() + from + range;
+            return queryPoint.toString() + range;
         }
         
-        private void startHTTPConnection() {
+        private String startHTTPConnection() {
+            String tag = getTag();
             httpAccess.startHTTPConnection(
                     urlString,
                     HTTPAccess.Method.POST,
                     postMap,
-                    getTag());
+                    getTag() + from);
+            return tag;
         }
     }
 }
