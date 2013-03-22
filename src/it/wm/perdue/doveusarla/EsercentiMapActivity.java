@@ -16,6 +16,7 @@ import android.util.Log;
 import com.actionbarsherlock.app.SherlockMapActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 
 import it.wm.HTTPAccess;
@@ -28,8 +29,9 @@ import java.util.HashMap;
 /**
  * @author Gabriele "Whisky" Visconti
  */
-public class EsercentiMapActivity extends SherlockMapActivity implements LocationListener,
-        HTTPAccess.ResponseListener {
+public class EsercentiMapActivity extends SherlockMapActivity 
+        implements LocationListener, HTTPAccess.ResponseListener,
+        ObservableMapView.MapViewListener {
     private static final String      DEBUG_TAG       = "EsercentiMapActivity";
     private String                   category        = null;
     private ObservableMapView        mapView         = null;
@@ -62,10 +64,10 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
         
         mapView = new ObservableMapView(this, 
                 getResources().getString(R.string.map_api_key));
+        mapView.setMapViewListener(this);
         mapView.setClickable(true);
         
         mapController = mapView.getController();
-        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
         if (lastLoc != null) {
             SimpleGeoPoint p = new SimpleGeoPoint(lastLoc.getLatitude(), lastLoc.getLongitude());
             mapController.animateTo(p.toGeoPoint());
@@ -158,7 +160,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
-        /* Aggiungiamo a priori gli esercenti appena ricevuti alla mappa. DopodichÂŽ 
+        /* Aggiungiamo a priori gli esercenti appena ricevuti alla mappa. DopodichŽ 
          * continuiamo a fetchare gli altri elementi della stessa query se e solo se
          * la query combiacia col download tag corrente. */
         int receivedElements = itemizedOverlay.addFromJSON(response);
@@ -171,6 +173,28 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
         
     }
     /* *** END: HTTPAccess.ResponseListener ******************** */
+    
+    
+    
+    /* * BEGIN: ObservableMavView.MapViewListener ************** */
+    @Override
+    public void onPan(GeoPoint oldTopLeft, GeoPoint oldCenter, GeoPoint oldBottomRight,
+            GeoPoint newTopLeft, GeoPoint newCenter, GeoPoint newBottomRight) {
+        currentDLTag = dh.startDowloading(new SimpleGeoPoint(newCenter), getRange());
+    }
+
+    @Override
+    public void onZoom(
+            GeoPoint oldTopLeft, GeoPoint oldCenter, GeoPoint oldBottomRight,
+            GeoPoint newTopLeft, GeoPoint newCenter, GeoPoint newBottomRight, 
+            int oldZoomLevel, int newZoomLevel) {
+        currentDLTag = dh.startDowloading(new SimpleGeoPoint(newCenter), getRange());
+    }
+
+    @Override
+    public void onClick(GeoPoint clickedPoint) { /* Do Nothing */ }
+    /* *** END: ObservableMavView.MapViewListener ************** */
+
     
     
     
@@ -214,13 +238,14 @@ public class EsercentiMapActivity extends SherlockMapActivity implements Locatio
         }
         
         public String startDowloading(SimpleGeoPoint point, double range) {
+            Log.d(DEBUG_TAG, "Starting Download from: " + point + "" + range);
             this.queryPoint = point;
             this.range = range;
             this.from = 0;
-            postMap.put("lat", "" + queryPoint.getLatitude());
-            postMap.put("long", "" + queryPoint.getLongitude());
-            postMap.put("raggio", "" + range*8);
-            postMap.put("from", "" + from);
+            postMap.put("lat",    "" + queryPoint.getLatitude());
+            postMap.put("long",   "" + queryPoint.getLongitude());
+            postMap.put("raggio", "" + range);
+            postMap.put("from",   "" + from);
             Log.d(DEBUG_TAG, "startDownloading, postMap: " + postMap);
             return startHTTPConnection();
         }
