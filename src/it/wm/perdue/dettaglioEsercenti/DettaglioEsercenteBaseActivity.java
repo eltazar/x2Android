@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -40,7 +39,7 @@ public class DettaglioEsercenteBaseActivity extends SherlockFragmentActivity {
             isRisto = extras.getBoolean(Tags.IS_RISTO);
             isCoupon = extras.getBoolean(Tags.COUPON_MODE);
             isGenerico = extras.getBoolean(Tags.GENERICO_MODE);
-            Log.d("EXTRAS","Extras ->"+extras);
+            //Log.d("EXTRAS","Extras ->"+extras);
         }
         
         ActionBar bar = getSupportActionBar();
@@ -100,7 +99,7 @@ public class DettaglioEsercenteBaseActivity extends SherlockFragmentActivity {
                 NavUtils.navigateUpTo(this, intent);
                 return true;
             case R.id.commenti:
-                Log.d("BBB", "cliccato pulsante commenti, eseID = " + id);
+                //Log.d("BBB", "cliccato pulsante commenti, eseID = " + id);
                 Bundle extras = new Bundle();
                 // extras.putSerializable("notizia", (Serializable)
                 // l.getItemAtPosition(position));

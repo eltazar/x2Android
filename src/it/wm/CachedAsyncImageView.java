@@ -6,7 +6,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
@@ -265,7 +264,7 @@ public class CachedAsyncImageView extends RelativeLayout implements DrawableCach
             
             @Override
             public void onAnimationCancel(android.animation.Animator animation) {
-                Log.d(DEBUG_TAG, "Anim interrupted");
+                //Log.d(DEBUG_TAG, "Anim interrupted");
             }
         });
         fadeIn.start();

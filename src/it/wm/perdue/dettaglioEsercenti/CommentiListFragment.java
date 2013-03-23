@@ -4,7 +4,6 @@ package it.wm.perdue.dettaglioEsercenti;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,7 +79,7 @@ public class CommentiListFragment extends SherlockListFragment implements
         for (int i = 0; i < nRows / 10; i++) {
             httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET, null, null);
             downloading++;
-            Log.d(DEBUG_TAG, "Donwloading " + downloading);
+            //Log.d(DEBUG_TAG, "Donwloading " + downloading);
         }
     }
     

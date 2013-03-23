@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -192,9 +191,9 @@ public class EsercentiListFragment extends SearchEndlessListFragment
              */
             if (!isInSearchMode() || !tag.equals(Tags.TAG_SEARCH + mapToTagString(searchPostMap))) {
             	// Ricerca vecchia. Non facciamo niente.
-            	Log.d(DEBUG_TAG, "Scarto i risultati della ricerca: " + tag
-            			+ " inSearchMode: " + isInSearchMode() 
-            			+ "searchKey: "     + searchKey );
+            	//Log.d(DEBUG_TAG, "Scarto i risultati della ricerca: " + tag
+            	//		+ " inSearchMode: " + isInSearchMode() 
+            	//		+ "searchKey: "     + searchKey );
                 return;
             }
             n = ((JSONListAdapter)searchAdapter).addFromJSON(response);
@@ -209,7 +208,7 @@ public class EsercentiListFragment extends SearchEndlessListFragment
     
     @Override
     public void onHTTPerror(String tag) {
-        Log.d(DEBUG_TAG, "Errore nel download");
+        //Log.d(DEBUG_TAG, "Errore nel download");
         if (tag.equals(Tags.TAG_SEARCH + searchKey))
         	notifySearchDownloadEnded();
         else if (tag.equals(Tags.TAG_NORMAL))

@@ -7,7 +7,6 @@ package it.wm.perdue.doveusarla;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
@@ -83,7 +82,7 @@ public class EsercentiItemizedOverlay extends BalloonItemizedOverlay<OverlayItem
             objects = gson.fromJson(json, Esercente[].class);
         } catch (JsonSyntaxException e) {
             // In teoria se siamo qui, significa che è arrivato un array vuoto,
-            Log.d(DEBUG_TAG, "Ho rilevato un array vuoto");
+            //Log.d(DEBUG_TAG, "Ho rilevato un array vuoto");
             //e.printStackTrace();
             objects = new Esercente[0];
         }
@@ -97,7 +96,7 @@ public class EsercentiItemizedOverlay extends BalloonItemizedOverlay<OverlayItem
                 //Log.d(DEBUG_TAG, "Zompo");
             }
         }
-        Log.d(DEBUG_TAG, "Esercenti nel json: " + objects.length);
+        //Log.d(DEBUG_TAG, "Esercenti nel json: " + objects.length);
         return objects.length;
     }
     

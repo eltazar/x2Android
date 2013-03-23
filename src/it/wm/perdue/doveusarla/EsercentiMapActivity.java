@@ -11,7 +11,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -174,7 +173,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
     /* *** BEGIN: LocationListener Methods ********************* */
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(DEBUG_TAG, "onLocationChanged: " + location.getLatitude() + ", " + location.getLongitude());
+        //Log.d(DEBUG_TAG, "onLocationChanged: " + location.getLatitude() + ", " + location.getLongitude());
         locationManager.removeUpdates(this);
         mapController.setZoom(12);
         final SimpleGeoPoint sGeoPoint = new SimpleGeoPoint(
@@ -225,10 +224,10 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
         if (v != mapView) return false;
         int action = event.getAction();
         if (action == MotionEvent.ACTION_DOWN) {
-            Log.d(DEBUG_TAG, "DITO GIU");
+            //Log.d(DEBUG_TAG, "DITO GIU");
             gestureStarted = true;
         } else if (action == MotionEvent.ACTION_UP) {
-            Log.d(DEBUG_TAG, "DITO SU");
+            //Log.d(DEBUG_TAG, "DITO SU");
             gestureStarted = true;
         }
         return false;
@@ -257,7 +256,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
     public void onClick(GeoPoint clickedPoint) { 
         /* Dopo un pan parte sempre un click: facciamo partire la query qui
          * altrimenti a ogni microspostamento ne parte una */
-        Log.d(DEBUG_TAG, "Click");
+        //Log.d(DEBUG_TAG, "Click");
         clickedPoint = mapView.getMapCenter();
         currentDLTag = dh.startDowloading(new SimpleGeoPoint(clickedPoint), getRange());
     }
@@ -288,7 +287,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
         bottomRight = new SimpleGeoPoint(
                 center.getLatitude() + latSpan / 2,
                 center.getLongitude() + longSpan / 2);
-        Log.d(DEBUG_TAG, "Il range è: " + topLeft.calculateDistance(bottomRight) / 2);
+        //Log.d(DEBUG_TAG, "Il range è: " + topLeft.calculateDistance(bottomRight) / 2);
         double distance = topLeft.calculateDistance(bottomRight) / 2;
         return (distance >= 0 && distance < 1) ? 1 : distance;
     }
@@ -316,7 +315,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
         }
         
         public String startDowloading(SimpleGeoPoint point, double range) {
-            Log.d(DEBUG_TAG, "Starting Download from: " + point + "" + range);
+            //Log.d(DEBUG_TAG, "Starting Download from: " + point + "" + range);
             /* Se il punto e il range combaciano (ad Es al tap a vuoto) non rifaccio
              * partire le query da capo
              * TODO: Non dovrebbero ripartire neanche se il range si � semplicemente 
@@ -331,7 +330,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
             postMap.put("long",   "" + queryPoint.getLongitude());
             postMap.put("raggio", "" + range);
             postMap.put("from",   "" + from);
-            Log.d(DEBUG_TAG, "startDownloading, postMap: " + postMap);
+            //Log.d(DEBUG_TAG, "startDownloading, postMap: " + postMap);
             return startHTTPConnection();
         }
         

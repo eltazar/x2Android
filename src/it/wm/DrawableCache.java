@@ -8,7 +8,6 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import it.wm.DownloaderTask.DownloadListener;
 
@@ -90,7 +89,7 @@ public class DrawableCache implements DownloadListener {
                 if (cacheIdx.size() > MAX_SIZE) {
                     cache.remove(cacheIdx.remove(0));
                 }
-                Log.d(DEBUG_TAG, "Abbiamo " + cache.size() + " elementi.");
+                //Log.d(DEBUG_TAG, "Abbiamo " + cache.size() + " elementi.");
                 DownloaderTask task = new DownloaderTask();
                 task.setListener(this);
                 task.execute(params);
@@ -131,7 +130,7 @@ public class DrawableCache implements DownloadListener {
                         BitmapFactory.decodeByteArray(data, 0, data.length, opt));                
             }
             catch(OutOfMemoryError e){
-                Log.d(DEBUG_TAG,"errore memoria esaurita"+e.getLocalizedMessage());
+                //Log.d(DEBUG_TAG,"errore memoria esaurita"+e.getLocalizedMessage());
             }
         }
         return d;
@@ -171,7 +170,7 @@ public class DrawableCache implements DownloadListener {
         line.listeners = null;
         }
         catch(NullPointerException e){
-            Log.d(DEBUG_TAG,"null pointer in onDownloadCompleted");
+            //Log.d(DEBUG_TAG,"null pointer in onDownloadCompleted");
         }
     }
     

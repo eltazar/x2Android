@@ -4,7 +4,6 @@ package it.wm.perdue.dettaglioEsercenti;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -29,17 +28,17 @@ public class DettaglioEseRistoListFragment extends DettaglioEseListFragment {
         super.onCreate(savedInstanceState);
         
         if(isGenerico){
-            Log.d("dettaglioEse","esercente generico query");
+            //Log.d("dettaglioEse","esercente generico query");
             urlString = "http://www.cartaperdue.it/partner/android/DettaglioRistoCoupon.php?id="
                     + eseId;
         }
         else if(isCoupon){
-            Log.d("dettaglioEse","coupon mode query");
+            //Log.d("dettaglioEse","coupon mode query");
             urlString = "http://www.cartaperdue.it/partner/android/DettaglioRistoCoupon.php?id="
                     + eseId;
         }
         else{
-            Log.d("dettaglioEse","esercente senza contratto query");
+            //Log.d("dettaglioEse","esercente senza contratto query");
             urlString = "http://www.cartaperdue.it/partner/v2.0/DettaglioRistorantePub.php?id="
                     + eseId;
         }

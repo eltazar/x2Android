@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,17 +67,17 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         httpAccess.setResponseListener(this);
 
         if(isGenerico){
-            Log.d("dettaglioEse","esercente generico query");
+            //Log.d("dettaglioEse","esercente generico query");
             urlString = "http://www.cartaperdue.it/partner/DettaglioEsercenteGenerico.php?id="
                     + eseId;
         }
         else if(isCoupon){
-            Log.d("dettaglioEse","coupon mode query");
+            //Log.d("dettaglioEse","coupon mode query");
             urlString = "http://www.cartaperdue.it/partner/DettaglioEsercente.php?id="
                     + eseId;
         }
         else{
-            Log.d("dettaglioEse","esercente senza contratto query");
+            //Log.d("dettaglioEse","esercente senza contratto query");
             urlString = "http://www.cartaperdue.it/partner/v2.0/DettaglioEsercenteCompleto.php?id="
                     + eseId;
         }
@@ -104,7 +103,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
         setListAdapter(adapter);
         
         if(savedInstanceState != null){
-            Log.d("couponList","recupero stato jsonstring");
+            //Log.d("couponList","recupero stato jsonstring");
             jsonData = savedInstanceState.getString("eseModel");
             adapter.addFromJSON(jsonData);
             if(cachedImg.getImageView().getDrawable()==null)
@@ -287,7 +286,7 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
                                     "<b> Giorni validità </b>" + "<br />"
                                     + esercente.getGiorniString() + "<br />" : "");
                         } catch (NullPointerException e) {
-                            Log.d(DEBUG_TAG, "eccezione in getView: " + e.getLocalizedMessage());
+                            //Log.d(DEBUG_TAG, "eccezione in getView: " + e.getLocalizedMessage());
                         }
                         
                         infoTextView.setText(Html.fromHtml((
@@ -338,15 +337,15 @@ public class DettaglioEseListFragment extends SherlockListFragment implements
 
     @Override
     public void onImageLoadingCompleted(CachedAsyncImageView imageView) {
-        Log.d("dettaglio","IMMAGINE CARICATA");     
+        //Log.d("dettaglio","IMMAGINE CARICATA");     
         if(imageView.getImageView().getDrawable() == null){
-            Log.d("dettaglio","immagine vuota");
+            //Log.d("dettaglio","immagine vuota");
             cachedImg.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void onImageLoadingFailed(CachedAsyncImageView imageView) {
-        Log.d("dettaglio","IMMAGINE NON CARICATA");                
+        //Log.d("dettaglio","IMMAGINE NON CARICATA");                
     }
 }
