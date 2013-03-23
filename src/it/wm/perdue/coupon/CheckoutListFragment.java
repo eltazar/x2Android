@@ -132,7 +132,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
             dataModel =  new HashMap<String,Object>();
         ListAdapter listAdapter = new BuyListAdapter(getActivity(), R.layout.coupon_title_row, rowKinds, dataModel);
         setListAdapter(listAdapter);
-        urlString = "https://cartaperdue.it/partner/android/acquistoCouponProva.php";
+        urlString = "https://cartaperdue.it/partner/acquistoCoupon.php";
         postMap = new TreeMap<String,String>();
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
