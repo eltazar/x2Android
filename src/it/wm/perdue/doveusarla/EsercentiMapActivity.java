@@ -22,6 +22,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 
+import it.wm.GeoDecoder;
 import it.wm.HTTPAccess;
 import it.wm.ObservableMapView;
 import it.wm.SimpleGeoPoint;
@@ -39,7 +40,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
         LocationListener, 
         HTTPAccess.ResponseListener,
         ObservableMapView.MapViewListener,
-        View.OnTouchListener {
+        View.OnTouchListener, GeoDecoder.Listener {
     private static final String      DEBUG_TAG       = "EsercentiMapActivity";
     private String                   category        = null;
     private ObservableMapView        mapView         = null;
@@ -49,6 +50,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
     private EsercentiItemizedOverlay itemizedOverlay = null;
     private DownloadHandler          dh              = null;
     private String                   currentDLTag    = null;
+    private GeoDecoder               geoDec          = null;
     
     @Override
     protected void onCreate(Bundle savedInstance) {
@@ -72,26 +74,38 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
         
         dh = new DownloadHandler(this, category, isRisto);
         
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 1, this);
-        Location lastLoc = locationManager.getLastKnownLocation(
-                LocationManager.NETWORK_PROVIDER);
-        
         mapView = new ObservableMapView(this, 
                 getResources().getString(R.string.map_api_key));
         mapView.setMapViewListener(this);
         mapView.setOnTouchListener(this);
         mapView.setClickable(true);
         
-        mapController = mapView.getController();
-        if (lastLoc != null) {
-            SimpleGeoPoint p = new SimpleGeoPoint(lastLoc.getLatitude(), lastLoc.getLongitude());
-            mapController.setZoom(12);
-            animateTo(p);
-        } else {
-            SimpleGeoPoint italia = new SimpleGeoPoint(41.891544, 12.497532);
-            mapController.setZoom(7);
-            animateTo(italia);
+        mapController = mapView.getController();        
+        
+        String city = Utils.getPreferenceString("where", "Roma");
+        
+        Log.d("map","citta = "+city);
+        if(city != null && city.equals("Qui")){
+            //mostra mappa su posizione utente
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 1, this);
+            Location lastLoc = locationManager.getLastKnownLocation(
+                    LocationManager.NETWORK_PROVIDER);
+            if (lastLoc != null) {
+                SimpleGeoPoint p = new SimpleGeoPoint(lastLoc.getLatitude(), lastLoc.getLongitude());
+                mapController.setZoom(12);
+                animateTo(p);
+            } else {
+                SimpleGeoPoint italia = new SimpleGeoPoint(41.891544, 12.497532);
+                mapController.setZoom(7);
+                animateTo(italia);
+            }
+        }
+        else{
+            //mostra mappa su città
+            geoDec = new GeoDecoder();
+            geoDec.setListener(this);
+            geoDec.getLocationInfo(city);
         }
         
         itemizedOverlay = new EsercentiItemizedOverlay(
@@ -105,15 +119,6 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
         mapView.getOverlays().add(itemizedOverlay);
         
         setContentView(mapView);
-        String city = Utils.getPreferenceString("where", "Roma");
-
-        if(city != null && city.equals("Qui")){
-            //mostra mappa su posizione utente
-        }
-        else{
-            //mostra mappa su città
-            setCenterCityMap(city);
-        }
         
     }
     
@@ -352,5 +357,17 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
                     getTag() + from);
             return tag;
         }
+    }
+
+    @Override
+    public void onGeoPointReceived(SimpleGeoPoint sgp) {
+        mapController.setZoom(12);
+        animateTo(sgp);        
+    }
+
+    @Override
+    public void onGeoPointNotReceived() {
+        // TODO Auto-generated method stub
+        
     }
 }
