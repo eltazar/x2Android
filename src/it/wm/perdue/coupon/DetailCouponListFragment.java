@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Parcelable;
 import android.text.Html;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,7 +87,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        Log.d("couponList","onCreate");
+        //Log.d("couponList","onCreate");
         
         Bundle args = getArguments();
         if(args != null){
@@ -101,7 +100,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
          * */
         //eseId = args.getString(ESE_ID);
         
-        Log.d("couponList","id coupon = "+idCoupon);
+        //Log.d("couponList","id coupon = "+idCoupon);
         if(idCoupon == 0){
             urlString = "http://www.cartaperdue.it/partner/android/coupon2.php?prov=" + "Roma";
             isCouponOfTheDay = true;
@@ -129,10 +128,10 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.d("couponList","onActivityCreated");
+        //Log.d("couponList","onActivityCreated");
         
         if(savedInstanceState != null){
-            Log.d("couponList","recupero stato jsonstring");
+           // Log.d("couponList","recupero stato jsonstring");
             jsonString = savedInstanceState.getString("couponModel");
             if(jsonString != null){
                 adapter.addFromJSON(jsonString);
@@ -143,7 +142,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("couponList","onCreateView");
+        //Log.d("couponList","onCreateView");
 
       View view = inflater.inflate(R.layout.coupon, container, false);
       buyButton = (Button) view.findViewById(R.id.buyButton);
@@ -166,24 +165,24 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d("couponList","salvo stato jsonstring");
+       // Log.d("couponList","salvo stato jsonstring");
 
         outState.putString("couponModel", jsonString);
     }
     
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d("couponList","onDestroyView");
+       // Log.d("couponList","onDestroyView");
         // setListAdapter(null);
     }
     
     public void onResume(){
         super.onResume();
-        Log.d("couponList","onResume");        
+        //Log.d("couponList","onResume");        
         
         //ripeto query
         if(isCouponOfTheDay || adapter.getObject() == null){
-            Log.d("couponList","onResume adapter model è null, rifaccio query");
+           // Log.d("couponList","onResume adapter model è null, rifaccio query");
             httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET,
                     null, TAG_NORMAL);
             showProgressDialog();
@@ -205,7 +204,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     
     public void onStop(){
         super.onStop();
-        Log.d("couponList","onStop");
+       // Log.d("couponList","onStop");
         if(countDownTimer != null)
             countDownTimer.cancel();
     }
@@ -223,10 +222,10 @@ public class DetailCouponListFragment extends SherlockListFragment implements
         //http://stackoverflow.com/questions/10024739/how-to-determine-when-fragment-becomes-visible-in-viewpager
         
         if (isVisibleToUser == true) { 
-            Log.d("couponList","fragment è visibile");
+           // Log.d("couponList","fragment è visibile");
         }
         else {
-            Log.d("couponList","fragment non è visibile");
+           // Log.d("couponList","fragment non è visibile");
 
         }
         
@@ -235,7 +234,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
     @Override
     public void onHTTPResponseReceived(String tag, String response) {        
-        Log.d("couponList", "RISPOSTA = " + response);
+       // Log.d("couponList", "RISPOSTA = " + response);
 
         if (tag.equals(TAG_NORMAL)) {
             adapter.addFromJSON(response);
@@ -304,7 +303,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
               //Log.d("uffa","data di scad ---> "+expiryDate.toString());
               //Log.d("uffa", "data now --->"+formatter.format(now));
               millisTot = expiryDate.getTime() - now.getTime();
-              Log.d("Timer","millisecondti minutes = "+millisTot);
+            //  Log.d("Timer","millisecondti minutes = "+millisTot);
           }
           catch(IllegalArgumentException e){
               e.printStackTrace();
@@ -381,7 +380,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
             intent.putExtra(DettaglioEsercenteBaseActivity.Tags.COUPON_MODE, true);
 
             int tipologia = c.getIdTipologiaEsercente();
-            Log.d("TIPO","TIPOLOGIA = "+tipologia);
+            //Log.d("TIPO","TIPOLOGIA = "+tipologia);
             
             if(tipologia == -1){
                 //senza contratto
@@ -438,7 +437,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
                 buyButtonPressed();
                 break;
             case R.id.refreshBtn:
-                Log.d("couponList","detail btn pressed");
+                //Log.d("couponList","detail btn pressed");
                 refreshView();
                 break;
         }
@@ -447,14 +446,14 @@ public class DetailCouponListFragment extends SherlockListFragment implements
     protected void buyButtonPressed(){
         if(LoggingHandler.isLogged()){
             //mostra Checkout
-            Log.d("couponList","mostra checkout");
+          //  Log.d("couponList","mostra checkout");
             Coupon coupon = adapter.getObject();    
             //Log.d("coupon","coupon in detail scaricato: "+coupon.getID()+" "+coupon.getDescrizioneBreve());
             listener.onDidCheckout(coupon);
         }
         else{
             //mostra login
-            Log.d("couponList","mostra login");
+         //   Log.d("couponList","mostra login");
             Intent i = new Intent(getSherlockActivity(),BaseFormActivity.class);
             startActivity(i);
         }
@@ -482,7 +481,7 @@ public class DetailCouponListFragment extends SherlockListFragment implements
                     title.setText(coupon.getTitoloBreve());
                 }
                 else if(position == 1){
-                    Log.d("couponList","coupon diverso null");
+                   // Log.d("couponList","coupon diverso null");
                     TextView price = (TextView) v.findViewById(R.id.couponPrice);            
                     TextView discount = (TextView) v.findViewById(R.id.couponDiscount);  
                     TextView differencePrice = (TextView) v.findViewById(R.id.couponDifference);   
@@ -559,15 +558,15 @@ public class DetailCouponListFragment extends SherlockListFragment implements
             //buy button pressed
             switch(v.getId()){
                 case R.id.detailBtn:
-                    Log.d("couponList","detail btn pressed");
+                 //   Log.d("couponList","detail btn pressed");
                     loadWebPage(coupon.getDescrizioneBreve(),"Dettagli offerta");
                     break;
                 case R.id.infoBtn:
-                    Log.d("couponList","info btn pressed");
+                  //  Log.d("couponList","info btn pressed");
                     loadWebPage(coupon.getDescrizioneEstesa(),"Per saperne di più");
                     break;
                 case R.id.rulesBtn:
-                    Log.d("couponList","rules btn pressed");
+                  //  Log.d("couponList","rules btn pressed");
                     loadWebPage(coupon.getCondizioni(),"Condizioni");
                     break;
                 case R.id.couponImage:

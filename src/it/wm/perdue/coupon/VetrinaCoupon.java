@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,7 +111,7 @@ public class VetrinaCoupon extends SherlockFragment implements HTTPAccess.Respon
     @Override
     public void onStop (){
         super.onStop();
-        Log.d("TIMER","ON STOP");
+        //Log.d("TIMER","ON STOP");
         //annullo il timer quando la view non è più visibile
         if(countDownTimer != null)
             countDownTimer.cancel();
@@ -122,7 +121,7 @@ public class VetrinaCoupon extends SherlockFragment implements HTTPAccess.Respon
     /* *** BEGIN: HTTPAccess.ResponseListener ****************** */
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
-        Log.d("TIMER", " RISPOSTA = "+response);
+        //Log.d("TIMER", " RISPOSTA = "+response);
         addFromJSON(response);
         showCoupon();
         setTimer();
@@ -138,17 +137,17 @@ public class VetrinaCoupon extends SherlockFragment implements HTTPAccess.Respon
     
     
     public void setTimer() {
-        Log.d("TIMER", "on resume");
+        //Log.d("TIMER", "on resume");
         long millisTot = 0;
 
         Date now = new Date();
         Date expiry = coupon.getFineValidita();
         DateFormat formatter = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
         String scadT = formatter.format(expiry);
-        Log.d("TIMER","data di scad ---> "+scadT);
-        Log.d("TIMER", "data now --->"+formatter.format(now));
+        //Log.d("TIMER","data di scad ---> "+scadT);
+       //Log.d("TIMER", "data now --->"+formatter.format(now));
         millisTot = expiry.getTime() - now.getTime();
-        Log.d("Timer","millisecondti minutes = " + millisTot);
+       // Log.d("Timer","millisecondti minutes = " + millisTot);
         
 
         //su ios facevo così, qui non so se serve... 
@@ -245,11 +244,11 @@ public class VetrinaCoupon extends SherlockFragment implements HTTPAccess.Respon
         jsonString = jsonString.substring(1, jsonString.length() - 1);
         //jsonString = jsonString.substring(1, jsonString.length() - 1);
         //jsonString = Utils.stripEsercente(jsonString);
-        Log.d("Timer","stringa strippata ----->"+jsonString);
+       // Log.d("Timer","stringa strippata ----->"+jsonString);
         Gson gson = Utils.getGson();
         try {
             this.coupon = gson.fromJson(jsonString, Coupon.class);
-            Log.d("TIMER","oggetto coupon =  "+coupon.getDescrizione());
+           // Log.d("TIMER","oggetto coupon =  "+coupon.getDescrizione());
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }

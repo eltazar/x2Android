@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -33,7 +32,7 @@ public class DetailCouponBaseActivity extends SherlockFragmentActivity implement
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
                 
-        Log.d("coupon","onCreate");
+        //Log.d("coupon","onCreate");
         
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -77,7 +76,7 @@ public class DetailCouponBaseActivity extends SherlockFragmentActivity implement
                 finish();
             }
             else{
-                Log.d("coupon","back premuto");
+                //Log.d("coupon","back premuto");
                 backToPreviousFragment();
             }
             return true;
@@ -125,7 +124,7 @@ public class DetailCouponBaseActivity extends SherlockFragmentActivity implement
                 NavUtils.navigateUpTo(this, intent);
                 return true;
             case R.id.menu_item_logout:
-                Log.d("coupon","pulsante menu logout premuto");
+                //Log.d("coupon","pulsante menu logout premuto");
                 LoggingHandler.doLogout();
                 return true;
         }
@@ -157,7 +156,7 @@ public class DetailCouponBaseActivity extends SherlockFragmentActivity implement
     
     @Override
     public void onDidCheckout(Coupon c) {
-        Log.d("coupon","devo lanciare fragment per checkout");
+        //Log.d("coupon","devo lanciare fragment per checkout");
         CheckoutListFragment f = new CheckoutListFragment((c.getID()+""),c.getTitoloBreve(),(c.getValoreAcquisto()+""));
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction =

@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,7 +79,7 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
         super.onActivityCreated(savedInstanceState);
         if(savedInstanceState != null){
             creditCard = (CreditCard)savedInstanceState.getParcelable(TAG_CREDIT_CARD);
-            Log.d("check","leggo vecchio stato ->"+creditCard.toString());
+            //Log.d("check","leggo vecchio stato ->"+creditCard.toString());
         }
     }
     
@@ -89,7 +88,7 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
         //salvo stato della carta di credito 
         saveIntoModel();
         outState.putParcelable(TAG_CREDIT_CARD, creditCard);
-        Log.d("check","salvo vecchio stato ->"+creditCard.toString());
+        //Log.d("check","salvo vecchio stato ->"+creditCard.toString());
         super.onSaveInstanceState(outState);
     }   
     
@@ -97,7 +96,7 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
     public void onResume(){
         super.onResume();
         if(creditCard != null){
-            Log.d("check","setto valori del vecchio stato->"+creditCard.toString());
+            //Log.d("check","setto valori del vecchio stato->"+creditCard.toString());
 
             numberEditText.setText(creditCard.getNumber());
             cvvEditText.setText(creditCard.getCvv());
@@ -197,7 +196,7 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent arg2) {
         String input = v.getText().toString();
-        Log.d("check","CHIAMATO ONEDITORACTION DONE = "+input);
+        //Log.d("check","CHIAMATO ONEDITORACTION DONE = "+input);
 
         if(actionId == EditorInfo.IME_ACTION_DONE)
         {
@@ -212,7 +211,7 @@ public class CreditCardFragment extends SherlockFragment implements OnClickListe
     public void onFocusChange(View v, boolean hasFocus) {
         if (hasFocus) {          
             EditText field = (EditText) v;
-            Log.d("XXX", "has focus");
+            //Log.d("XXX", "has focus");
             field.setHintTextColor(Color.GRAY);
             field.setTextColor(Color.BLACK);
         }

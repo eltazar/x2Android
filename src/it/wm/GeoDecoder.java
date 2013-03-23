@@ -1,7 +1,5 @@
 package it.wm;
 
-import android.util.Log;
-
 import com.google.android.maps.GeoPoint;
 
 import it.wm.HTTPAccess.ResponseListener;
@@ -23,7 +21,7 @@ public class GeoDecoder implements ResponseListener {
     public GeoDecoder(){
          httpAccess = new HTTPAccess();
          httpAccess.setResponseListener(this);
-         Log.d("map","geodec allocato");
+        // Log.d("map","geodec allocato");
     }
     
     public void setListener(Listener listener){
@@ -31,7 +29,7 @@ public class GeoDecoder implements ResponseListener {
     }
     
     public void getLocationInfo(String address) {
-        Log.d("map","geodec start query");
+        //Log.d("map","geodec start query");
 
         String urlString = "http://maps.google.com/maps/api/geocode/json?address=" +address+"&ka&sensor=false";
         httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.GET, null, null);
@@ -63,7 +61,7 @@ public class GeoDecoder implements ResponseListener {
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
         try {
-            Log.d("map","respone = "+response);
+            //Log.d("map","respone = "+response);
             JSONObject jo = new JSONObject(response);
             SimpleGeoPoint sgp = new SimpleGeoPoint(getGeoPoint(jo));
             if(listener != null)
