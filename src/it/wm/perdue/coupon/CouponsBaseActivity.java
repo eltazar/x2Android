@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -98,7 +97,7 @@ public class CouponsBaseActivity extends SherlockFragmentActivity implements Cha
         MenuItem wMenuItem = menu.findItem(R.id.whereMenu);
         
         String dove = Utils.getPreferenceString(COUPON_CITY, "Roma");       
-        Log.d("dialog","città -> "+dove);
+        //Log.d("dialog","città -> "+dove);
         wMenuItem.setTitle(dove);
         // rilancio query
         CouponsListFragment f = (CouponsListFragment)getSupportFragmentManager().findFragmentByTag(COUPONS_FRAGMENT_TAG);

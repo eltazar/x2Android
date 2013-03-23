@@ -3,7 +3,6 @@ package it.wm.perdue.coupon;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -37,7 +36,7 @@ implements HTTPAccess.ResponseListener {
         // Super. onCreate utilizza l'adapter in caso di config change, 
         // quindi va richiamato dopo averlo inizializzato
         urlString = "http://www.cartaperdue.it/partner/android/listaCoupon.php?prov="+Utils.getPreferenceString(COUPON_CITY, "Roma")+"&from=0";
-        Log.d("coupon","url _---> "+urlString);
+        //Log.d("coupon","url _---> "+urlString);
         httpAccess = new HTTPAccess();
         httpAccess.setResponseListener(this);
     }
@@ -65,7 +64,7 @@ implements HTTPAccess.ResponseListener {
         
         try{
             int n = ((CouponsJSONListAdapter)adapter).addFromJSON(response);
-            Log.d("coupon","n = "+n);
+            //Log.d("coupon","n = "+n);
             if (n < PHP_ARRAY_LENGTH) {
                 notifyDataEnded();
             }
@@ -74,13 +73,13 @@ implements HTTPAccess.ResponseListener {
             notifyDownloadEnded();
         }
         catch(NullPointerException e){
-            Log.d(DEBUG_TAG,"Eccezione in list fragment ---> "+e.getLocalizedMessage());
+            //Log.d(DEBUG_TAG,"Eccezione in list fragment ---> "+e.getLocalizedMessage());
         }
     }
     
     @Override
     public void onHTTPerror(String tag) {
-        Log.d(DEBUG_TAG, "Errore nel download");
+        //Log.d(DEBUG_TAG, "Errore nel download");
         notifyDownloadEnded();
     }
     /* *** END: HTTPAccess.ResponseListener ******************* */

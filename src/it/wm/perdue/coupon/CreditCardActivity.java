@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -57,7 +56,7 @@ public class CreditCardActivity extends SherlockFragmentActivity implements OnCr
     @Override
     public void onCreditCardDoneButtonClicked(CreditCard c) {
         //mando carta di credito indietro
-        Log.d("check","creo intent extra per mandare indietro carta");
+        //Log.d("check","creo intent extra per mandare indietro carta");
         Intent i = getIntent();
         i.putExtra("creditCard", c);
         setResult(RESULT_OK, i);

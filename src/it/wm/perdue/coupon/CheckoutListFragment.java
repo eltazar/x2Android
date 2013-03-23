@@ -66,7 +66,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
     
     public void createDataModel(String... couponInfo){
         dataModel =  new HashMap<String,Object>();
-        Log.d("coupon","couponinfo = "+couponInfo[0]+" "+couponInfo[1]+" "+couponInfo[2]);
+        //Log.d("coupon","couponinfo = "+couponInfo[0]+" "+couponInfo[1]+" "+couponInfo[2]);
         dataModel.put("couponInfo", (new ArrayList<String>(Arrays.asList(couponInfo))));  
         dataModel.put("loginData", LoggingHandler.getSavedLoginData());
     }
@@ -80,7 +80,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
     }
     
     public CheckoutListFragment(String... couponInfo){
-        Log.d("check","fragment istanziato");
+        //Log.d("check","fragment istanziato");
         createDataModel(couponInfo);
     }
     
@@ -126,7 +126,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("check","on  create");
+        //Log.d("check","on  create");
         
         if(dataModel == null)
             dataModel =  new HashMap<String,Object>();
@@ -153,7 +153,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
       super.onActivityResult(requestCode, resultCode, data);
       if (requestCode == 0 && resultCode == SherlockActivity.RESULT_OK && data != null){
-          Log.d("check","CheckoutList: ricevuto carta salvata -> "+((CreditCard)data.getExtras().get("creditCard")).toString());
+          //Log.d("check","CheckoutList: ricevuto carta salvata -> "+((CreditCard)data.getExtras().get("creditCard")).toString());
           //ho ricevuto la carta di credito creata, la salvo nel model
           dataModel.put("creditCard", data.getExtras().get("creditCard"));
           //aggiorno la listView
@@ -193,7 +193,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
     }
     
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Log.d("checkout","cliccato riga "+position);
+        //Log.d("checkout","cliccato riga "+position);
         if(position == 3){
             //riga carta di credito
             Intent intent = new Intent(getSherlockActivity(),CreditCardActivity.class);
@@ -240,7 +240,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
             
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Log.d("checkout","acquisto confermato");
+                //Log.d("checkout","acquisto confermato");
                 completePurchase();
             }
         });
@@ -248,7 +248,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
             
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Log.d("checkout","acquisto annullato");
+                //Log.d("checkout","acquisto annullato");
             }
         });
         AlertDialog alert = builder.create();
@@ -275,7 +275,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
                 postMap, TAG_NORMAL);
         
         showProgressDialog();
-        Log.d("postMapAcquisto","postmap ---> "+postMap);
+        //Log.d("postMapAcquisto","postmap ---> "+postMap);
     }
     /*Metodi privati per l'acquisto END
      **/
@@ -318,7 +318,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
        
-            Log.d("check","get view");
+            //Log.d("check","get view");
             View v = convertView;
             
             int viewType = 0;         
@@ -406,7 +406,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
             if(buyButton != null){
                 buyButton.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) { 
-                        Log.d("checkout","E' stato premuto il bottone buy");
+                        //Log.d("checkout","E' stato premuto il bottone buy");
                         hideSoftKeyboard();
                         String result = "ok";
                         CreditCard creditCard = (CreditCard) dataModel.get("creditCard");
@@ -542,7 +542,7 @@ public class CheckoutListFragment extends SherlockListFragment implements
                             output = amountItems*pr;
                         }
                         catch(NumberFormatException e){
-                            Log.d("checkout","number format exception");
+                            //Log.d("checkout","number format exception");
                             output = 0.0;
                         }
                         //aggiorno dataModel con prezzo totale convertito in stringa
