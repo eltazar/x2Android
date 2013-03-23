@@ -70,7 +70,8 @@
             android:layout_height="wrap_content"
             android:layout_alignRight="@+id/tel"
             android:layout_below="@+id/textView1"
-            android:text="Registra" />
+            android:text="Registra"
+            android:background="@drawable/pd_yellow_button" />
 
         <ScrollView
             android:id="@+id/scrollView1"

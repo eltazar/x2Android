@@ -21,7 +21,7 @@
             android:layout_marginRight="5dp"
             android:enabled="false"
             android:text="Compra"
-            android:background="@drawable/coupon_buy_button"/>
+            android:background="@drawable/pd_yellow_button"/>
 
         <TextView
             android:id="@+id/expiryString"

@@ -62,16 +62,21 @@
             android:layout_below="@+id/loginBtn"
             android:layout_centerInParent="true"
             android:layout_marginTop="35dp"
-            android:text="Recupera password" />
+            android:background="@drawable/pd_yellow_button"
+            android:minHeight="48dp"
+            android:text="Recupera password"
+            android:textSize="14sp" />
             
         <Button
             android:id="@+id/signInbtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-			android:layout_centerInParent="true"
-			android:layout_marginTop="5dp"
             android:layout_below="@+id/retrievePswBtn"
-            android:text="Registrati a PerDue" />
+            android:layout_centerInParent="true"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/pd_yellow_button"
+            android:text="Registrati a PerDue"
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/loginBtn"
@@ -79,7 +84,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView1"
             android:layout_centerHorizontal="true"
-            android:text="Login" />
+            android:background="@drawable/pd_yellow_button"
+            android:minHeight="0dp"
+            android:text="Login"
+            android:textSize="14sp" />
 
     </RelativeLayout>
 

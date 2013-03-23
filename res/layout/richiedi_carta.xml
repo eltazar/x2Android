@@ -75,7 +75,8 @@
             android:layout_height="wrap_content"
             android:layout_alignRight="@+id/textView1"
             android:layout_below="@+id/textView1"
-            android:text="Invia" />
+            android:text="Invia" 
+            android:background="@drawable/pd_yellow_button"/>
 
         <ScrollView
             android:id="@+id/scrollView1"
