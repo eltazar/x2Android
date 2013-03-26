@@ -283,9 +283,9 @@ import java.util.HashMap;
             postMap.put("telefono", Utils.replacePlusInPhone(tel));
             postMap.put("mail", email);
             
-//             httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
-//             postMap, TAG_NORMAL);
-            Log.d("XXX", "PADRE: i dati da inviare al server sono: " + postMap);
+            httpAccess.startHTTPConnection(urlString, HTTPAccess.Method.POST,
+             postMap, TAG_NORMAL);
+//            Log.d("XXX", "PADRE: i dati da inviare al server sono: " + postMap);
             
             progressDialog = ProgressDialog.show(getActivity(), "", "Invio in corso...");
             
