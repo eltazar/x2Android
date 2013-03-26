@@ -83,7 +83,7 @@ public class EsercentiMapActivity extends SherlockMapActivity implements
         
         String city = Utils.getPreferenceString("where", "Roma");
         
-        Log.d("map","citta = "+city);
+        //Log.d("map","citta = "+city);
         if(city != null && city.equals("Qui")){
             //mostra mappa su posizione utente
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
