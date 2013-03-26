@@ -24,9 +24,9 @@ public class EsercenteRistorazione extends Esercente {
     private boolean marMattina     = false;
     @SerializedName("Martedi_sera_CE")
     private boolean marSera        = false;
-    @SerializedName("Mecoledi_mat_CE")
+    @SerializedName("Mercoledi_mat_CE")
     private boolean merMattina     = false;
-    @SerializedName("Mecoledi_sera_CE")
+    @SerializedName("Mercoledi_sera_CE")
     private boolean merSera        = false;
     @SerializedName("Giovedi_mat_CE")
     private boolean gioMattina     = false;
@@ -153,7 +153,7 @@ public class EsercenteRistorazione extends Esercente {
             cena = cena.concat("Lun ");
         if (this.isMarSera())
             cena = cena.concat("Mar ");
-        if (this.isMerMattina())
+        if (this.isMerSera())
             cena = cena.concat("Merc ");
         if (this.isGioSera())
             cena = cena.concat("Gio ");
