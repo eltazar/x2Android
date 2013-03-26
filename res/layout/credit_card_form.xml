@@ -91,7 +91,8 @@
             android:layout_height="wrap_content"
             android:layout_alignRight="@+id/owner"
             android:layout_below="@+id/owner"
-            android:text="Fatto" />
+            android:text="Fatto"
+            android:background="@drawable/pd_yellow_button" />
 
         <ScrollView
             android:id="@+id/scrollView1"
@@ -106,7 +107,8 @@
             android:layout_alignRight="@+id/saveCardBtn"
             android:layout_below="@+id/saveCardBtn"
             android:layout_marginTop="20dp"
-            android:text="I tuoi dati sono al sicuro, scopri come!" />
+            android:text="I tuoi dati sono al sicuro, scopri come!"
+            android:background="@drawable/pd_yellow_button" />
 
 
 

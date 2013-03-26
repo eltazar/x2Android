@@ -11,6 +11,7 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_vertical"
         android:layout_marginTop="5dp"
-        android:text="Acquista" />
+        android:text="Acquista" 
+        android:background="@drawable/pd_yellow_button"/>
 
 </RelativeLayout>
