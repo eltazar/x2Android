@@ -7,6 +7,7 @@ import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -106,9 +107,15 @@ public class NewsDetailActivity extends WebviewActivity implements HTTPAccess.Re
     @Override
     public void onHTTPResponseReceived(String tag, String response) {
         // Log.d(DEBUG_TAG, "RICEVUTA RISPOSTA: " + response);
-        response = Utils.formatJSON(response);
-        notizia = Utils.getGson().fromJson(response, Notizia[].class)[0];
-        loadPage(notizia.getTesto());
+        try{
+            response = Utils.formatJSON(response);
+            notizia = Utils.getGson().fromJson(response, Notizia[].class)[0];
+            loadPage(notizia.getTesto());
+        }
+        catch(NullPointerException e){
+            Toast toast = Toast.makeText(this, "Errore di rete, riprova", Toast.LENGTH_LONG);
+            toast.show(); 
+        }
     }
     
     @Override
