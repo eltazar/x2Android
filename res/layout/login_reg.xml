@@ -36,17 +36,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
         </ScrollView>
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@+id/psw"
-            android:layout_below="@+id/psw"
-            android:gravity="center"
-            android:paddingTop="10dp"
-            android:text="@string/login_string"
-            android:textSize="11sp" />
         
         <View
             android:layout_width="fill_parent"
@@ -88,6 +77,17 @@
             android:minHeight="0dp"
             android:text="Login"
             android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/psw"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:text="@string/login_string"
+            android:textSize="11sp" />
 
     </RelativeLayout>
 
